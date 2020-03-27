@@ -13,8 +13,22 @@ var test = function(bool){
 
 test(true)
 .then(function(result){
-    console.log(result);
+    console.log("1) " + result);
+    return test(true);
 })
-.catch(function(err){
-    console.log(err);
+.then( function(result){
+    console.log("2) " + result);
+    return test(false);
+})
+.then( function(result){
+    console.log("3) " + result);
+    return test(true);
+})
+.catch(function(result){
+    console.log("4) " + result);
+    return test(true);
+})
+.then( function(result){
+    console.log("5) " + result);
+    return test(true);
 })
