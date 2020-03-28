@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "test123",
-    "database": "test_qr",
+    "database": "0328testnode",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false
