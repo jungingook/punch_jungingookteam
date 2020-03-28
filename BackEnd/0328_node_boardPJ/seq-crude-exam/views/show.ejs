@@ -19,5 +19,21 @@
         </table>
         <input type="submit" value="전송하기">
     </form>
+
+    <hr>
+    <table>
+        <tr>
+            <td>제목</td>
+            <td>작성자</td>
+            <td>작성일</td>
+        </tr>
+        <% for(let post of posts) {%>
+            <tr>
+                <td><%= post.title%></td>
+                <td><%= post.writer%></td>
+                <td><%= post.createdAt%></td>                
+            </tr>
+            <% }%>
+    </table>
 </body>
 </html>

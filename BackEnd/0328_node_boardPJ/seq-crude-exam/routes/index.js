@@ -4,7 +4,16 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/board', function(req, res, next) {
-  res.render('show');
+  models.post.findAll({
+    where: {writer: "victolee"}
+  }).then( result => {
+    res.render("show", {
+      posts: result
+    });
+  })
+  .catch(function(err){
+    console.log(err);
+  });
 });
 
 router.post('/board', function(req, res, next){
