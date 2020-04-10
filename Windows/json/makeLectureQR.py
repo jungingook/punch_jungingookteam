@@ -15,6 +15,7 @@ class MyApp(QWidget):
 
     def initUI(self):
         #한글 데이터를 받아오기 위해 encoding='utf-8' 추가
+        #json 파일을 가져오는 코드
         with open('lecture.json', encoding='utf-8') as json_file:
             json_data = json.load(json_file)
 
@@ -24,10 +25,11 @@ class MyApp(QWidget):
             # key가 json_number인 숫자 가져오기
             json_number = json_data["lecture_number"]
             print(str(json_number))  # 숫자이기 때문에 str()함수를 이용
-        # Hello World! 로 QR 코드 생성
+
+        # JSON 파일의 데이터를 이용하여 QR 코드 생성
         img = qrcode.make(json_string + str(json_number))
 
-        # 생성된 이미지를 helloworld_qrcode.png로 저장
+        # 생성된 qr 코드를 qrcode.png로 저장
         img.save('qrcode.png')
         pixmap = QPixmap('qrcode.png')
 
