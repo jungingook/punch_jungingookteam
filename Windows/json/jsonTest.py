@@ -3,7 +3,7 @@ import json
 # with를 이용해 파일을 연다.
 # json 파일은 같은 폴더에 있다고 가정!
 
-with open('example.json') as json_file:
+with open('exampleTest.json') as json_file:
     json_data = json.load(json_file)
 
     # 문자열
