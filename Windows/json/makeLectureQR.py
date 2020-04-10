@@ -21,14 +21,13 @@ class MyApp(QWidget):
             # 문자열
             # key가 json_string인 문자열 가져오기
             json_string = json_data["lecture_name"]
-            print(json_string)
+
 
             # 숫자
             # key가 json_number인 숫자 가져오기
             json_number = json_data["lecture_number"]
-            print(str(json_number))  # 숫자이기 때문에 str()함수를 이용
 
-        # JSON 파일의 데이터를 이용하여 QR 코드 생성
+        # JSON 파일의 데이터를 이용하여 QR 코드 생성, 숫자이기 때문에 str()함수를 이용
         img = qrcode.make(json_string + str(json_number))
 
 
