@@ -1,22 +1,17 @@
-// import React from 'react';
-// import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import Header from './Header';
 
-// export default function App() {
-//   return (
-//     <View style={styles.container}>
-//       <Text>앱 테스트</Text>
-//     </View>
-//   );
-// }
+class App extends Component {
+  render() {
+    return (
+      <Header name="리액트"/>
+    );
+  }
+}
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
+export default App;
+
+/*
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -60,3 +55,4 @@ export default function App() {
     </View>
   );
 }
+*/
