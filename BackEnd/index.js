@@ -71,6 +71,10 @@ app.post('/main', function(req, res){
     });
 });
 
+app.get('/test', (req, res) => {
+    res.end('test')
+})
+
 app.get('/main', function(req, res) {
     connection.query('select * from student', function(err, results){
         if(err){
