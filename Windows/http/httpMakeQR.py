@@ -14,6 +14,7 @@ class MyApp(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 파이썬 실행창을 항상 위로 유지해주는 코드
         self.initUI()
 
     def initUI(self):

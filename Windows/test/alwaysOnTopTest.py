@@ -1,6 +1,8 @@
+#파이썬 프로그램을 항상 위에 떠있게 만드는 소스 코드
 import sys
 import qrcode
-import json
+import requests
+
 
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
 from PyQt5.QtGui import QPixmap
@@ -12,24 +14,16 @@ class MyApp(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 파이썬 실행창을 항상 위로 유지해주는 코드
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.initUI()
 
     def initUI(self):
-        with open('lecture.json', encoding='utf-8') as json_file:
-            json_data = json.load(json_file)
+        #서버에서 json 값을 받아와 data 변수에 저장
+        url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"
+        data = requests.get(url).json()
 
-            # 문자열
-            # key가 json_string인 문자열 가져오기
-            json_string = json_data["lecture_name"]
-
-
-            # 숫자
-            # key가 json_number인 숫자 가져오기
-            json_number = json_data["lecture_number"]
-
-        # JSON 파일의 데이터를 이용하여 QR 코드 생성, 숫자이기 때문에 str()함수를 이용
-        img = qrcode.make(json_string + str(json_number))
+        # data 딕셔너리 중 randomNum 키의 value 값으로 qr코드 생성, 추후 다른 키 값과 조합하여 수정 예정
+        img = qrcode.make(data['randomNum'])
 
 
         qt_image = ImageQt.ImageQt(img)
@@ -55,6 +49,9 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = MyApp()
     sys.exit(app.exec_())
+    
+
+
 
 
 
