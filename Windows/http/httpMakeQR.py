@@ -1,3 +1,4 @@
+#프로젝트 서버의 데이터 값을 받아와 원하는 key의 value 값을 추출하고 추출한 값으로 qr코드 생성
 import sys
 import qrcode
 import requests
