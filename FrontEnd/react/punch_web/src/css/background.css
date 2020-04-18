@@ -1,0 +1,11 @@
+#CardzoneBackground{
+    min-width: 50%;
+    height: 100vh;
+    background-color: #F6F7F9;
+}
+
+#QRzoneBackground{
+    width: 100%;
+    height: 100vh;
+    background-color: #F2F2F2;
+}

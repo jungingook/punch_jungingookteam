@@ -1,0 +1,95 @@
+/* 사이드바 */
+#sidebar{
+    width: 5%;
+    height: 100vh;
+    background-color: #F2F2F2;
+  }
+
+/* 클래스룸 */
+#ClassInfoList{
+    width: 45%;
+    overflow: auto;
+}
+#ClassInfoListTitle{
+    width: 80%;
+    height: 5vh;
+    margin: 0 auto;
+    line-height: 10vh;
+    color: black;
+    font-size: 5vh;  
+    font-weight: bold;
+}
+.classCard{
+    margin: 5vh auto;
+    width: 80%;
+    height: 30vh;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 2px 5px #77777760;
+}
+.classUpper{
+    width: 100%;
+    height: 20vh;
+    border-radius: 20px 20px 0px 0px;
+    background-color: #00B0F0;
+    box-sizing: border-box;
+    padding: 0 2.5%;
+}
+.classCardBackground{
+    width: 100%;
+    height: 20vh;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+.classDesign{
+    position: relative;
+    width: 50%;
+    height: 9vh;
+    display: inline-block;
+    background-color: #ffffff70;
+    border-radius: 100px;
+}
+.classOne{
+    top:-5vh;
+    left: 55%; 
+    transform: rotate(135deg);
+}
+
+.classTwo{
+    transform: rotate(135deg);
+    top:-5vh;
+    left: 15%; 
+}
+.classInfo{
+    top : -20vh;
+    width: 100%;
+    height: 20vh;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+.classText{
+    color: white;
+    font-weight: bold;
+    font-size: 3vh;  
+    text-shadow: 2px 2px 1px #77777760;
+}
+.classLower{
+    width: 100%;
+    height: 10vh;
+    font-weight: bold;
+    border-radius: 0px 0px 20px 20px;
+    background-color: #009FF0;
+    box-sizing: border-box;
+    padding: 0 2.5%;
+}
+.className{
+    color: white;
+    font-size: 5vh;  
+    line-height: 10vh;
+    text-shadow: 2px 2px 1px #77777760;
+}
