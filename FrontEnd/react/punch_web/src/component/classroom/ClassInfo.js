@@ -1,4 +1,8 @@
+// 모듈 연결
 import React, { Component } from 'react';
+import { connect } from "react-redux"; // 리덕스 연결
+// 컴포넌트 연결
+import store from "../../store";
 
 class ClassInfo extends Component {
     // defaultProps[기본값 프로버티]
@@ -21,7 +25,9 @@ class ClassInfo extends Component {
         localStorage.setItem('code', this.props.info.code);
         localStorage.setItem('name', this.props.info.name);
         localStorage.setItem('professor', this.props.info.professor);
-        console.log("수업코드 : "+this.props.info.code)
+        let id = this.props.info.code
+        store.dispatch({ type: "selectCard",id : id})
+
     }
 
     date = (day,startTime,endTime) => {
@@ -57,4 +63,19 @@ class ClassInfo extends Component {
     }
 }
 
-export default ClassInfo;
+//export default ClassInfo;
+/* 
+mapDispatchToProps는 첫번째 인자로
+redux의 dispatch를 인자로 사용한다.
+이를 통해 우리는 store의 상태를 변경할수있다.
+*/
+const mapDispatchToProps = dispatch => {
+    // 순수 객체를 반환해줘야한다.
+    return {
+      // 순수 action객체를 dispatch 해준다.
+      increment: () => dispatch({ type: 'INCREMENT' }),
+      decrement: () => dispatch({ type: 'DECREMENT' }),
+      reset: () => dispatch({ type: 'RESET' })
+    }
+  }
+export default connect(mapDispatchToProps)(ClassInfo);

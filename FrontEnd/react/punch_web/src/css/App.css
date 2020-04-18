@@ -29,11 +29,11 @@
 /* CSS 연결 */
 
 /* 배경 레이어 */
-@import url("css/background.css"); 
+@import url("background.css"); 
 /* 컨텐츠 레이어 */
-@import url("css/content.css");
+@import url("content.css");
 /* 컨트롤 */
-@import url("css/content/control.css");
+@import url("content/control.css");
 
 
 #qr{

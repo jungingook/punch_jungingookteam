@@ -11,7 +11,7 @@ class Standby extends Component {
         return (
             <div>
                 <div id ="StandbyUpper">
-                    <img id="StandbyLogo" src={ require('../logo.png') }/>
+                    <img id="StandbyLogo" src={ require('../../img/logo.png') }/>
                 </div>
                 <div id ="StandbyLower">
                     왼쪽에서 수업을<br/>선택해주세요

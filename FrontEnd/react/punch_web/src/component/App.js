@@ -1,9 +1,12 @@
-// file: src/App.js
+// 모듈 임포트
 import React, { Component } from 'react';
-import QR from './QR.js';
+
+// React 임포트
+import QR from '../QR.js';
 import ClassInfoList from './classroom/ClassInfoList';
 import Panel from './controlPanel/Panel';
-import './App.css';
+
+import '../css/App.css';
 
 class App extends Component {
  
