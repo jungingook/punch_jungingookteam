@@ -1,9 +1,11 @@
 import { createStore } from "redux";
 
 const selectCard = "selectCard";
-
+const panelMode = "panelMode";
 
 const defaultState = {
+    panelMode : "Error",
+    selectCard: null,
     classList: [
     {
         id: 0,
@@ -33,7 +35,7 @@ const defaultState = {
         day: 4,
         startTime: 720,
         endTime: 180,
-        color :'#00B0F0',
+        color :'#FFC000',
     },
     {
         id: 3,
@@ -55,8 +57,8 @@ const defaultState = {
         endTime: 180,
         color :'#00B0F0',
     }
-    ],
-    selectCard: null,
+    ]
+
 };
 
 const reducer = (state = defaultState, action) => {
@@ -66,6 +68,11 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 selectCard: action.id
+            } 
+        case panelMode :
+            return {
+                ...state,
+                panelMode: action.panelMode
             } 
         default:
             //console.log("리듀스 성공");

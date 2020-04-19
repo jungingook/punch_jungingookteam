@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 
 // React 임포트
-import QR from '../QR.js';
 import ClassInfoList from './classroom/ClassInfoList';
 import Panel from './controlPanel/Panel';
 

@@ -1,4 +1,11 @@
+// 모듈 연결
 import React, { Component } from 'react';
+import { connect } from "react-redux"; // 리덕스 연결
+// 컴포넌트 연결
+
+// [리듀스]스토어 연결
+import store from "../../store";
+
 var QRCode = require('qrcode.react');
 class QR extends Component {
     state = {
@@ -32,6 +39,12 @@ class QR extends Component {
         );
     }
 }
-export default QR;
+//export default Panel;
+const mapStateToProps = (state) => ({
+    classList : state.classList,
+    selectCard : state.selectCard
+  })
+
+export default connect(mapStateToProps)(QR);
 
 

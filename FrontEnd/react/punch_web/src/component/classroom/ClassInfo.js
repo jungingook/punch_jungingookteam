@@ -22,12 +22,9 @@ class ClassInfo extends Component {
     }
 
     handle = () => {
-        localStorage.setItem('code', this.props.info.code);
-        localStorage.setItem('name', this.props.info.name);
-        localStorage.setItem('professor', this.props.info.professor);
-        let id = this.props.info.code
+        let id = this.props.info.id
         store.dispatch({ type: "selectCard",id : id})
-
+        store.dispatch({ type: "panelMode",panelMode : "Select"})
     }
 
     date = (day,startTime,endTime) => {
@@ -40,12 +37,14 @@ class ClassInfo extends Component {
     render() {
         // prop의 정보를 상수로 만듭니다.
         const {
-        day, startTime, endTime, name// , professor, code, id // 사용하지 않는 상수
+        day, startTime, endTime, name, color// , professor, code, id // 사용하지 않는 상수
         } = this.props.info;
-        // 날짜변환기
+        // 카드의 칼라색
+        let bgColor={backgroundColor:color}
+
         return (
         <div className = "classCard" onClick={this.handle}>   
-            <div className = "classUpper">
+            <div className = "classUpper" style={bgColor}>
                 <div className = "classCardBackground">
                     <div className = "classOne classDesign"/>
                     <div className = "classTwo classDesign"/>
@@ -55,7 +54,7 @@ class ClassInfo extends Component {
                     {/* <div className = "classProfessor classText">{professor}</div> */}
                 </div>
             </div>
-            <div className = "classLower">
+            <div className = "classLower" style={bgColor}>
                 <div className = "className">{name}</div>
             </div>
         </div>
