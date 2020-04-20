@@ -1,13 +1,13 @@
 /* 사이드바 */
 #sidebar{
-    width: 5%;
+    width: 10%;
     height: 100vh;
     background-color: #F2F2F2;
   }
 
 /* 클래스룸 */
 #ClassInfoList{
-    width: 45%;
+    width: 90%;
     overflow: auto;
 }
 #ClassInfoListTitle{

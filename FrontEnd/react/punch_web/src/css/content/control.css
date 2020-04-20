@@ -1,12 +1,12 @@
 /* 메인 패널 */
 #Panel{
-    width: 50%;
+    width: 100%;
     height: 100vh;
     transition: background-color 0.5s;
 }
 #PanelBox{
-    width: 80%;
-    margin: 10vh auto ;
+    width: 40%;
+    margin: 10vh 5% ;
     height: 70vh;
     background-color: #FFFEFF;
     box-shadow: 2px 2px 5px #77777760;
@@ -71,7 +71,7 @@
     height: 45vh;
     margin: 5vh 0;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 .SelectPanelBnt{
     width: 90%;
@@ -100,4 +100,66 @@
     font-size: 2.5vh;
     color: white;
     font-weight: bold;  
+}
+
+
+/* QR코드 셋팅 */
+#QRreadePanel{
+    width: 100%;
+    display: flex;
+    height: 45vh;
+    margin: 5vh 0;
+    padding: 0 5%;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#cheakLevelSelect{
+    width: 100%;
+    display: flex;
+    height: 5vh;
+    line-height: 5vh;
+    border-radius: 10px;
+    background-color: #d9d9d9;
+    justify-content: space-around;
+}
+#cheakTimeSelect{
+    width: 100%;
+    display: flex;
+    height: 5vh;
+    line-height: 5vh;
+    border-radius: 10px;
+    background-color: #d9d9d9;
+    justify-content: space-around;
+}
+#QRreadeBnts{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 10vh;
+    border-radius: 10px;
+    background-color: #d9d9d9;
+    text-align: center;
+    font-size: 3vh;  
+    font-weight: bold;
+}
+#QRcodeSetBnt{
+    width: 50%;
+    height: 8vh;
+    line-height: 8vh;
+    margin: 1vh 2.5%;
+    color: #d9d9d9;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #FFFEFF;
+}
+#QRcodeMakeBnt{
+    width: 20%;
+    height: 8vh;
+    line-height: 8vh;
+    margin: 1vh 2.5%;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #FFFEFF;
 }

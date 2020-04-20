@@ -24,8 +24,29 @@
   z-index: 0;
   width: 100%;
   height: 100vh;
-  display: flex;
   overflow: hidden;
+}
+#ContentPointer{
+  width: 150%; 
+  position: relative;
+  display: flex;
+  transition: left 1s;
+}
+.contentMove_0{
+  left: 0%;
+}
+.contentMove_50{
+  left: -50%;
+}
+#ContentLeft{
+  width: 50%;
+  height: 100vh;
+  display: flex;
+}
+#ContentRight{
+  width: 100%;
+  height: 100vh;
+  display: flex;
 }
 /* CSS 연결 */
 

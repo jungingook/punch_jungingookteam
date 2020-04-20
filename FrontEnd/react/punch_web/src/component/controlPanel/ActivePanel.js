@@ -25,7 +25,7 @@ class ActivePanel extends Component {
             output = <SelectPanel color={this.props.select.color}/>
         }
         else if (mode == "QRreade") {
-            output = <QRreade/>
+            output = <QRreade select={this.props.select}/>
         }
         else if (mode == "QRactive") {
             output = <div>QRactive</div>
