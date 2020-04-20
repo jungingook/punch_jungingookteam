@@ -3,6 +3,7 @@
     width: 100%;
     height: 100vh;
     transition: background-color 0.5s;
+    display: flex;
 }
 #PanelBox{
     width: 40%;
@@ -11,6 +12,14 @@
     background-color: #FFFEFF;
     box-shadow: 2px 2px 5px #77777760;
     border-radius: 20px;
+}
+#QRzone{
+    width: 40%;
+    margin: 10vh 5% ;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 /* 스텐바이 패널 */
 #StandbyUpper{
@@ -114,23 +123,55 @@
     flex-direction: column;
     justify-content: space-between;
 }
+#cheakLevel{
+    height: 15vh;
+    overflow: hidden;
+}
+.QRreadePanelSetsummar{
+    display: inline-block;
+    height: 3vh;
+    margin: 1vh 0 0;
+    padding: 1vh 5% 0 5%;
+    font-size: 2vh;
+    width: auto;
+    border-radius: 10px 10px 0px 0px;
+    background-color: #d9d9d9;
+}
 #cheakLevelSelect{
     width: 100%;
     display: flex;
     height: 5vh;
+    font-size: 2vh;
     line-height: 5vh;
-    border-radius: 10px;
+    border-radius: 0px 10px 10px 10px;
     background-color: #d9d9d9;
     justify-content: space-around;
+}
+#cheakLevelInfo{
+    height: 5vh;
+    box-sizing: content-box;
+    padding: 1vh 0;
+    font-size: 1.5vh;
+}
+#cheakTime{
+    height: 15vh;
+    overflow: hidden;
 }
 #cheakTimeSelect{
     width: 100%;
     display: flex;
     height: 5vh;
+    font-size: 2vh;
     line-height: 5vh;
-    border-radius: 10px;
+    border-radius: 0px 10px 10px 10px;
     background-color: #d9d9d9;
     justify-content: space-around;
+}
+#cheakTimeInfo{
+    height: 5vh;
+    box-sizing: content-box;
+    padding: 1vh 0;
+    font-size: 1.5vh;
 }
 #QRreadeBnts{
     display: flex;
@@ -152,6 +193,7 @@
     text-align: center;
     border-radius: 10px;
     background-color: #FFFEFF;
+    box-shadow: 2px 2px 5px #77777760;
 }
 #QRcodeMakeBnt{
     width: 20%;
@@ -162,4 +204,50 @@
     text-align: center;
     border-radius: 10px;
     background-color: #FFFEFF;
+    box-shadow: 2px 2px 5px #77777760;
+}
+/* QR코드 - 출석부 */
+#QRactivePanel{
+    width: 100%;
+    display: flex;
+    height: 50vh;
+    padding: 0 5%;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#attendancelist{
+    overflow: auto;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+#attendancelist::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+}
+.attendanceUser{
+    width: 90%;
+    background-color: #d9d9d9;
+    height: 5vh;
+    font-size: 3vh;
+    color: #fff;
+    padding: 0 5%;
+    line-height: 4vh;
+    margin: 0.5vh 0;
+    border-radius: 10px;
+}
+/* QR코드 */
+#qr{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 5vh;
+    color: #000;
+}
+#temp{
+    width: 60%;
+}
+#ClassTimer{
+    font-size: 10vh;
 }

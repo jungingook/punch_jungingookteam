@@ -8,7 +8,7 @@ import store from "../../store";
 // 컴포넌트 연결
 import Standby from './Standby'; // 패널 비활성화
 import ActivePanel from './ActivePanel'; // 패널 활성화
-import QR from "./QR";
+import QRcode from "./QRcode";
 
 
 class Panel extends Component {
@@ -16,6 +16,7 @@ class Panel extends Component {
     render() {
         let bgColor={backgroundColor:"#FFFEFF"}
         let mode = <Standby/>;
+        let qrcode = null;
         if(this.props.selectCard != null){
             
             console.log(this.props.selectCard+"카드 선택")
@@ -25,6 +26,7 @@ class Panel extends Component {
                 if (this.props.classList[index].id == this.props.selectCard){
                     bgColor={background:this.props.classList[index].color}
                     mode = <ActivePanel select={this.props.classList[index]}/>;
+                    qrcode = <QRcode select={this.props.classList[index]}/>
                 }
             }
             
@@ -34,6 +36,9 @@ class Panel extends Component {
             <div id = "Panel" style={bgColor}>
                 <div id = "PanelBox">
                     {mode}
+                </div>
+                <div id = "QRzone">
+                    {qrcode == null? "":qrcode}
                 </div>
             </div>
             

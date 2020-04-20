@@ -26,6 +26,7 @@
   height: 100vh;
   overflow: hidden;
 }
+
 #ContentPointer{
   width: 150%; 
   position: relative;

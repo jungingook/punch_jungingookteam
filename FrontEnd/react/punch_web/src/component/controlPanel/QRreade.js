@@ -24,20 +24,26 @@ class QRreade extends Component {
         return (
             <div id = "QRreadePanel">
                 <div id ="cheakLevel">
-                    출석체크 보안 난이도를 설정합니다.
+                <div className ="QRreadePanelSetsummar">출석체크 보안 난이도를 설정합니다.</div>
                     <div id ="cheakLevelSelect">
-                        <div id ="bnt">널널하게</div>    
-                        <div id ="bnt">적당하게</div>
-                        <div id ="bnt">엄격하게</div>  
-                    </div>             
+                        <div id ="bnt" className = "cheakLevelBnt">널널하게</div>    
+                        <div id ="bnt" className = "cheakLevelBnt">적당하게</div>
+                        <div id ="bnt" className = "cheakLevelBnt">엄격하게</div>  
+                    </div>  
+                    <div id ="cheakLevelInfo">
+                        엄격하게 :<br/> 지문, 얼굴 인식과 GPS를 통해 엄격한 인증을 진행합니다.
+                    </div>           
                 </div>
                 <div id ="cheakTime">
-                    수업 시작 시간을 선택합니다.
+                    <div className ="QRreadePanelSetsummar">수업 시작 시간을 선택합니다.</div>
                     <div id ="cheakTimeSelect">
-                        <div id ="bnt">{this.startTime(this.props.select.startTime)}<small>(수업시간)</small></div>    
-                        <div id ="bnt">{test}<small>(현제시간)</small></div>
-                        <div id ="bnt">직접입력</div>  
+                        <div id ="bnt" className = "cheakTimeBnt">{this.startTime(this.props.select.startTime)}<small>(수업시간)</small></div>    
+                        <div id ="bnt" className = "cheakTimeBnt">{test}<small>(현제시간)</small></div>
+                        <div id ="bnt" className = "cheakTimeBnt">직접입력</div>  
                     </div> 
+                    <div id ="cheakTimeInfo">
+                        현제시간 :<br/> 지금시간({this.startTime(this.props.select.startTime)}) 에서 5분간 출석자에게 출석인정을 하며 20분 이후는 결석으로 처리합니다. 
+                    </div>     
                 </div>
                 <div id ="QRreadeBnts">
                     <div id ="QRcodeSetBnt">세부설정</div>

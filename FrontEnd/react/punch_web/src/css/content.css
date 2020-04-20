@@ -9,7 +9,12 @@
 #ClassInfoList{
     width: 90%;
     overflow: auto;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
+#ClassInfoList::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 #ClassInfoListTitle{
     width: 80%;
     height: 5vh;

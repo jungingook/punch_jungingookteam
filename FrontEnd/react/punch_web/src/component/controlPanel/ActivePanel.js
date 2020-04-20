@@ -6,7 +6,7 @@ import store from "../../store";
 // 컴포넌트 연결
 import SelectPanel from './SelectPanel'; // 선택메뉴
 import QRreade from './QRreade'; // 출석체크 선택메뉴
-
+import QRactive from './QRactive'; // QR코드 체크
 
 class ActivePanel extends Component {
 
@@ -28,7 +28,7 @@ class ActivePanel extends Component {
             output = <QRreade select={this.props.select}/>
         }
         else if (mode == "QRactive") {
-            output = <div>QRactive</div>
+            output = <QRactive select={this.props.select}/>
         }
         return output
     }
