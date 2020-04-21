@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import { connect } from "react-redux"; // 리덕스 연결
 // [리듀스]스토어 연결
 import store from "../../store";
+// [ajax] axios 연결
+import axios from 'axios';
 // 컴포넌트 연결
-
 
 var QRCodeMaker = require('qrcode.react');
 class QRcode extends Component {
@@ -23,11 +24,22 @@ class QRcode extends Component {
         return Math.floor(startTime/60) + ":" + (startTime%60<10? "0"  +startTime%60 : startTime%60 )
     }
     qrChange = () => {
-        let random = Math.floor(Math.random() * (9999999999 - 1000000000 + 1) + 1000000000)
-        this.setState({
-            qrCode: random,
-            classCode : this.props.select.code,
-          });
+        let random
+        console.log()
+        axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr')
+        .then( response => {
+            console.log(response.data.randomNum);
+            random = response.data.randomNum;
+            console.log(random);
+            this.setState({
+                qrCode: random,
+                classCode : this.props.select.code,
+              });
+        })
+        .catch( error => {
+            console.log(error);
+        });
+
     }
     componentWillMount() {
         setInterval(this.qrChange, 1000, "1초 간격")

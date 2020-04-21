@@ -16,6 +16,7 @@ const defaultState = {
         startTime: 600,
         endTime: 180,
         color :'#00B0F0',
+        design : "default"
     },
     {
         id: 1,
@@ -26,6 +27,7 @@ const defaultState = {
         startTime: 540,
         endTime: 180,
         color :'#00B0F0',
+        design : "default"
     },
     {
         id: 2,
@@ -36,6 +38,7 @@ const defaultState = {
         startTime: 720,
         endTime: 180,
         color :'#FFC000',
+        design : "default"
     },
     {
         id: 3,
@@ -46,6 +49,7 @@ const defaultState = {
         startTime: 900,
         endTime: 180,
         color :'#00B0F0',
+        design : "default"
     },
     {
         id: 4,
@@ -56,6 +60,7 @@ const defaultState = {
         startTime: 900,
         endTime: 180,
         color :'#00B0F0',
+        design : "default"
     }
     ]
 
