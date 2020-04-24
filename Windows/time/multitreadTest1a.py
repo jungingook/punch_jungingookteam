@@ -1,5 +1,3 @@
-#multithreading을 이용하여 프로그램이 돌아가는 동안 프로그램 제어 기능, 버튼을 클릭하면 정상작동 안함
-
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -20,8 +18,13 @@ class MainWindow(QMainWindow):
         b = QPushButton("DANGER!")
         b.pressed.connect(self.oh_no)
 
+        c = QPushButton("?")
+        c.pressed.connect(self.change_message)
+
         layout.addWidget(self.l)
         layout.addWidget(b)
+
+        layout.addWidget(c)
 
         w = QWidget()
         w.setLayout(layout)
@@ -30,17 +33,16 @@ class MainWindow(QMainWindow):
 
         self.show()
 
-        self.timer = QTimer()
-        self.timer.setInterval(1000)
-        self.timer.timeout.connect(self.recurring_timer)
-        self.timer.start()
+    def change_message(self):
+        self.message = "OH NO"
 
     def oh_no(self):
-        time.sleep(5)
+        self.message = "Pressed"
 
-    def recurring_timer(self):
-        self.counter += 1
-        self.l.setText("Counter: %d" % self.counter)
+        for n in range(100):
+            time.sleep(0.1)
+            self.l.setText(self.message)
+            QApplication.processEvents()
 
 
 app = QApplication([])
