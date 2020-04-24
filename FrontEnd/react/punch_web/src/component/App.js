@@ -7,6 +7,7 @@ import store from "../store";
 // React 임포트
 import ClassInfoList from './classroom/ClassInfoList';
 import Panel from './controlPanel/Panel';
+import BackBnt from './interface/BackBnt';
 
 import '../css/App.css';
 
@@ -40,11 +41,13 @@ class App extends Component {
               <Panel/>
             </div>
           </div>
-          {/* <div id="profile">
-          <QR id="temp" /> 
-          </div> */}
-
         </div>
+        <div id = "L_Interface">
+          <BackBnt/>
+        </div>
+        <div id = "L_Modal">
+          
+          </div>
       </div>
       
     );

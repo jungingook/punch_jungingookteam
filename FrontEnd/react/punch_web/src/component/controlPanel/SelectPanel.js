@@ -13,7 +13,7 @@ class SelectPanel extends Component {
     }
 
     render() {
-        let bgColor={backgroundColor: this.props.color}
+        let bgColor={backgroundColor: this.props.cardColor[this.props.color][0]}
         return (
             <div id = "SelectPanel">
                 <div id = "PanelCheckBnt" className ="SelectPanelBnt" onClick={this.handle} style ={bgColor} >
@@ -50,7 +50,8 @@ class SelectPanel extends Component {
 //export default Panel;
 const mapStateToProps = (state) => ({
     classList : state.classList,
-    selectCard : state.selectCard
+    selectCard : state.selectCard,
+    cardColor : state.cardColor
   })
 
 export default connect(mapStateToProps)(SelectPanel);

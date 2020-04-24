@@ -20,7 +20,7 @@ class QRreade extends Component {
     render() { 
         let d = new Date();
         let test = d.getHours()+":"+(d.getMinutes());
-        let bgColor={backgroundColor: this.props.select.color}
+        let bgColor={backgroundColor: this.props.cardColor[this.props.select.color][0]}
         return (
             <div id = "QRreadePanel">
                 <div id ="cheakLevel">
@@ -56,7 +56,8 @@ class QRreade extends Component {
 //export default Panel;
 const mapStateToProps = (state) => ({
     classList : state.classList,
-    selectCard : state.selectCard
+    selectCard : state.selectCard,
+    cardColor : state.cardColor
   })
 
 

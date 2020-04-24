@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import Header from './Header';
+// import React, { Component } from 'react';
+// import Header from './Header';
 
-class App extends Component {
-  render() {
-    return (
-      <Header name="리액트"/>
-    );
-  }
-}
+// class App extends Component {
+//   render() {
+//     return (
 
-export default App;
+//     );
+//   }
+// }
 
-/*
+// export default App;
+
+
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -55,4 +55,3 @@ export default function App() {
     </View>
   );
 }
-*/

@@ -17,8 +17,8 @@ class ClassInfo extends Component {
             day: 0,
             startTime: 1100,
             endTime: 180,
-            color :'#fff',
-          }
+            color :"black",
+          },
     }
 
     handle = () => {
@@ -40,8 +40,16 @@ class ClassInfo extends Component {
         day, startTime, endTime, name, color// , professor, code, id // 사용하지 않는 상수
         } = this.props.info;
         // 카드의 칼라색
-        let bgColor={backgroundColor:color}
-
+        let cardColor = this.props.cardColor["default"]
+        let bgColor={backgroundColor:cardColor[0]}
+        let titleColor ={backgroundColor:cardColor[1]}
+        try {
+            cardColor = this.props.cardColor[color]
+            bgColor={backgroundColor:cardColor[0]}
+            titleColor ={backgroundColor:cardColor[1]}
+          } catch (e) {
+            console.log('에러 : 카드 컬러의 색상값을 받아오지 못했습니다.')
+          }
         return (
         <div className = "classCard" onClick={this.handle}>   
             <div className = "classUpper" style={bgColor}>
@@ -54,14 +62,16 @@ class ClassInfo extends Component {
                     {/* <div className = "classProfessor classText">{professor}</div> */}
                 </div>
             </div>
-            <div className = "classLower" style={bgColor}>
+            <div className = "classLower" style={titleColor}>
                 <div className = "className">{name}</div>
             </div>
         </div>
         );
     }
 }
-
+const mapStateToProps = (state) => ({
+    cardColor : state.cardColor
+  })
 //export default ClassInfo;
 /* 
 mapDispatchToProps는 첫번째 인자로
@@ -77,4 +87,6 @@ const mapDispatchToProps = dispatch => {
       reset: () => dispatch({ type: 'RESET' })
     }
   }
-export default connect(mapDispatchToProps)(ClassInfo);
+
+
+export default connect(mapStateToProps)(ClassInfo);

@@ -4,7 +4,6 @@
     height: 100vh;
     background-color: #F2F2F2;
   }
-
 /* 클래스룸 */
 #ClassInfoList{
     width: 90%;
@@ -32,6 +31,22 @@
     display: flex;
     flex-direction: column;
     box-shadow: 2px 2px 5px #77777760;
+}
+.errorCard{
+    margin: 5vh auto;
+    width: 80%;
+    height: 10vh;
+    border-radius: 20px;
+    display: flex;
+    text-align: center;
+    font-size: 4vh;
+    flex-direction: column;
+    background-color: lightcoral;
+    color: #fff;
+    box-shadow: 2px 2px 5px #77777760;
+}
+.errorCard > span{
+    font-size: 2vh; 
 }
 .classUpper{
     width: 100%;
@@ -90,7 +105,6 @@
     font-weight: bold;
     border-radius: 0px 0px 20px 20px;
     /* background-color: #00B0F0; */
-    filter: grayscale(20%);
     box-sizing: border-box;
     padding: 0 2.5%;
 }

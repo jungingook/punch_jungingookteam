@@ -12,6 +12,7 @@ class QRcode extends Component {
     state = {
         qrCode: "0000",
         classCode : "-1",
+        qrColor : "#000000"
     }
 
     date = (day,startTime,endTime) => {
@@ -22,6 +23,17 @@ class QRcode extends Component {
     }
     startTime = (startTime) => {
         return Math.floor(startTime/60) + ":" + (startTime%60<10? "0"  +startTime%60 : startTime%60 )
+    }
+    sortTime = (mode,Hours,Minutes) =>{
+        let Min  = Minutes<10?"0"+Minutes : Minutes
+        let Hour 
+        if (mode==12){
+            Hours>12? Hour = Hours-12 : Hour = Hours-0
+            return (Hours>12?"오후" : "오전") +" "+(Hour<10? "0"+Hour : Hour) + ":" + Min
+        }
+        if (mode==24){
+            
+        }
     }
     qrChange = () => {
         let random
@@ -34,6 +46,7 @@ class QRcode extends Component {
             this.setState({
                 qrCode: random,
                 classCode : this.props.select.code,
+                qrColor : (this.props.select.color == "black"? "#FFFFFF":"#000000")
               });
         })
         .catch( error => {
@@ -46,13 +59,13 @@ class QRcode extends Component {
       }
     render() {
         let d = new Date();
-        let test = "오후"+d.getHours()+":"+(d.getMinutes());
+        let textColor={Color:this.state.qrColor}
         return (
         <div id = "qr">
-            <div id = "ClassTimer">{test}</div>
-            <QRCodeMaker id="temp" value={this.state.qrCode+this.props.select.code} renderAs="canvas" size="1000" bgColor="#ffffff00" fgColor="#000000"/>
+            <div id = "ClassTimer" style={textColor}>{this.sortTime(12,d.getHours(),d.getMinutes())}</div>
+            <QRCodeMaker id="temp" value={this.state.qrCode+this.props.select.code} renderAs="canvas" size="1000" bgColor="#ffffff00" fgColor={this.state.qrColor}/>
             {/* size = 숫자 넣으면 에러가 뜨나 작동은 정상적으로 됨  */}
-            <div id="tempClass"> 
+            <div id="tempClass" style={textColor}> 
             앱을 통해 출석 체크 하세요
             </div>
         </div>
