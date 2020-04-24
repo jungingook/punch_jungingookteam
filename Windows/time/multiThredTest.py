@@ -1,4 +1,4 @@
-#multithreading을 이용하여 프로그램이 돌아가는 동안 프로그램 제어 가능
+#multithreading을 이용하여 프로그램이 돌아가는 동안 프로그램 제어 기능, 버튼을 클릭하면 정상작동 안함
 
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
