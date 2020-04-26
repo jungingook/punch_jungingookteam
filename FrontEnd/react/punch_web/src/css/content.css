@@ -10,6 +10,7 @@
     overflow: auto;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+    background-color: #F6F7F9;
 }
 #ClassInfoList::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
@@ -113,4 +114,7 @@
     font-size: 5vh;  
     line-height: 10vh;
     text-shadow: 2px 2px 1px #77777760;
+    white-space:nowrap;
+    word-wrap:normal;
+    overflow:hidden;
 }

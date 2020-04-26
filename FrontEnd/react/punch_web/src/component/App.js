@@ -28,8 +28,8 @@ class App extends Component {
     return (
       <div id="page">
         <div id = "L_Background">
-          <div id ="CardzoneBackground"/>
-          <div id ="QRzoneBackground"/>
+          {/* <div id ="CardzoneBackground"/>
+          <div id ="QRzoneBackground"/> */}
         </div>
         <div id = "L_Content">
           <div id = "ContentPointer" className={this.contentMove(this.props.panelMode)}>
@@ -43,7 +43,7 @@ class App extends Component {
           </div>
         </div>
         <div id = "L_Interface">
-          <BackBnt/>
+          {this.props.panelMode == "QRactive" ? <BackBnt/>:""}
         </div>
         <div id = "L_Modal">
           

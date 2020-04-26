@@ -13,20 +13,23 @@ class ClassInfoList extends Component {
         data: [],
     }
     state = {
-        classLength : 0 // 수업의 숫자
+        //classLength : 0 // 수업의 숫자
+        // 테스트시
+        classLength : 5 // 수업의 숫자
     }
 
     componentWillMount() {
+
         let classList
-        axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/main')
-        .then( response => {
-            classList = response.data;
-            store.dispatch({ type: "classList",classList})
-            this.setState({ classLength : classList.length });
-        })
-        .catch( error => {
-            this.setState({ classLength : -1 });
-          })
+        // axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/main')
+        // .then( response => {
+        //     classList = response.data;
+        //     store.dispatch({ type: "classList",classList})
+        //     this.setState({ classLength : classList.length });
+        // })
+        // .catch( error => {
+        //     this.setState({ classLength : -1 });
+        //   })
       }
     render() {
         let list = ""

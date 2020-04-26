@@ -4,22 +4,17 @@ const selectCard = "selectCard";
 const panelMode = "panelMode";
 const classList = "classList";
 
-const cardColor = {
-
-}
-
 const defaultState = {
     panelMode : "Error",
     selectCard: null,
-    // classList: classList,
     cardColor : {
         default : ["#00B0F0","#009FF0"], // 블루와 같음
-        red : ["#00B0F0","#009FF0"],
+        red : ["#E93A2E","#C92A1D"], // 확정
         blue : ["#00B0F0","#009FF0"], // 확정
-        green : ["#81E400","#81E400"], // 바꾸기
+        green : ["#99C556","#7EBB57"], // 확정
         yellow : ["#FFC000","#FFB000"], //확정
-        pink : ["#FF71D1","#FF4DD1"], //확정
-        purple : ["#00B0F0","#009FF0"],
+        pink : ["#E780BC","#E770AC"], // 좀별로
+        purple : ["#9949CE","#5C3088"], //
         black : ["#595959","#333333"] // 확정
     },
     classList: [
@@ -31,7 +26,7 @@ const defaultState = {
         day: 0,
         startTime: 600,
         endTime: 180,
-        color :'#00B0F0',
+        color :'green',
         design : "default"
     },
     {
@@ -42,7 +37,7 @@ const defaultState = {
         day: 0,
         startTime: 600,
         endTime: 180,
-        color :'#00B0F0',
+        color :'pink',
         design : "default"
     },
     {
@@ -53,7 +48,7 @@ const defaultState = {
         day: 0,
         startTime: 600,
         endTime: 180,
-        color :'#00B0F0',
+        color :'red',
         design : "default"
     },
     {
@@ -64,7 +59,7 @@ const defaultState = {
         day: 0,
         startTime: 600,
         endTime: 180,
-        color :'#00B0F0',
+        color :'purple',
         design : "default"
     },
     {
@@ -75,7 +70,7 @@ const defaultState = {
         day: 0,
         startTime: 600,
         endTime: 180,
-        color :'#00B0F0',
+        color :'black',
         design : "default"
     },
     ],
