@@ -36,9 +36,11 @@ class QRcode extends Component {
         }
     }
     qrChange = () => {
-        let random
+        let random = "1111"
         console.log()
-        axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr')
+        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/request',{
+            classListId : this.props.select.id
+        })
         .then( response => {
             console.log(response.data.randomNum);
             random = response.data.randomNum;
@@ -63,7 +65,7 @@ class QRcode extends Component {
         return (
         <div id = "qr">
             <div id = "ClassTimer" style={textColor}>{this.sortTime(12,d.getHours(),d.getMinutes())}</div>
-            <QRCodeMaker id="temp" value={this.state.qrCode+this.props.select.code} renderAs="canvas" size="1000" bgColor="#ffffff00" fgColor={this.state.qrColor}/>
+            <QRCodeMaker id="temp" value={this.state.qrCode} renderAs="canvas" size="1000" bgColor="#ffffff00" fgColor={this.state.qrColor}/>
             {/* size = 숫자 넣으면 에러가 뜨나 작동은 정상적으로 됨  */}
             <div id="tempClass" style={textColor}> 
             앱을 통해 출석 체크 하세요

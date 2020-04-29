@@ -13,9 +13,9 @@ const defaultState = {
         blue : ["#00B0F0","#009FF0"], // 확정
         green : ["#99C556","#7EBB57"], // 확정
         yellow : ["#FFC000","#FFB000"], //확정
-        pink : ["#E780BC","#E770AC"], // 좀별로
-        purple : ["#9949CE","#5C3088"], //
-        black : ["#595959","#333333"] // 확정
+        pink : ["#E780BC","#E770AC"], // 확정 
+        purple : ["#9949CE","#5C3088"], // 확정
+        black : ["#595959","#474747"] // 확정
     },
     classList: [
     {

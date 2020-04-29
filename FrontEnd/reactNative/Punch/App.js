@@ -1,57 +1,57 @@
-// import React, { Component } from 'react';
-// import Header from './Header';
+// 리엑트 모듈
+import React, { Component } from 'react';
+import Header from './Header';
+import { Text, View, SafeAreaView, StyleSheet, Button } from 'react-native';
+// [ajax] axios 연결
+import axios from 'axios';
+// [리듀스]스토어 연결
+import { Provider } from 'react-redux'
+import store from './store';
 
-// class App extends Component {
-//   render() {
-//     return (
-
-//     );
-//   }
-// }
-
-// export default App;
+// 컴포넌트 연결
+import MainView from './component/MainView'; // 앱의 메인 화면 구성을 담당하는 컴포넌트
+import QRSanner from './QRSanner'; // 폰 인포 연결
 
 
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
 
-export default function App() {
-  const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
-  }, []);
-
-  const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-  };
-
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+const layout = StyleSheet.create({
+  Main: {
+    flex : 1,
+    
+  },
+});
+class App extends Component {
+    appView = (mode) => {
+      let output = <MainView/>
+      if (mode == "main") {
+          output = <MainView/>
+      }
+      else if (mode == "QRscan") {
+          output = <SelectPanel color={this.props.select.color}/>
+      }
+      else if (mode == "QRscan1") {
+          output = <QRreade select={this.props.select}/>
+      }
+      else if (mode == "QRactive") {
+          output = <QRactive select={this.props.select}/>
+      }
+      return output
   }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+  render() {
+    return (
+      // <QRSanner/>
+        <SafeAreaView style={layout.Main}> 
+          {/* <MainView/> */}
+          {this.appView()/*(this.props.AppMode)*/}
+          {/* <QRSanner/> */}
+        </SafeAreaView>
+    );
   }
-
-  return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'flex-end',
-      }}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
-
-      {scanned && <Button title={'눌러서 다시 스켄하기'} onPress={() => setScanned(false)} />}
-    </View>
-  );
 }
+export default App;
+// const mapStateToProps = (state) => ({
+//   AppMode : state.AppMode
+// })
+
+// export default connect(mapStateToProps)(App);
+

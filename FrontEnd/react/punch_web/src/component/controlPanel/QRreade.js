@@ -3,6 +3,8 @@ import React, { Component , Fragment } from 'react';
 import { connect } from "react-redux"; // 리덕스 연결
 // [리듀스]스토어 연결
 import store from "../../store";
+// [ajax] axios 연결
+import axios from 'axios';
 // 컴포넌트 연결
 
 
@@ -11,6 +13,16 @@ class QRreade extends Component {
 
     handle = () => {
         store.dispatch({ type: "panelMode",panelMode : "QRactive"})
+        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/open', {
+            classListId: this.props.select.id,
+            classHour : 1200,
+          })
+        .then( response => {
+            console.log("QR코드 생성")
+        })
+        .catch( error => {
+            console.log(error)
+          })
     }
     
     startTime = (startTime) => {
