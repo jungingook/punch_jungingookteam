@@ -29,7 +29,7 @@ class ViewControl extends Component {
             checkState = <Text> 결석 </Text>
         }
         else if (mode == "null") { 
-            checkState = <Text> 인식불가 </Text>
+            checkState = <Text> 인식불가  </Text>
         }
         return output
     }
