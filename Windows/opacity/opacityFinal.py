@@ -18,22 +18,21 @@ class MyApp(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.setStyleSheet("background-color: #FFFFFF")
-        # 서버에서 json 값을 받아와 data 변수에 저장
+        #서버에서 json 값을 받아와 data 변수에 저장
         url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"
         data = requests.get(url).json()
 
+        # data 딕셔너리 중 randomNum 키의 value 값으로 qr코드 생성, 추후 다른 키 값과 조합하여 수정 예정
+        self.setStyleSheet("background-color: #FFFFFF")
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=5,
+            box_size=10,
             border=0,
         )
-        qr.add_data(data)
+        qr.add_data(str(data['id'])+data['randomNum'])
         qr.make(fit=True)
-
         img = qr.make_image(fill_color="black", back_color="white")
-
         qt_image = ImageQt.ImageQt(img)
         self.pixmap = QPixmap.fromImage(qt_image)
 
