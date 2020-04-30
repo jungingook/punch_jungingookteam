@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap');
+#page{
+ width: 100%;
+ font-family: 'Do Hyeon', sans-serif;
+}
+
+#content{
+  width: 100%;
+}
+
+/* Layer 연결 */
+
+#L_Background{
+  position: absolute;
+  z-index: -9;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+#L_Content{
+  position: absolute;
+  z-index: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+#L_Interface{
+  position: absolute;
+  z-index: 5;
+}
+/* #L_Modal{
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+} */
+#leftBnt{
+  position: relative;
+  top : 45vh;
+  left: 1vh;
+  width: 5vh;
+  height: 5vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 50px;
+  text-align: center;
+  line-height: 3vh;
+  font-size: 3vh;
+  background-color: rgb(255, 254, 255);
+  box-shadow: 2px 2px 2px #666;
+}
+#ContentPointer{
+  width: 150%; 
+  position: relative;
+  display: flex;
+  transition: left 1s;
+}
+.contentMove_0{
+  left: 0%;
+}
+.contentMove_50{
+  left: -50%;
+}
+#ContentLeft{
+  width: 50%;
+  height: 100vh;
+  display: flex;
+}
+#ContentRight{
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
+/* CSS 연결 */
+
+/* 배경 레이어 */
+@import url("background.css"); 
+/* 컨텐츠 레이어 */
+@import url("content.css");
+/* 컨트롤 */
+@import url("content/control.css");
+
+
+#qr{
+  display: flex;
+}
+
+#temp{
+  margin: 20px;
+}
+#tempClass{
+  display: flex;
+  flex-direction: column;
+}
+#className{
+  font-size: 50px;
+  font-weight: 700;
+}
+#classProfessor{
+  font-size: 20px;
+  color: #555;
+}
