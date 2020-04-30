@@ -30,7 +30,7 @@ export default class BarcodeScannerExample extends React.Component {
       return <Text>Requesting for camera permission</Text>;
     }
     if (hasCameraPermission === false) {
-      return <Text>No access to camera</Text>;
+      return <Text>카메라에 연결할수 없습니다.</Text>;
     }
     return (
       <View
@@ -64,11 +64,12 @@ export default class BarcodeScannerExample extends React.Component {
           })
         .then( response => {
             console.log(response.data);
-            alert(`인증성공 :  ${data} `);
+            alert(`인증성공 :  ${response.data} `);
         })
         .catch( error => {
             console.log(error);
             alert(`인증성공 :  ${error} `);
         });
   };
+  
 }

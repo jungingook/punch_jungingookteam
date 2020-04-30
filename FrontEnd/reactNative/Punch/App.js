@@ -1,57 +1,60 @@
 // 리엑트 모듈
 import React, { Component } from 'react';
-import Header from './Header';
 import { Text, View, SafeAreaView, StyleSheet, Button } from 'react-native';
 // [ajax] axios 연결
 import axios from 'axios';
-// [리듀스]스토어 연결
-import { Provider } from 'react-redux'
-import store from './store';
+// [redux] 최상단 컴포넌트 설정 
+// import reducer from "./reducer"; // 직접 만든 reducer를 사용하기 위함. 
+import { createStore } from 'redux'; // reducer를 store로 만들기 위해 사용 
+import { Provider } from "react-redux"; // store를 component(Timer)에 연결하기 위해 사용 
+
+// Redux 임포트
 
 // 컴포넌트 연결
-import MainView from './component/MainView'; // 앱의 메인 화면 구성을 담당하는 컴포넌트
-import QRSanner from './QRSanner'; // 폰 인포 연결
+import ViewControl from './component/ViewControl'; // 앱의 메인 화면 구성을 담당하는 컴포넌트
 
+const appStore = {
+  AppMode : "MAIN",
+}
 
+const reducer = (state = appStore,action) =>{
+  switch (action.type) {
+    // 카드 선택시
+    case "QRSCAN" :
+        return {
+            ...state,
+            AppMode: "QRSCAN"
+        } 
+    case "MAIN" :
+        return {
+            ...state,
+            AppMode: "MAIN"
+        } 
+    default:
+        //console.log("리듀스 성공");
+        return state; 
+    }
+}
+
+const store = createStore(reducer); // createStore를 이용해 reducer를 store로 만들어서 const 변수에 넣음. 
 
 const layout = StyleSheet.create({
   Main: {
     flex : 1,
-    
   },
 });
 class App extends Component {
-    appView = (mode) => {
-      let output = <MainView/>
-      if (mode == "main") {
-          output = <MainView/>
-      }
-      else if (mode == "QRscan") {
-          output = <SelectPanel color={this.props.select.color}/>
-      }
-      else if (mode == "QRscan1") {
-          output = <QRreade select={this.props.select}/>
-      }
-      else if (mode == "QRactive") {
-          output = <QRactive select={this.props.select}/>
-      }
-      return output
-  }
+ 
   render() {
+
     return (
-      // <QRSanner/>
+      // 
+      <Provider store={store}>
         <SafeAreaView style={layout.Main}> 
-          {/* <MainView/> */}
-          {this.appView()/*(this.props.AppMode)*/}
-          {/* <QRSanner/> */}
+          <ViewControl/>
         </SafeAreaView>
+      </Provider>
     );
   }
 }
 export default App;
-// const mapStateToProps = (state) => ({
-//   AppMode : state.AppMode
-// })
-
-// export default connect(mapStateToProps)(App);
-
