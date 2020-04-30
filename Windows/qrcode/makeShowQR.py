@@ -16,7 +16,17 @@ class MyApp(QWidget):
 
     def initUI(self):
         # Hello World! 로 QR 코드 생성
-        img = qrcode.make('Hello World!')
+        self.setStyleSheet("background-color: #FFFFFF")
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=0,
+        )
+        qr.add_data('Hello World')
+        qr.make(fit=True)
+
+        img = qr.make_image(fill_color="black", back_color="white")
 
         qt_image = ImageQt.ImageQt(img)
         pixmap = QPixmap.fromImage(qt_image)
@@ -24,12 +34,11 @@ class MyApp(QWidget):
 
         lbl_img = QLabel()
         lbl_img.setPixmap(pixmap)
-        lbl_size = QLabel('Width: '+str(pixmap.width())+', Height: '+str(pixmap.height()))
-        lbl_size.setAlignment(Qt.AlignCenter)
+
+
 
         vbox = QVBoxLayout()
         vbox.addWidget(lbl_img)
-        vbox.addWidget(lbl_size)
         self.setLayout(vbox)
 
         self.setWindowTitle('QPixmap')
