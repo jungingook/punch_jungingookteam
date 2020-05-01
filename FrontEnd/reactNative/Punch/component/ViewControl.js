@@ -18,7 +18,7 @@ class ViewControl extends Component {
 
    appView = (mode) => {
       let output = <MainView/>
-      if (mode == "MAIN") {
+      if (mode == "NORMAL") {
           output = <MainView/>
       }
       else if (mode == "QRSCAN") {

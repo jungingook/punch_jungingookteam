@@ -29,7 +29,7 @@ class ViewControl extends Component {
             checkState = <Text> 결석 </Text>
         }
         else if (mode == "null") { 
-            checkState = <Text> 인식불가  </Text>
+            checkState = <Text> 인식불가 </Text>
         }
         return output
     }
@@ -37,9 +37,6 @@ class ViewControl extends Component {
   render() {
     return (
       <View style={layout.Main}>
-        <View>
-            
-        </View>
       </View>
     );
   }
@@ -53,7 +50,7 @@ function mapStateToProps (state){
 }
 function mapDispatchToProps(dispatch){
   return {
-
+    ScannerEnd : () => dispatch({type:'MAIN'}),
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(ViewControl);

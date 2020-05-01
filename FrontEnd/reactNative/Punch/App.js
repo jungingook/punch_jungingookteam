@@ -14,7 +14,7 @@ import { Provider } from "react-redux"; // store를 component(Timer)에 연결�
 import ViewControl from './component/ViewControl'; // 앱의 메인 화면 구성을 담당하는 컴포넌트
 
 const appStore = {
-  AppMode : "MAIN",
+  AppMode : "NORMAL",
 }
 
 const reducer = (state = appStore,action) =>{
@@ -25,10 +25,10 @@ const reducer = (state = appStore,action) =>{
             ...state,
             AppMode: "QRSCAN"
         } 
-    case "MAIN" :
+    case "NORMAL" :
         return {
             ...state,
-            AppMode: "MAIN"
+            AppMode: "NORMAL"
         } 
     default:
         //console.log("리듀스 성공");

@@ -7,11 +7,14 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 
 // [ajax] axios 연결
 import axios from 'axios';
+// 컴포넌트 연결
+import ScannerControl from './component/qrScanner/ScannerControl';
 
 export default class BarcodeScannerExample extends React.Component {
   state = {
     hasCameraPermission: null,
     scanned: false,
+    control : "QRSCAN"
   };
 
   async componentDidMount() {
@@ -43,19 +46,22 @@ export default class BarcodeScannerExample extends React.Component {
           onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
         />
-
+        <ScannerControl control={this.state.control}/>
         {scanned && (
           <Button
-            title={'다시 스켄하기'}
+            title={'뒤로 돌아가기'}
             onPress={() => this.setState({ scanned: false })}
           />
         )}
+
       </View>
     );
   }
 
   handleBarCodeScanned = ({ type, data }) => {
-    this.setState({ scanned: true });
+    this.setState({ scanned: true});
+    this.setState({ control : "MAIN"});
+    alert(`인증실패 :  ${this.state.control} `);
     let d = new Date();
     axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/mobile/qr/verify',{
             qrNum: data, // QR코드 읽은값
@@ -64,11 +70,11 @@ export default class BarcodeScannerExample extends React.Component {
           })
         .then( response => {
             console.log(response.data);
-            alert(`인증성공 :  ${response.data} `);
+            alert(`출석체크 :  ${response.data} `);
         })
         .catch( error => {
             console.log(error);
-            alert(`인증성공 :  ${error} `);
+            alert(`인증실패 :  ${error} `);
         });
   };
   
