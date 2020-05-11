@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>학생이 폰에서 특정 수업 출석 현황 request</h1>
+    <!--
+        let student_id =req.body.studentID;
+        let class_id = req.body.classListID;
+    -->
+
+    <form action="http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/mobile/student/class/attendance" method="POST">
+        <div>
+            <label>학생의 id</label>            
+            <input type="text" name="studentID">
+        </div>
+        <div>
+            <label>수업의 id</label>
+            <input type="text" name="classListID">
+        </div>
+
+        <br><br>
+        <input type="submit" value="해당 학생의 출결 보기!">
+    </form>
+</body>
+</html>

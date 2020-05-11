@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>수업 생성</h1>
+<!--
+    let body = req.body;
+
+    let inputName = body.InputClassName;
+    let inputCode = body.InputClassCode;
+    let inputDay = body.InputClassDay;
+    let inputStartTime = body.InputClassStartTime;
+    let inputEndTime = body.InputClassEndTime;
+    let inputColor = body.inputClassColor;
+    let inputDesign = body.InputClassDesign;
+    let inputPrfessorId = 1;
+-->
+    <form action="http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList" method="POST">
+        <div>
+            <label>수업 이름</label>
+            <input type="text" name="InputClassName" placeholder="InputClassName">
+        </div>
+        <div>
+            <label>수업 코드(100~999)</label>
+            <input type="text" name="InputClassCode" placeholder="InputClassCode">
+        </div>
+        <div>
+            <label>수업 요일(1~7)</label>
+            <input type="text" name="InputClassDay" placeholder="InputClassDay">
+        </div>
+        <div>
+            <label>수업 시작 시간(10시 == 600)</label>
+            <input type="text" name="InputClassStartTime" placeholder="InputClassStartTime">
+        </div>
+        <div>
+            <label>수업 종료시간(시작시간 + 몇분)</label>
+            <input type="text" name="InputClassEndTime" placeholder="InputClassEndTime">
+        </div>
+        <div>
+            <label>수업 배경 색(red, blue, yellow, ...)</label>
+            <input type="text" name="inputClassColor" placeholder="inputClassColor">
+        </div>
+        <div>
+            <label>수업 디자인 패턴(default)</label>
+            <input type="text" name="InputClassDesign" placeholder="InputClassDesign">
+        </div>
+        <div>
+            <label>수업을 개설할 교수 id, 현재는 이승진(==1)으로 설정해 놓음</label>
+            <!-- <input type="text" name="inputPrfessorId" placeholder="inputPrfessorId"> -->
+        </div>
+
+        <br>
+        <br>
+        <input type="submit" value="수업 생성">
+    </form>
+</body>
+</html>
