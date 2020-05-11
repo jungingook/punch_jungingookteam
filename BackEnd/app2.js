@@ -1,15 +1,15 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const app = express();
-const port  = 3000;
-const methodOverride = require('method-override')
+var express = require('express');
+var bodyParser = require('body-parser');
+var cors = require('cors');
+var app = express();
+var port  = 3000;
+var methodOverride = require('method-override')
 
 // var indexRouter = require('./routes/index');
 
 // //mysql 
-const mysql = require('mysql')
-const connection = mysql.createConnection({
+var mysql = require('mysql')
+var connection = mysql.createConnection({
     host: 'qr.c5wiyouiqpec.ap-northeast-2.rds.amazonaws.com',
     user: 'admin',
     password: 'dlwhdgh009',
@@ -29,21 +29,21 @@ app.use(methodOverride('_method'))
 //router
 
 app.get('/desk/qr', (req, res) => {
-    const min = Math.ceil(1000000000);  //10억 10자리
-    const max = Math.floor(10000000000);    //100억 11자리
-    const randomNum =  Math.floor(Math.random() * (max - min)) + min;   //10자리의 랜덤 값
+    let min = Math.ceil(1000000000);  //10억 10자리
+    let max = Math.floor(10000000000);    //100억 11자리
+    let randomNum =  Math.floor(Math.random() * (max - min)) + min;   //10자리의 랜덤 값
 
-    const time = new Date();
-    const currentTime = time.getTime(); //밀리초 단위로 환산
+    let time = new Date();
+    let currentTime = time.getTime(); //밀리초 단위로 환산
 
-    const fiveM = 5 * 60 * 1000;
-    const attendanceTime = currentTime
-    const perceptionTime = currentTime + fiveM
+    let fiveM = 5 * 60 * 1000;
+    let attendanceTime = currentTime
+    let perceptionTime = currentTime + fiveM
 
 
 
-    const  subjectCode = 100;
-    const qrJson = {
+    let  subjectCode = 100;
+    let qrJson = {
         id: 1,
         randomNum: randomNum +'' + subjectCode,
         attendanceTime: attendanceTime,
@@ -78,29 +78,30 @@ app.get('/desk/professor/main', (req, res) => {
 
 // 2. 교수 수업 생성 실행
 app.post('/desk/professor/classList', (req, res) => {
-    const professor_ID = 1;
-    const body = req.body;
+    let body = req.body;
 
-    const inputName = body.InputClassName;
-    const inputCode = body.InputClassCode;
-    const inputDay = body.InputClassDay;
-    const inputStartTime = body.InputClassStartTime;
-    const inputEndTime = body.InputClassEndTime;
-    const inputDesign = body.InputClassDesign;
-    const inputPrfessorId = 1; // 임시. 이승진
+    let inputName = body.InputClassName;
+    let inputCode = body.InputClassCode;
+    let inputDay = body.InputClassDay;
+    let inputStartTime = body.InputClassStartTime;
+    let inputEndTime = body.InputClassEndTime;
+    let inputColor = body.inputClassColor;
+    let inputDesign = body.InputClassDesign;
+    let inputPrfessorId = 1; // 임시. 이승진
 
-    const arr = [
+    let arr = [
         inputName,  //1
         inputCode,//2
         inputDay, 
         inputStartTime,
         inputEndTime,
         inputDesign,
+        inputColor,
         inputPrfessorId//7
     ];
 
     connection.query(`
-        INSERT INTO classList (name, code, day, startTime, endTime, design, professor_id) 
+        INSERT INTO classList (name, code, day, startTime, endTime, design, color, professor_id) 
         VALUES (?, ?, ?, ?, ?, ?, ?);
     `, arr, (err, results, fields) => {
         if (err){
@@ -138,7 +139,7 @@ app.post('/desk/professor/classList/update', (req, res) => {
 // 4. 교수 수업 삭제
 app.post('/desk/prfoessor/classList/delete', (req, res) => {
     // let classListID = req.body.classListId;    
-    let classListID = 5; // 임의로 보낸 값
+    let classListID = rep.body.classListID; // 임의로 보낸 값
 
     
     connection.query(`
@@ -182,7 +183,8 @@ app.post('/desk/professor/classList/qr/request', (req, res) => {
 
     // 먼저 해당 과목의 isOpened가 true인지 확인한다.
     connection.query(`
-        select isOpened, code from classList
+        select isOpened, code 
+        from classList
         where id  = ?
     `,  [classListID], function(err, result){
         if(err) throw err;
@@ -290,6 +292,8 @@ app.post('/mobile/qr/verify', (req, res) => {
     let qrNum = req.body.qrNum;
     let allowTime = req.body.allowTime;// 현재는 계속 작은 값을 보내줘 출석으로 되는데 테스트 할 때 실제 시간값을 보내줘서 체크할 수 있도록 한다.
     let studentID = req.body.studentId;
+    let classStartTimeHour = req.body.classStartTime; 
+    
     console.log("qr인증 test");
 
     // qrNum의 뒤에 3자리(수업 코드는 따로 떼어낸다.)
@@ -307,19 +311,17 @@ app.post('/mobile/qr/verify', (req, res) => {
 
 
         // db에서 해당 클래스의 출석 인정 시간을 가져오자
-        let classStartTimeHour = (result[0].startTime*1) / 60; //시간 값으로 바꿈 ex) 10 => 오전 10시, 아마 getHour()했을 때도 비슷하지 않았나..
-        classStartTimeHour = classStartTimeHour-9;
+        // let classStartTimeHour = (result[0].startTime*1) / 60; //시간 값으로 바꿈 ex) 10 => 오전 10시, 아마 getHour()했을 때도 비슷하지 않았나..
+        // classStartTimeHour = classStartTimeHour-9;  // 시간 차이 미국 시간으로 들어오나 봄   
+        
+               
+        let classStartTimeMinute = (classStartTimeHour*1) % 60; // 나머지를 구함으로써 분(minute)을 구한다.
 
-        let classStartTimeMinute = (result[0].startTime*1) % 60; // 나머지를 구함으로써 분(minute)을 구한다.
         console.log("classStartTimeHour: "+classStartTimeHour);
-        console.log("classStartTimeMinute: " +classStartTimeMinute)
-        // classStartTimeHour = _attendanceTime / 60;
-        // classStartTimeMinute = _attendanceTime % 60;
-
+        console.log("classStartTimeMinute: " +classStartTimeMinute);
 
         // 변수에 classList의 상태를 저장한다.
         let classIsOpened = result[0].isOpened;
-
 
         let isAllow = checkRandomArray(onlyRandomNum, allowTime, classStartTimeHour, classStartTimeMinute);
 
@@ -372,13 +374,31 @@ app.post('/mobile/qr/verify', (req, res) => {
 
 })  //실제로 테스트 해 봐야하는 ** 가장 중요
 
+// 5. 학새 출석 현황 보기
+app.post('/mobile/student/class/attendance', (req, res) => {
+    let student_id =req.body.studentID;
+    let class_id = req.body.classListID;
 
+    // 해당 학생의 해당 과목의 출석 결과를 보여준다.
+    connection.query(`
+    select * from attendance
+    where student_id = ? and class_id = ?;
+    `, [student_id, class_id], (err, result) => {
+        if(err){
+            console.error(err);
+            throw err;
+        }
+        
+        res.json(result);
+    })
+
+})
 
 
 // 난수 메소드
 
 // 난수 배열 객체 생성 함수
-const randomArray = new Array();
+var randomArray = new Array();
 
 // 난수 객체 선언
 class RandomObject{
@@ -391,13 +411,12 @@ class RandomObject{
 // 난수 객체 배열 초기화
 function initRandomArray(){
     for(let i = 0; i < 65; i++ ){
-        const min = Math.ceil(1000000000);  //10억 10자리
-        const max = Math.floor(10000000000);    //100억 11자리
+        let min = Math.ceil(1000000000);  //10억 10자리
+        let max = Math.floor(10000000000);    //100억 11자리
         let randomNum =  Math.floor(Math.random() * (max - min)) + min;   //10자리의 랜덤 값
-        // randomNum = 1000000000;
 
-        const time = new Date();
-        const currentTime = time.getTime(); //밀리초 단위로 환산  
+        let time = new Date();
+        let currentTime = time.getTime(); //밀리초 단위로 환산  
         
 
         randomArray.push(new RandomObject(randomNum, currentTime));
@@ -407,27 +426,19 @@ function initRandomArray(){
 // 여기에 출석인지 지각인지 결석인지를 결정한다.
 // 그러면 출석 인정시간을 db에서 가져와야 한다.
 // 현재 배열에서 같은 값이 있는지 검증 한다.
-function checkRandomArray( qrNum, allowTime, startTimeHour, startTimeMinute){
-    
-
+function checkRandomArray( qrNum, allowTime, startTimeHour, startTimeMinute){    
     // 검증1 배열 앞부분의 5개의 RandomObject를 꺼낸다.
     firstRandomObject = randomArray[0];
     secondRandomObject = randomArray[1];
     thirdRandomObject = randomArray[2];
     fourthRandomObject = randomArray[3];
     fifthRandomObject = randomArray[4];
-    console.log("검사 가장 앞부분")
-    console.log("fifthRandomObject.ct :" + fifthRandomObject.ct + "\n");
 
     // 5번째 값의 ct + 5초의 값이 allowTime보다 큰지 먼저 검사
     if(fifthRandomObject.ct + 5000 > allowTime){
         // 총과하면 5개의 넘 값중에 같은 난수값이 있는지 확인
-        console.log("검사 두 번째 부분")
-        console.log("fifthRandomObject.ct :" + fifthRandomObject.ct + "\n");
         if( firstRandomObject.rn == qrNum || secondRandomObject.rn == qrNum || thirdRandomObject.rn == qrNum || fourthRandomObject.rn == qrNum || fifthRandomObject.rn == qrNum){
             // 출석인지 지각인지 결석인지 결정
-            console.log("검사 세 번째 부분")
-            console.log("fifthRandomObject.ct :" + fifthRandomObject.ct + "\n");
 
             // 현재의 년, 월, 일을 구하자.
             let currentYear = new Date().getUTCFullYear();
@@ -436,30 +447,21 @@ function checkRandomArray( qrNum, allowTime, startTimeHour, startTimeMinute){
 
             // 먼저 비교 가능하게 1970년 이후의 밀로초 값으로 만들자
             let testCurrentTime = new Date(currentYear, currentMonth, currentDate, startTimeHour, startTimeMinute, 0);
+            console.log("testCurrentTime : ");
+            console.log(testCurrentTime)
 
             let millie1970StartTime = testCurrentTime.getTime();//수업시간
             
             // 출석이라면 수업시간 <=  현재 시간 
             // 수업시간 
-            // 출석이라면 startTime + 5분 보다 5번째 랜덤 객체의 createTime이 작아야 한다.
-            console.log("millie1970StartTime : "+millie1970StartTime)
-            console.log("fifthRandomObject.ct + (5 * 60 * 1000): "+(fifthRandomObject.ct + (5 * 60 * 1000)))
-            console.log("이게 진짜다")
-            console.log((fifthRandomObject.ct - millie1970StartTime)/60000)
-            if((fifthRandomObject.ct - millie1970StartTime)/60000 < 5){
-                console.log("검사 네 번째 부분")
-                console.log("fifthRandomObject.ct :" + (fifthRandomObject.ct - millie1970StartTime)/(1000*60) + "\n");
+            // 출석이라면 startTime + 5분 보다 5번째 랜덤 객체의 createTime이 작아야 한다.            
+            if((fifthRandomObject.ct - millie1970StartTime)/60000 < 5){                
                 // 2 == 출석
                 return 2;
             } else if((fifthRandomObject.ct - millie1970StartTime)/60000 < 15){
                 // 1 == 지각
                 return 1;
             } else{
-                console.log(fifthRandomObject.ct)
-                console.log(millie1970StartTime)
-                console.log(fifthRandomObject.ct /(1000*60))
-                console.log(millie1970StartTime /(1000*60))
-                console.log("둘의 차이 :" + (fifthRandomObject.ct - millie1970StartTime)/(1000*60) + "\n");
                 // 0 == 결석
                 return 0;
             }
