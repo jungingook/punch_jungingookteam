@@ -7,8 +7,6 @@ import store from "../../store";
 import axios from 'axios';
 // 컴포넌트 연결
 
-
-
 class QRreade extends Component {
 
     state = {
@@ -17,7 +15,6 @@ class QRreade extends Component {
         selectHour : "",
         selectMin : "",
       }
-
 
     handle = () => {
         store.dispatch({ type: "panelMode",panelMode : "QRactive"})
@@ -33,15 +30,12 @@ class QRreade extends Component {
           })
     }
     cheakClick = (mode) =>{
-        console.log("반복",mode)
         this.setState({
             cheakMode : mode,
         })   
     }
     hourChange = (e) => {
         let val = (e.target.value == '0'? 0 : parseInt(e.target.value) )
-        console.log("값:",val ,"표현식 :", this.state.selectHour,"왜지 :",parseInt(this.state.selectHour)==true)
-        console.log("값:",parseInt(this.state.selectHour))    
         if (val != 0 &&!parseInt(val)){
             this.setState({
                 selectHour : "",
@@ -136,15 +130,25 @@ class QRreade extends Component {
         else if  (mode == "absent"){
             time = time + 20          
         }
-        return Math.floor(time/60) + ":" + (time%60<10? "0"  +time%60 : time%60 )
+        return (Math.floor(time/60)<10? "0"+Math.floor(time/60): Math.floor(time/60)) + ":" + (time%60<10? "0"  +time%60 : time%60)
     } 
     // 클릭한것의 배경색을 바꿔주는 함수
-    thisSelect = (select) =>{
-        let css = {backgroundColor : '#c8c8c8'}
-        if (select == this.state.cheakMode){
-            css = {backgroundColor : this.props.cardColor[this.props.select.color][0]}
+    thisSelect = (select, div) =>{
+
+        if (div =='cheakText') {
+            let css = {backgroundColor : '#c8c8c8'}
+            if (select == this.state.cheakMode){
+                css = {backgroundColor : this.props.cardColor[this.props.select.color][0]}
+            }
+            return css
         }
-        return css
+        else if (div =='cheakTimeSelect') {
+            let css = {backgroundColor : '#F6F7F9'}
+            if (select == this.state.cheakMode){
+                css = {backgroundColor : '#FFFFFF'}
+            }
+            return css
+        }
     }
     render() { 
 
@@ -155,28 +159,28 @@ class QRreade extends Component {
         return (
             <div id = "QRreadePanel">
                 <div id ="cheakTime">
-                    {/* <div className ="QRreadePanelSetsummar">출석체크 시간을 선택합니다.</div> */}
+                    <div className ="QRreadePanelSetsummar">출석체크의 시간기준을 설정합니다.</div>
                     <div className = "cheakTimeSelectZone">
 
-                        <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("ClassTime")}>
+                        <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("ClassTime")} style={this.thisSelect('ClassTime','cheakTimeSelect')} >
                             <div className = "cheakTime"> {this.startTime(this.props.select.startTime)} </div>
-                            <div className = "cheakText" style={this.thisSelect('ClassTime')}>
+                            <div className = "cheakText" style={this.thisSelect('ClassTime','cheakText')}>
                             <div className = "cheakTimeExplanation"> 수업시간으로 출석체크 </div>
                             <div className = "cheakTimeInfo"> <div className = "cheakTimeInfoTag"> </div>{this.timeCalculation(this.props.select.startTime,"late")} 부터 지각 {this.timeCalculation(this.props.select.startTime,"absent")} 부터는 결석이 됩니다.</div>
                             </div>
                         </div>
-                        <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("NowTime")}>
+                        <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("NowTime")} style={this.thisSelect('NowTime','cheakTimeSelect')} >
                             <div className = "cheakTime"> {this.timeCalculation(this.nowTime())} </div>
-                            <div className = "cheakText" style={this.thisSelect('NowTime')}>
+                            <div className = "cheakText" style={this.thisSelect('NowTime','cheakText')}>
                             <div className = "cheakTimeExplanation"> 지금시간으로 출석체크 </div>
                             <div className = "cheakTimeInfo"> <div className = "cheakTimeInfoTag"> </div>{this.timeCalculation(this.nowTime(),"late")} 부터 지각 {this.timeCalculation(this.nowTime(),"absent")} 부터는 결석이 됩니다.</div>
                             </div>
                         </div>
-                        <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("SelectTime")}>
+                        <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("SelectTime")} style={this.thisSelect('SelectTime','cheakTimeSelect')} >
                             <div className = "cheakTime cheakTimeUser"> 
                             <input className="inputLeft" placeholder="13" maxLength="2" value={this.state.selectHour} onChange={this.hourChange} onFocus={this.hourFocus} onBlur={this.hourBlur}/>:<input placeholder="00" maxLength="2" value={this.state.selectMin} onChange={this.minChange} onFocus={this.minFocus} onBlur={this.minBlur}/>
                             </div>
-                            <div className = "cheakText" style={this.thisSelect('SelectTime')}>
+                            <div className = "cheakText" style={this.thisSelect('SelectTime','cheakText')}>
                             <div className = "cheakTimeExplanation"> 지정한 시간으로 출석체크 </div>
                             <div className = "cheakTimeInfo"> 
                                 <div className = "cheakTimeInfoTag"> </div>  

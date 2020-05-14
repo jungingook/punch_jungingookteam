@@ -7,6 +7,8 @@ const classList = "classList";
 const defaultState = {
     panelMode : "Error",
     selectCard: null,
+    loginActivation: true,
+    addClass : false,
     cardColor : {
         default : ["#00B0F0","#009FF0"], // 블루와 같음
         red : ["#E93A2E","#C92A1D"], // 확정
@@ -95,6 +97,21 @@ const reducer = (state = defaultState, action) => {
                 ...state,
                 classList: action.classList
             } 
+        case "LOGINSUCCESS" :
+            return {
+                ...state,
+                loginActivation: false,
+            }
+        case "LOGOUT" :
+            return {
+                ...state,
+                loginActivation: true,
+            }  
+        case "ADDCLASS" :
+            return {
+                ...state,
+                addClass: true,
+            }              
         default:
             //console.log("리듀스 성공");
             return state; 

@@ -3,6 +3,7 @@ import React, { Component } from 'react'; //리엑트 연결
 import { connect } from "react-redux"; // 리덕스 연결
 // 컴포넌트 연결
 import ClassInfo from './ClassInfo'; // 폰 인포 연결
+import AddClass from './AddClass'; // 폰 인포 연결
 import store from "../../store";
 // [ajax] axios 연결
 import axios from 'axios';
@@ -28,6 +29,7 @@ class ClassInfoList extends Component {
             this.setState({ classLength : -1 });
           })
       }
+      
     render() {
         let list = ""
         console.log(this.state.classLength)
@@ -44,6 +46,7 @@ class ClassInfoList extends Component {
         return (
             <div id="ClassInfoList">
                 <div id = "ClassInfoListTitle"> 수업목록</div>
+                {(this.props.addClass?<AddClass/>:"")}
                 {list}    
             </div>
         );
@@ -51,7 +54,8 @@ class ClassInfoList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    classList : state.classList
+    classList : state.classList,
+    addClass :  state.addClass
   })
 
 export default connect(mapStateToProps)(ClassInfoList);

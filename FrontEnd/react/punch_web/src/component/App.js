@@ -8,6 +8,7 @@ import store from "../store";
 import ClassInfoList from './classroom/ClassInfoList';
 import Panel from './controlPanel/Panel';
 import BackBnt from './interface/BackBnt';
+import Login from './login/Login';
 
 import '../css/App.css';
 
@@ -23,7 +24,7 @@ class App extends Component {
     }
     return output
   }
-  
+
   render() {
     return (
       <div id="page">
@@ -34,7 +35,11 @@ class App extends Component {
         <div id = "L_Content">
           <div id = "ContentPointer" className={this.contentMove(this.props.panelMode)}>
             <div id = "ContentLeft"> 
-              <div id = "sidebar"></div>
+              <div id = "SideBar">
+                <div id = "SideBarAddClass" className ="SideButton" onClick={() => this.props.addClass()} ></div>
+                <div id = "SideBarSetting" className ="SideButton" onClick={() => this.props.logout()} ></div>
+                <div id = "SideBarLogoutBt" className ="SideButton" onClick={() => this.props.logout()} ></div>
+              </div>
               <ClassInfoList/>
             </div>
             <div id = "ContentRight"> 
@@ -45,9 +50,12 @@ class App extends Component {
         <div id = "L_Interface">
           {this.props.panelMode == "QRactive" ? <BackBnt/>:""}
         </div>
+        <div id = "L_Login" className={(this.props.loginActivation ? "LoginActivation" : "LoginDisabled" )}>
+          <Login/>
+        </div>
         <div id = "L_Modal">
           
-          </div>
+        </div>
       </div>
       
     );
@@ -57,6 +65,15 @@ class App extends Component {
 //export default Panel;
 const mapStateToProps = (state) => ({
   panelMode : state.panelMode,
+  loginActivation : state.loginActivation,
 })
 
-export default connect(mapStateToProps)(App);
+function mapDispatchToProps(dispatch){
+  return {
+    logout : () => dispatch({type:'LOGOUT'}),
+    addClass : () => dispatch({type:'ADDCLASS'}),
+    logout : () => dispatch({type:'LOGOUT'}),
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(App);
