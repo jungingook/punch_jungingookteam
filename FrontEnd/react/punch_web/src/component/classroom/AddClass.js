@@ -8,6 +8,8 @@ import axios from 'axios';
 
 // 컴포넌트 연결
 import AddTime from './AddTime';
+import AddDate from './AddDate';
+import AddTardy from './AddTardy';
 
 class AddCalss extends Component {
     // defaultProps[기본값 프로버티]
@@ -159,8 +161,19 @@ class AddCalss extends Component {
                         </div>
                         {output}
                         {this.timeError()}
-                        <div id="AddClasApeend" onClick={()=>this.appendTime()}> 수업시간 추가 </div>
+                        <div id="AddClassTimeApeend" onClick={()=>this.appendTime()}> 수업시간 추가 </div>
+
+
                         
+                    </div>
+
+                    <div className = "AddClassSelector"> 
+                        <div className = "AddClassSelectorName">
+                            수업 기간
+                        </div>
+                        <div className = "AddClassSelectorInput">
+                            <AddDate/>
+                        </div>
                     </div>
 
                     <div className = "AddClassSelector"> 
@@ -172,13 +185,13 @@ class AddCalss extends Component {
                         </div>
                         <div className = "AddClassSelectorInput">
                             <div id="AddClassSelectorColorInput">
-                             <div style={{backgroundColor:'#E93A2E'}} className = {(this.state.classColor == 'red' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('red')} ></div>
-                             <div style={{backgroundColor:'#00B0F0'}} className = {(this.state.classColor == 'blue' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('blue')} ></div>
-                             <div style={{backgroundColor:'#99C556'}} className = {(this.state.classColor == 'green' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('green')} ></div>
-                             <div style={{backgroundColor:'#FFC000'}} className = {(this.state.classColor == 'yellow' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('yellow')} ></div>
-                             <div style={{backgroundColor:'#E780BC'}} className = {(this.state.classColor == 'pink' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('pink')} ></div>
-                             <div style={{backgroundColor:'#9949CE'}} className = {(this.state.classColor == 'purple' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('purple')} ></div>
-                             <div style={{backgroundColor:'#595959'}} className = {(this.state.classColor == 'black' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('black')} ></div>
+                                <div style={{backgroundColor:'#E93A2E'}} className = {(this.state.classColor == 'red' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('red')} ></div>
+                                <div style={{backgroundColor:'#00B0F0'}} className = {(this.state.classColor == 'blue' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('blue')} ></div>
+                                <div style={{backgroundColor:'#99C556'}} className = {(this.state.classColor == 'green' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('green')} ></div>
+                                <div style={{backgroundColor:'#FFC000'}} className = {(this.state.classColor == 'yellow' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('yellow')} ></div>
+                                <div style={{backgroundColor:'#E780BC'}} className = {(this.state.classColor == 'pink' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('pink')} ></div>
+                                <div style={{backgroundColor:'#9949CE'}} className = {(this.state.classColor == 'purple' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('purple')} ></div>
+                                <div style={{backgroundColor:'#595959'}} className = {(this.state.classColor == 'black' ? " SelectThisColor " : "AddClassSelectorColor" )} onClick={ () => this.colorChange('black')} ></div>
                             </div>
                         </div>
                         <div className = "AddClassSelectorInfo">
@@ -189,14 +202,12 @@ class AddCalss extends Component {
 
                     <div className = "AddClassSelector"> 
                         <div className = "AddClassSelectorName">
-                             수업 정책 선택
+                             수업 정책
                         </div>
                         <div className = "AddClassSelectorInfo">
-                             인포
+                            
                         </div>
-                        <div className = "AddClassSelectorInput">
-                             셀렉터 이름
-                        </div>
+                        <AddTardy times={this.state.backClassTimeList}/>
                     </div>
 
                 </div>

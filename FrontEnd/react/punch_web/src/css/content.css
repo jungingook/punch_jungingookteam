@@ -295,6 +295,10 @@
     animation-iteration-count : 1;
     animation-direction: normal;
 }
+.AddClassTimeReady{
+    border: 1px solid #ccc;
+    /* color: #cccccc; */
+}
 .AddClassTimeLeft{
     display: flex;
     width: 80%;
@@ -360,7 +364,7 @@
     line-height: 18px;
     font-size: 15px;
 }
-#AddClasApeend{
+#AddClassTimeApeend{
     margin: 10px auto;
     border: 1px solid #fff;
     height: 30px;
@@ -375,6 +379,41 @@
     color: #cccccc;
 }
 
+/* 수업시간 */
+.AddClassDate{
+    display: flex;
+    width: 400px;
+    flex-direction: column;
+    font-size: 20px;
+    line-height: 30px;
+    color: #fff;
+    font-family: '나눔스퀘어';
+    font-weight: bold;
+
+}
+.AddClassDateInput{
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    line-height: 30px;
+    color: #fff;
+    font-family: '나눔스퀘어';
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.AddClassDateInputTag{
+    background-color: #ffffff00;
+    color: #fff;
+    border: 1px solid #fff;
+    height: 20px;
+    padding: 5px;
+    width: 60%;
+    border-radius: 5px;
+    font-size: 20px;
+    line-height: 20px;
+    transition: all 0.35s;
+}
 
 #AddClassStartDate{
 
@@ -417,4 +456,45 @@
     border-radius: 30px;
     /* border: 2px solid black; */
     box-shadow: 2px 2px 5px #77777760;
+}
+#AddClassTardy{
+
+}
+#tardyView{
+    display: flex;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+#tardyViewUpperText{
+    display: flex;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 10px;   
+}
+#AttendanceCell{
+    overflow: hidden;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: rgb(153, 197, 86);
+
+}
+#tardyCell{
+    overflow: hidden;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: orange;
+    
+}
+#absentCell{
+    overflow: hidden;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: red;
+}
+.tardyViewText{
+    white-space :nowrap;
 }
