@@ -111,7 +111,12 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 addClass: true,
-            }              
+            }         
+        case "ADDCLASSBACK" :
+            return {
+                ...state,
+                addClass: false,
+            }       
         default:
             //console.log("리듀스 성공");
             return state; 

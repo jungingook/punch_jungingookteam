@@ -18,7 +18,6 @@
     content: "";
     display: block;
     padding-bottom: 100%;
-
   }
 #SideBarLogoutBt{
     background-image: url("../img/logout.png");
@@ -192,22 +191,87 @@
     flex : 1;
     /* background-color: rgba(255,0,0,0.3); */
     padding: 10vh 0;
-}
-#CardMake{
-    padding-left: 10%;
+    display: flex;
 
 }
+/* 뒤로가기 버튼  */
+#AddClassSidebar{
+    width: 10%;
+    height: 90vh;
+
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+#AddClassBackButton{
+    background-image: url("../img/backbt.png");
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    transition: all 0.3s;
+}
+#AddClassBackButton:hover{
+    background-size: 100% 100%;
+    background-color: #F2F2F200;
+}
+#CardMake{
+    width: 90%;
+}
+
 #AddClassSetting{
     flex : 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     overflow: auto;
     /* background-color: rgba(0,255,0,0.3); */
 }
 #AddClassDumi{
     flex : 1;
     /* background-color: rgba(0,0,255,0.3); */
+}
+
+#AddClassSubmit{
+    max-width: 600px;
+    width: 70%;
+    margin: 5vh auto;
+    padding: 20px 0;
+    background-color: rgba(99,99,99,0.5);
+    border-radius: 15px;
+    color: #fff;
+    box-shadow: 2px 2px 5px #77777760;
+    transition: all 1s;   
+}
+#AddClassSubmitReason{
+    width: 80%;
+    height: 2vh;
+    margin: 0px auto; 
+    padding: 1%;
+    box-sizing: border-box;
+}
+#AddClassSubmitButton{
+    width: 80%;
+    margin: 20px auto;
+    text-align: center;
+    line-height: 5vh;
+    font-size: 3vh;
+    border-radius: 5px;
+    color: #ccc;
+    border : 1px solid #fff;
+    background: #fff;  /* fallback for old browsers */
+ 
+}
+#AddClassSubmitButtonReady{
+    width: 80%;
+    margin: 20px auto;
+    text-align: center;
+    line-height: 5vh;
+    font-size: 3vh;
+    border-radius: 5px;
+    color: #ccc;
+    border : 1px solid #ccc ;
+    background-color: #00000000;
 }
 .AddClassSelector{
     max-width: 600px;
@@ -218,9 +282,9 @@
     border-radius: 15px;
     color: #fff;
     box-shadow: 2px 2px 5px #77777760;
+    transition: all 1s;
 }
 .AddClassSelectorName{
-
     font-size: 3vh;
     
 }
@@ -457,12 +521,41 @@
     /* border: 2px solid black; */
     box-shadow: 2px 2px 5px #77777760;
 }
-#AddClassTardy{
 
+.AddClassTardy{
+    max-width: 600px;
+    width: 80%;
+    padding: 0 2%;
+    margin: 20px 10%;
+    background-color: rgba(99,99,99,0.5);
+    border-radius: 15px;
+    color: #fff;
+    box-shadow: 2px 2px 5px #77777760;
+    transition: all 1s;
+}
+.AddClassTardyStart{
+    height: 0px;
+    transition: all 1s; 
+}
+#sscs
+{
+    max-width: 600px;
+    width: 80%;
+    padding: 0 2%;
+    margin: 20px 10%;
+    background-color: rgba(99,99,99,0.5);
+    border-radius: 15px;
+    color: #fff;
+    box-shadow: 2px 2px 5px #77777760;
+    transition: all 1s; 
+}
+#AddClassTardy{
+    width: 400px;
+    margin: 0 auto;
 }
 #tardyView{
     display: flex;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     border-radius: 10px;
 }

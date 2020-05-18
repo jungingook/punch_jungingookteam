@@ -22,31 +22,30 @@ class AddDate extends Component {
     uplode = () => {
         if(this.state.startDay!=''&&this.state.endDay!=''){
             console.log('업로드 준비됨')
-            // this.props.dataBack([this.state.day,this.state.startTime,this.state.endTime-this.state.startTime,this.props.id]);
-            // this.effectCancel()
+            this.props.dataBack(this.state.startDay,this.state.endDay);
         }
         else{
             console.log('준비 안됨')
             // this.ready()
         }
     }
-    startDayBlur = (e) => {
+    startDayChange = (e) => {
         console.log(e.target.value)
         this.setState({
             startDay : e.target.value,       
-        })
+        },()=>this.uplode)
     }
-    endDayBlur = (e) => {
+    endDayChange = (e) => {
         console.log(e.target.value)
         this.setState({
             endDay : e.target.value,       
-        })
+        },()=>this.uplode)
     }
     render() {
         return (
             <div className = "AddClassDate"> 
-            <div className = "AddClassDateInput"> <span>수업 시작일 : </span> <input id="AddClassStartDate"  className = "AddClassDateInputTag" onChange={this.startDayBlur} onBlur={this.uplode} type="date"/></div>
-            <div className = "AddClassDateInput"> <span>수업 종료일 : </span> <input id="AddClassEndDate" className = "AddClassDateInputTag" onChange={this.endDayBlur} onBlur={this.uplode} type="date"/></div>              
+            <div className = "AddClassDateInput"> <span>수업 시작일 : </span> <input id="AddClassStartDate"  className = "AddClassDateInputTag" onChange={this.startDayChange} onBlur={this.uplode} type="date"/></div>
+            <div className = "AddClassDateInput"> <span>수업 종료일 : </span> <input id="AddClassEndDate" className = "AddClassDateInputTag" onChange={this.endDayChange} onBlur={this.uplode} type="date"/></div>              
             </div>
         );
       }      

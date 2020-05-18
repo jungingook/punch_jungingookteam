@@ -50,8 +50,8 @@ class AddTime extends Component {
         else {
             this.setState({
                 startHour : val,
-                startTime : val*60 + parseInt(e.target.value),
-            })
+                startTime : val*60 + parseInt(this.state.startMin),
+            },()=>this.uplode())
         }
       }
 
@@ -59,14 +59,14 @@ class AddTime extends Component {
         if (e.target.value == ""){
             this.setState({
                 startHour : "00",
-            }) 
+            },this.uplode()) 
         }
         else if (e.target.value < 10){
             this.setState({
                 startHour : "0"+e.target.value,
-            })           
+            },this.uplode())          
         }
-        this.uplode()
+
     }
 
     focusStartHour = (e) =>{
@@ -77,25 +77,22 @@ class AddTime extends Component {
 
 
     funStartMin = (e) => {
-        console.log(e.target.value)
         let val = (e.target.value == '0'? 0 : parseInt(e.target.value) )
         if (val != 0 &&!parseInt(val)){
             this.setState({
                 startMin : '',
             })
-            console.log('왜지')
         } 
         else if (val > 59){
             this.setState({
                 startMin : '',
             })
-            console.log('먼대')
         }
         else {
             this.setState({
                 startMin : val,
                 startTime : parseInt(this.state.startHour)*60 + val,
-            })
+            },()=>this.uplode())
         }
     }
 
@@ -103,14 +100,13 @@ class AddTime extends Component {
         if (e.target.value == ""){
             this.setState({
                 startMin : "00",
-            }) 
+            },this.uplode()) 
         }
         else if (e.target.value < 10){
             this.setState({
                 startMin : "0"+e.target.value,
-            })           
+            },this.uplode())           
         }
-        this.uplode()
     }
     
     focusStartMin = (e) =>{
@@ -135,7 +131,7 @@ class AddTime extends Component {
             this.setState({
                 endHour : val,
                 endTime : val*60 + parseInt(this.state.endMin),
-            })
+            },()=>this.uplode())
         }
     }
  
@@ -143,14 +139,14 @@ class AddTime extends Component {
         if (e.target.value == ""){
             this.setState({
                 endHour : "00",
-            }) 
+            },this.uplode()) 
         }
         else if (e.target.value < 10){
             this.setState({
                 endHour : "0"+e.target.value,
-            })           
+            },this.uplode())          
         }
-        this.uplode()
+
     }
     
     focusEndHour = (e) =>{
@@ -175,7 +171,7 @@ class AddTime extends Component {
             this.setState({
                 endMin : val,
                 endTime : parseInt(this.state.endHour)*60 +val,
-            }) 
+            },()=>this.uplode())
         }
     }
 
@@ -183,14 +179,13 @@ class AddTime extends Component {
         if (e.target.value == ""){
             this.setState({
                 endMin : "00",
-            }) 
+            },this.uplode()) 
         }
         else if (e.target.value < 10){
             this.setState({
                 endMin : "0"+e.target.value,
-            })           
+            },this.uplode())          
         }
-        this.uplode()
     }
     
     focusEndMin = (e) =>{
@@ -202,12 +197,7 @@ class AddTime extends Component {
     funselectDay =(e) => {
         this.setState({
             day : e.target.value,
-        }) 
-        this.uplode()
-    }
-
-    blurselectDay = (e) =>{   
-        this.uplode()
+        },()=>this.uplode())
     }
 
     deleteClick = () => {
@@ -245,15 +235,14 @@ class AddTime extends Component {
 
     // 상위 컴포넌트에게 시간값을 전달합니다.
     uplode = () => {
-        console.log('스타트 타임',this.state.startTime,'엔드타임',this.state.endTime,)
-        console.log('상태: ',this.state)
+
         if(this.state.startTime != false && this.state.endTime != false && this.state.startTime < this.state.endTime){
-            console.log('업로드 준비됨')
+            console.log('수업시간[',this.props.id ,'] 업로드 완료 : ',this.state)
             this.props.dataBack([this.state.day,this.state.startTime,this.state.endTime-this.state.startTime,this.props.id]);
             this.effectCancel()
         }
         else{
-            console.log('준비 안됨')
+            console.log('수업시간[',this.props.id ,'] 업로드 실패 : ',this.state)
             this.ready()
         }
     }
@@ -262,7 +251,7 @@ class AddTime extends Component {
         return (
             <div className = {this.state.cssClass}>
                 <div className=" AddClassTimeLeft">
-                    <select className = "AddClassTimeSelectorDay" onBlur={this.uplode} onChange={this.funselectDay}>
+                    <select className = "AddClassTimeSelectorDay" onChange={this.funselectDay}>
                         <option>월요일</option>
                         <option>화요일</option>
                         <option>수요일</option>
@@ -281,7 +270,7 @@ class AddTime extends Component {
                 </div>
         </div>
         );
-      }      
+    }      
 }
 
 const mapStateToProps = (state) => ({

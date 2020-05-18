@@ -19,17 +19,25 @@ class AddCalss extends Component {
     state = {
         classLength : 0, // 수업의 숫자
         className : '',
-        classTime : '',
         classColor : 'blue',
+        classDesign : 'default',
+        startDay : false,
+        endDay : false,
+        tardy: 5,
+        absent : 20, 
         // 애니메이션을 위한것
         moveAnimation : '-100vh',
+        // 데이터 전달을 위한것
         classTimeListId : 1,
         classTimeList : [
             {
                 id : 0,
             }],
         backClassTimeList : [],
+        // 상태 파악을 위한것
         timeError : false,
+        allReady : false, 
+        messenger : "이름을 입력해주세요",
     }
     
     cardcolor = (position) => {
@@ -38,12 +46,7 @@ class AddCalss extends Component {
     nameChange = (e) =>{
         this.setState({
             className : e.target.value
-        })
-    }
-    timeChange = (e) => {
-        this.setState({
-            classTime : e.target.value
-        })
+        },()=>this.isReady()) 
     }
     colorChange = (color) =>{
         this.setState({
@@ -74,14 +77,15 @@ class AddCalss extends Component {
             })
         }
         console.log(this.state.classTimeList)
-        
     }
+
     timeError = ()=>{
         if (this.state.timeError==false){
         return ""
         }
         return <div className = "timeError">{this.state.timeError}</div>
     }
+
     showAnimation = () => {
         const SetTime = setTimeout( ()=> {
             this.setState({
@@ -98,7 +102,21 @@ class AddCalss extends Component {
         this.setState({
             backClassTimeList : test.concat({ key:data[3], id:data[3], day: data[0],startTime: data[1],endTime: data[2]}),
             timeError :  false,
-        })       
+        },()=>this.isReady())       
+    }
+
+    tardyCallBack = (tardy,absent) => {
+        this.setState({
+            tardy: tardy,
+            absent : absent, 
+        },()=>this.isReady())          
+    }
+
+    dateCallBack = (startDay,endDay) => {
+        this.setState({
+            startDay : startDay,
+            endDay : endDay,
+        },()=>this.isReady())          
     }
     // 시간을 계산해주는 함수
     timeCalculation = (time, mode="normal") => {
@@ -110,6 +128,61 @@ class AddCalss extends Component {
         }
         return (Math.floor(time/60)<10? "0"+Math.floor(time/60): Math.floor(time/60)) + ":" + (time%60<10? "0"  +time%60 : time%60)
     } 
+
+    // 여러 수업시간중 최소 시간을 구하는 함수 지각 정책 설정을 위해 필요
+    minTime = () =>{
+        let maxVal = 30 
+        if (this.state.backClassTimeList.length == 1){
+            maxVal = this.state.backClassTimeList[0].endTime
+        }
+        else if (this.state.backClassTimeList.length != 0){
+        maxVal = this.state.backClassTimeList.reduce((timeA,tiemB) => (timeA.endtTme < tiemB.endTime?timeA.endTime:tiemB.endTime))
+       } 
+       return maxVal
+    }
+
+    isReady = () =>{
+        // 이름이 입력되지 않은 경우
+        if (this.state.className == '') {
+            this.setState({ allReady : false, messenger : "이름을 입력해주세요" }) 
+            return 0 
+        }
+        if (this.state.backClassTimeList.length == 0) {
+            this.setState({ allReady : false, messenger : "하나이상의 수업시간을 입력해주세요" })
+            return 0 
+        }
+        if (this.state.startDay == false || this.state.startDay == false ) {
+            this.setState({ allReady : false, messenger : "수업기간을 입력해주세요" })
+            return 0 
+        }
+        this.setState({         
+            allReady : true,
+            messenger : "수업을 생성할 수 있습니다.", 
+        })
+        return 0
+    }
+    // 수업을 생성합니다.
+    axios = () => {
+        console.log(this.state.backClassTimeList[0]) 
+        if (this.state.allReady){
+            // 임시로 다중 시간을 입력하지 않고 입력된 첫 시간만 보냄 
+            axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList', {
+                InputClassName: this.props.select.id,
+                InputClassDay : this.state.backClassTimeList[0].day,
+                InputClassStartTime : this.state.backClassTimeList[0].startTime,//
+                InputClassEndTime : this.state.backClassTimeList[0].endTime,//
+                inputClassColor : this.state.classColor,
+                InputClassDesign : this.state.classDesign,
+                inputPrfessorId : 1, // 1 승진좌
+            })
+            .then( response => {
+                this.props.addClassReturn()
+            })
+            .catch( error => {
+                console.log(error)
+            })
+        }
+    }
 
 
     render() {
@@ -123,11 +196,17 @@ class AddCalss extends Component {
             info => (<AddTime key={info.id}  id={info.id} ondelete={this.deleteTime} dataBack={this.timeCallBack}/>)   
         );   
 
+        
+
         let className = this.state.className;
         this.showAnimation()
         return (
             <div id="AddClassView" style={{top:this.state.moveAnimation}}>
                 <div id="AddClassCard">   
+                    <div id = "AddClassSidebar">
+                        <div id="AddClassBackButton" className="SideButton" onClick={() => this.props.addClassReturn()}/>
+
+                    </div>
                     <div id="CardMake">
                         <div className = "classCard" style={this.cardcolor(0)} >   
                             <div className = "classUpper">
@@ -143,16 +222,20 @@ class AddCalss extends Component {
                                 <div className = "className">{className}</div>
                             </div>
                         </div>
+                        <div id = "AddClassSubmit"> 
+                            <div id ="AddClassSubmitReason">
+                            {this.state.messenger}
+                            </div>
+                            <div id = {(this.state.allReady? "AddClassSubmitButton" : "AddClassSubmitButtonReady")} className="transitionBackground" onClick={()=>this.axios()}> 수업만들기 </div>
+                        </div>
                     </div>
                 </div>
+
                 <div id="AddClassSetting">  
                     <div className = "AddClassSelector"> 
                         <div className = "AddClassSelectorName">
                              수업 기본 정보
                         </div>
-                        {/* <div className = "AddClassSelectorInfo">
-                             수업의 이름
-                        </div> */}
                         <div className = "AddClassSelectorInput">
                             <div className = "AddClassSelectorInfo">
                                 수업명 : 
@@ -162,9 +245,6 @@ class AddCalss extends Component {
                         {output}
                         {this.timeError()}
                         <div id="AddClassTimeApeend" onClick={()=>this.appendTime()}> 수업시간 추가 </div>
-
-
-                        
                     </div>
 
                     <div className = "AddClassSelector"> 
@@ -172,7 +252,7 @@ class AddCalss extends Component {
                             수업 기간
                         </div>
                         <div className = "AddClassSelectorInput">
-                            <AddDate/>
+                            <AddDate dataBack={this.dateCallBack} />
                         </div>
                     </div>
 
@@ -199,17 +279,7 @@ class AddCalss extends Component {
                         </div>
 
                     </div>
-
-                    <div className = "AddClassSelector"> 
-                        <div className = "AddClassSelectorName">
-                             수업 정책
-                        </div>
-                        <div className = "AddClassSelectorInfo">
-                            
-                        </div>
-                        <AddTardy times={this.state.backClassTimeList}/>
-                    </div>
-
+                     <AddTardy times={this.minTime()} dataBack={this.tardyCallBack} />
                 </div>
                 <div id="AddClassDumi"/>  
             </div>
@@ -220,4 +290,10 @@ class AddCalss extends Component {
 const mapStateToProps = (state) => ({
     cardColor : state.cardColor
   })
-export default connect(mapStateToProps)(AddCalss);
+
+function mapDispatchToProps(dispatch){
+    return {
+      addClassReturn : () => dispatch({type:'ADDCLASSBACK'}),
+    }
+  }
+export default connect(mapStateToProps,mapDispatchToProps)(AddCalss);
