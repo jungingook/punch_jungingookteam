@@ -14,8 +14,9 @@ class MyApp(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 파이썬 실행창을 항상 위로 유지해주는 코드
         self.initUI()
+        # 파이썬 실행창을 항상 위로 유지해주는 코드
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
 
     def initUI(self):
         #서버에서 json 값을 받아와 data 변수에 저장
