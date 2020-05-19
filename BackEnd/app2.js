@@ -25,6 +25,34 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'))
 
+// ID, PW test
+app.post('/test/login', (req, res) => {
+    let id = req.body.id;
+    let pw = req.body.pw;
+
+    let a = {
+        tt: 1
+    }
+
+    if(id == 101 && pw == 200){
+        console.log("ok");
+        console.log(a);
+        res.json(a);
+        
+    }else if(id && pw){
+        console.log("id or pw doesnt come");
+        console.log(id);
+        console.log(pw);
+        res.send("what?")
+        
+    }else{
+        console.log("this is wha?")
+        console.log(id);
+        console.log(pw);
+        
+    }
+})
+
 
 //router
 
@@ -59,59 +87,61 @@ app.get('/desk/qr', (req, res) => {
 // express 자체의 RestFul방식을 적용 가능 한지 찾아봐야함
 
 // Part. Professor
+app.use('/desk', require('./routes/desk'));
+
 
 // 1. 교수 메인창
-app.get('/desk/professor/main', (req, res) => {
-     // get parameter로 받는 형식으로 변경
+// app.get('/desk/professor/main', (req, res) => {
+//      // get parameter로 받는 형식으로 변경
 
-    connection.query(`
-    select cl.id as id, cl.name as name, p.name as professor, cl.code as code, cl.day, cl.startTime, cl.endTime, cl.color, cl.design
-    from professor as p
-    left join classList as cl on cl.professor_id = p.id
-    where p.id = 1
-    `, function(err, results, fields){
-        if(err) throw err
+//     connection.query(`
+//     select cl.id as id, cl.name as name, p.name as professor, cl.code as code, cl.day, cl.startTime, cl.endTime, cl.color, cl.design
+//     from professor as p
+//     left join classList as cl on cl.professor_id = p.id
+//     where p.id = 1
+//     `, function(err, results, fields){
+//         if(err) throw err
 
-        res.json(results)
-    })
-})
+//         res.json(results)
+//     })
+// })
 
 // 2. 교수 수업 생성 실행
-app.post('/desk/professor/classList', (req, res) => {
-    let body = req.body;
+// app.post('/desk/professor/classList', (req, res) => {
+//     let body = req.body;
 
-    let inputName = body.InputClassName;
-    let inputCode = body.InputClassCode;
-    let inputDay = body.InputClassDay;
-    let inputStartTime = body.InputClassStartTime;
-    let inputEndTime = body.InputClassEndTime;
-    let inputColor = body.inputClassColor;
-    let inputDesign = body.InputClassDesign;
-    let inputPrfessorId = 1; // 임시. 이승진
+//     let inputName = body.InputClassName;
+//     let inputCode = body.InputClassCode;
+//     let inputDay = body.InputClassDay;
+//     let inputStartTime = body.InputClassStartTime;
+//     let inputEndTime = body.InputClassEndTime;
+//     let inputColor = body.inputClassColor;
+//     let inputDesign = body.InputClassDesign;
+//     let inputPrfessorId = 1; // 임시. 이승진
 
-    let arr = [
-        inputName,  //1
-        inputCode,//2
-        inputDay, 
-        inputStartTime,
-        inputEndTime,
-        inputDesign,
-        inputColor,
-        inputPrfessorId//7
-    ];
+//     let arr = [
+//         inputName,  //1
+//         inputCode,//2
+//         inputDay, 
+//         inputStartTime,
+//         inputEndTime,
+//         inputDesign,
+//         inputColor,
+//         inputPrfessorId//7
+//     ];
 
-    connection.query(`
-        INSERT INTO classList (name, code, day, startTime, endTime, design, color, professor_id) 
-        VALUES (?, ?, ?, ?, ?, ?, ?);
-    `, arr, (err, results, fields) => {
-        if (err){
-            console.error(err);
-            throw err;
-        } 
-        console.log(inputName + "수업 생성 완료");
-        res.redirect('/desk/professor/main');
-    })
-})
+//     connection.query(`
+//         INSERT INTO classList (name, code, day, startTime, endTime, design, color, professor_id) 
+//         VALUES (?, ?, ?, ?, ?, ?, ?);
+//     `, arr, (err, results, fields) => {
+//         if (err){
+//             console.error(err);
+//             throw err;
+//         } 
+//         console.log(inputName + "수업 생성 완료");
+//         res.redirect('/desk/professor/main');
+//     })
+// })
 
 // 3. 교수 수업 수정,    _ 오직 startTime, endTime, color, design만 변경가능
 app.post('/desk/professor/classList/update', (req, res) => {
@@ -137,9 +167,9 @@ app.post('/desk/professor/classList/update', (req, res) => {
 })
 
 // 4. 교수 수업 삭제
-app.post('/desk/prfoessor/classList/delete', (req, res) => {
+app.post('/desk/professor/classList/delete', (req, res) => {
     // let classListID = req.body.classListId;    
-    let classListID = rep.body.classListID; // 임의로 보낸 값
+    let classListID = req.body.classListID; // 임의로 보낸 값
 
     
     connection.query(`
@@ -222,6 +252,47 @@ app.post('/desk/professor/classList/qr/request', (req, res) => {
             res.send('isOpened값을 잘못 확인하였다. 수정 요망')
         }
     }) 
+})
+
+// 7. 교수가 자신의 과목에 대한 모든 출결현황 보기
+app.post('/desk/professor/classList/attendance', (req, res) => {
+    let professor_id = req.body.professor_ID;
+    let class_id = req.body.classListID;
+
+    connection.query(`
+        select * from attendance as att 
+        left join classList as cl on att.class_id = cl.id
+        where cl.professor_id = ? and cl.id = ?;
+    `, [class_id, professor_id], (err, result) => {
+        if(err){
+            console.error(err);
+            throw err;
+        }
+
+        res.json(result);
+    })
+})
+
+// 8. 교수가 수동으로 출석 변경
+app.post('/desk/professor/classList/attendance/modify', (req, res) => {
+    let attendance_id = req.body.attendance_ID;
+    let edit_record = req.body.edit_record;
+    let edit_reason = req.body.edit_reason;
+
+    // 변경은 recored와 reason을 변경한다.
+    // 특정 날짜를 알 수 있어야 한다. 아니 attendanceID만 알고 있으면 변경할 수 있다 어차피 이 url에 접근할 수 있는 유저는 해당 교수밖에 없으므로.    
+    connection.query(`
+        UPDATE attendance 
+        SET record = ?, reason = ? 
+        WHERE id = ?
+    `, [attendance_id, edit_record, edit_reason], (err, result)=> {
+        if(err){
+            console.error(err);
+            throw err;
+        }
+
+        res.redirect('/desk/professor/main');
+    })
 })
 
 // ------------------------------------------------------------------------------------------------------------------------------
@@ -374,7 +445,7 @@ app.post('/mobile/qr/verify', (req, res) => {
 
 })  //실제로 테스트 해 봐야하는 ** 가장 중요
 
-// 5. 학새 출석 현황 보기
+// 5. 학생 출석 현황 보기
 app.post('/mobile/student/class/attendance', (req, res) => {
     let student_id =req.body.studentID;
     let class_id = req.body.classListID;
