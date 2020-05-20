@@ -43,31 +43,36 @@ class LoginForm(QWidget):
 
         button_login = QPushButton('로그인')
         button_login.clicked.connect(self.check_password)
+        button_login.setShortcut('return')
 
         layout.addWidget(button_login, 3, 0)
 
         self.setLayout(layout)
 
     def check_password(self):
-        url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/test/login"
-        login_json = {'id': self.lineEdit_username.text(), 'pw': self.lineEdit_password.text()}
-        response = requests.post(url_post, json=login_json)
-        print(response.status_code)
-
-        if response.status_code == 200:
-            if response.text == 'what?':
-                msg = QMessageBox()
-                msg.setText('아이디 혹은 비밀번호를 확인해주세요.')
-                msg.exec_()
-            else:
-                # login_code = response.json() <-추후 json으로 받아올 경우를 대비한 코드
-                qr = QR()
-                qr.show()
-                self.close()
-        else:
+        if self.lineEdit_username.text() == '' or self.lineEdit_password.text() == '':
             msg = QMessageBox()
-            msg.setText('인터넷 연결을 확인해주세요.')
+            msg.setText('아이디 혹은 비밀번호 입력해주세요.')
             msg.exec_()
+        else:
+            url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/test/login"
+            login_json = {'id': self.lineEdit_username.text(), 'pw': self.lineEdit_password.text()}
+            response = requests.post(url_post, json=login_json)
+
+            if response.status_code == 200:
+                if response.text == 'what?':
+                    msg = QMessageBox()
+                    msg.setText('아이디 혹은 비밀번호를 확인해주세요.')
+                    msg.exec_()
+                else:
+                    # login_code = response.json() <-추후 json으로 받아올 경우를 대비한 코드
+                    qr = QR()
+                    qr.show()
+                    self.close()
+            else:
+                msg = QMessageBox()
+                msg.setText('인터넷 연결을 확인해주세요.')
+                msg.exec_()
 
 
 class QR(QWidget):
@@ -92,7 +97,6 @@ class QR(QWidget):
             box_size=10,
             border=0,
         )
-        qr.add_data(str(data_qr['id']) + data_qr['randomNum'])
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
         qt_image = ImageQt.ImageQt(img)
@@ -120,8 +124,7 @@ class QR(QWidget):
         self.move(300, 300)
         self.show()
 
-        t = threading.Thread(target=self.refreshImg)
-        t.start()
+        threading.Thread(target=self.refreshImg, daemon=True).start()
 
     def refreshImg(self):
         url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"

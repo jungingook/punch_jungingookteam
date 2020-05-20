@@ -19,13 +19,7 @@ class MyApp(QWidget):
         self.initUI()
 
     def initUI(self):
-        #서버에서 json 값을 받아와 data 변수에 저장
-        url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"
-        data = requests.get(url).json()
-
-        # data 딕셔너리 중 randomNum 키의 value 값으로 qr코드 생성, 추후 다른 키 값과 조합하여 수정 예정
-        img = qrcode.make(str(data['id'])+data['randomNum'])
-
+        img = qrcode.make("Start")
         qt_image = ImageQt.ImageQt(img)
         self.pixmap = QPixmap.fromImage(qt_image)
 
@@ -44,8 +38,7 @@ class MyApp(QWidget):
         self.move(300, 300)
         self.show()
 
-        t = threading.Thread(target=self.refreshImg)
-        t.start()
+        threading.Thread(target=self.refreshImg, daemon=True).start()
 
     def refreshImg(self):
         url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"
