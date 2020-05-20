@@ -97,6 +97,7 @@ class QR(QWidget):
             box_size=10,
             border=0,
         )
+        qr.add_data(str(data_qr['id']) + data_qr['randomNum'])
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
         qt_image = ImageQt.ImageQt(img)
