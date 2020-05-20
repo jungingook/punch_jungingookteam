@@ -29,33 +29,44 @@ class LoginForm(QWidget):
         layout.addWidget(self.lbl, 0, 0)
 
         self.lineEdit_username = QLineEdit()
-        self.lineEdit_username.setStyleSheet("font-size: 20px;")
+        self.lineEdit_username.setStyleSheet("font-size: 30px;")
         self.lineEdit_username.setPlaceholderText('아이디')
         self.lineEdit_username.resize(50, 10)
 
         layout.addWidget(self.lineEdit_username, 1, 0)
 
         self.lineEdit_password = QLineEdit()
-        self.lineEdit_password.setStyleSheet("font-size: 20px;")
+        self.lineEdit_password.setStyleSheet("font-size: 30px;")
         self.lineEdit_password.setEchoMode(QLineEdit.Password)
         self.lineEdit_password.setPlaceholderText('비밀번호')
         layout.addWidget(self.lineEdit_password, 2, 0)
 
-        button_login = QPushButton('Login')
+        button_login = QPushButton('로그인')
         button_login.clicked.connect(self.check_password)
+
         layout.addWidget(button_login, 3, 0)
 
         self.setLayout(layout)
 
     def check_password(self):
+        url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/test/login"
+        login_json = {'id': self.lineEdit_username.text(), 'pw': self.lineEdit_password.text()}
+        response = requests.post(url_post, json=login_json)
+        print(response.status_code)
 
-        if self.lineEdit_username.text() == 'ingook' and self.lineEdit_password.text() == 'babo':
-            qr = QR()
-            qr.show()
-            self.close()
+        if response.status_code == 200:
+            if response.text == 'what?':
+                msg = QMessageBox()
+                msg.setText('아이디 혹은 비밀번호를 확인해주세요.')
+                msg.exec_()
+            else:
+                # login_code = response.json() <-추후 json으로 받아올 경우를 대비한 코드
+                qr = QR()
+                qr.show()
+                self.close()
         else:
             msg = QMessageBox()
-            msg.setText('아이디 혹은 비밀번호를 다시 확인해주세요')
+            msg.setText('인터넷 연결을 확인해주세요.')
             msg.exec_()
 
 
@@ -69,11 +80,11 @@ class QR(QWidget):
         # 파이썬 실행창을 항상 위로 유지해주는 코드
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
 
-        #서버에서 json 값을 받아와 data 변수에 저장
-        url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"
-        data = requests.get(url).json()
+        # 서버에서 json 값을 받아와 data_qr 변수에 저장
+        url_qr = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"
+        data_qr = requests.get(url_qr).json()
 
-        # data 딕셔너리 중 randomNum 키의 value 값으로 qr코드 생성, 추후 다른 키 값과 조합하여 수정 예정
+        # data_qr 딕셔너리 중 randomNum 키의 value 값으로 qr코드 생성, 추후 다른 키 값과 조합하여 수정 예정
         self.setStyleSheet("background-color: #FFFFFF")
         qr = qrcode.QRCode(
             version=1,
@@ -81,7 +92,7 @@ class QR(QWidget):
             box_size=10,
             border=0,
         )
-        qr.add_data(str(data['id'])+data['randomNum'])
+        qr.add_data(str(data_qr['id']) + data_qr['randomNum'])
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
         qt_image = ImageQt.ImageQt(img)
@@ -89,6 +100,7 @@ class QR(QWidget):
 
         self.lbl_img = QLabel()
         self.lbl_img.setPixmap(self.pixmap)
+        self.lbl_img.setScaledContents(True)
 
         self.vbox = QVBoxLayout()
         self.vbox.addWidget(self.lbl_img)
@@ -102,7 +114,7 @@ class QR(QWidget):
         self.vbox.addWidget(self.btn)
 
         self.slider.valueChanged.connect(self.setOpacity)
-        self.btn.clicked.connect(self.button_clicked)
+        self.btn.clicked.connect(self.resetOpacity)
 
         self.setWindowTitle('투명도 조절')
         self.move(300, 300)
@@ -121,7 +133,7 @@ class QR(QWidget):
             self.lbl_img.setPixmap(self.pixmap)
             time.sleep(1)
 
-    def button_clicked(self):
+    def resetOpacity(self):
         self.slider.setValue(1)
 
     def setOpacity(self, value):

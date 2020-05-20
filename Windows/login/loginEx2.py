@@ -16,27 +16,28 @@ class LoginForm(QWidget):
 
         self.lbl = QLabel()
         self.img = QPixmap("logo.png")
-        self.lbl.setPixmap(self.img.scaled(300, 300))
+        self.lbl.setPixmap(self.img.scaledToWidth(300))
         self.lbl.setStyleSheet("background-color:white;")
         self.lbl.setAlignment(Qt.AlignCenter)
 
         layout.addWidget(self.lbl, 0, 0)
 
         self.lineEdit_username = QLineEdit()
-        self.lineEdit_username.setStyleSheet("font-size: 20px;")
+        self.lineEdit_username.setStyleSheet("font-size: 30px;")
         self.lineEdit_username.setPlaceholderText('아이디')
         self.lineEdit_username.resize(50, 10)
 
         layout.addWidget(self.lineEdit_username, 1, 0)
 
         self.lineEdit_password = QLineEdit()
-        self.lineEdit_password.setStyleSheet("font-size: 20px;")
+        self.lineEdit_password.setStyleSheet("font-size: 30px;")
         self.lineEdit_password.setEchoMode(QLineEdit.Password)
         self.lineEdit_password.setPlaceholderText('비밀번호')
         layout.addWidget(self.lineEdit_password, 2, 0)
 
         button_login = QPushButton('Login')
         button_login.clicked.connect(self.check_password)
+        button_login.setShortcut('Return')
         layout.addWidget(button_login, 3, 0)
 
         self.setLayout(layout)
