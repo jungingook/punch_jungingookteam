@@ -22,9 +22,9 @@ class ClassInfo extends Component {
     }
 
     handle = () => {
-        let id = this.props.info.id
-        store.dispatch({ type: "selectCard",id : id})
-        store.dispatch({ type: "panelMode",panelMode : "Select"})
+        this.props.PanelSelect("Select")
+        this.props.selectCard(this.props.info.id)
+
     }
 
     date = (day,startTime,endTime) => {
@@ -51,7 +51,7 @@ class ClassInfo extends Component {
             console.log('에러 : 카드 컬러의 색상값을 받아오지 못했습니다.')
           }
         return (
-        <div className = "classCard" onClick={this.handle}>   
+        <div className = "classCard" onClick={() => this.handle()}>   
             <div className = "classUpper" style={bgColor}>
                 <div className = "classCardBackground">
                     <div className = "classOne classDesign"/>
@@ -72,21 +72,11 @@ class ClassInfo extends Component {
 const mapStateToProps = (state) => ({
     cardColor : state.cardColor
   })
-//export default ClassInfo;
-/* 
-mapDispatchToProps는 첫번째 인자로
-redux의 dispatch를 인자로 사용한다.
-이를 통해 우리는 store의 상태를 변경할수있다.
-*/
-const mapDispatchToProps = dispatch => {
-    // 순수 객체를 반환해줘야한다.
+
+function mapDispatchToProps(dispatch){
     return {
-      // 순수 action객체를 dispatch 해준다.
-      increment: () => dispatch({ type: 'INCREMENT' }),
-      decrement: () => dispatch({ type: 'DECREMENT' }),
-      reset: () => dispatch({ type: 'RESET' })
+        selectCard : (id) => dispatch({ type: "selectCard",id :id}),
+        PanelSelect : (mode) => dispatch({ type: "panelMode",panelMode :mode}),
     }
   }
-
-
-export default connect(mapStateToProps)(ClassInfo);
+export default connect(mapStateToProps,mapDispatchToProps)(ClassInfo);

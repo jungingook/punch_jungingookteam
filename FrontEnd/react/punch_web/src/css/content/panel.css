@@ -1,0 +1,522 @@
+/* 메인 패널 */
+#Panel{
+    width: 100%;
+    height: 100vh;
+    transition: background-color 0.5s;
+    display: flex;
+}
+#PanelBox{
+    width: 40%;
+    margin: 10vh 5% ;
+    height: 70vh;
+    background-color: #FFFEFF;
+    box-shadow: 2px 2px 5px #77777760;
+    border-radius: 20px;
+}
+
+/* 스텐바이 패널 */
+#StandbyUpper{
+    height: 35vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    
+}
+#StandbyLogo{
+    filter: grayscale(1) opacity(0.7);
+    height: 40%;
+    margin-bottom: 5vh;
+}
+#StandbyLower{
+    height: 35vh;
+    text-align: center;
+    color: #777;
+    font-size: 5vh;  
+    font-weight: bold;
+    line-height: 10vh;
+}
+/* 타이틀 패널 */
+#TitlePanel{
+    width: 100%;
+    height: 15vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#TitlePanelUpper{
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    padding: 0 5%;
+    height: 5vh;
+}
+#TitlePanelTime{
+    position: relative;
+    z-index: 1;
+    box-sizing: content-box;
+    font-size: 3vh;
+    font-weight: bold;
+    line-height: 5vh;
+    overflow: hidden;
+}
+
+/* 수업 수정과 삭제가 있는 설정메뉴 */
+#TitlePanelSetting{
+    transition: all 1s;
+}
+#TitlePanelSettingMenu{
+    display: flex;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+#TitlePanelSettingButton{
+    margin: 0.5vh;
+    width: 4vh;
+    height: 4vh;
+    background-image: url("../../img/setting.png");
+
+    background-repeat: no-repeat;
+    background-position: center center;
+    transition: all 0.3s;
+    background-color: #d9d9d9;
+    border-radius: 5px;
+}
+.TitlePanelSettingButtonL{
+    background-size: 100% 100%;
+}
+.TitlePanelSettingButtonS{
+    background-size: 80% 80%;
+}
+#TitlePanelSettingButton:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+  }
+.TitlePanelSettingButtonL:hover{
+    background-size: 80% 80%;
+}
+.TitlePanelSettingButtonS:hover{
+    background-size: 100% 100%;
+}
+#TitlePanelHideButton{
+    height: 4vh;
+    font-size: 3vh;
+    line-height: 4vh;
+    width: 10vh;
+    margin: 0.5vh;
+    text-align: center;
+    background: #999999; 
+    color: white;
+    border-radius: 5px;
+}
+#TitlePanelClassModifyButton{
+    height: 4vh;
+    font-size: 3vh;
+    line-height: 4vh;
+    width: 10vh;
+    margin: 0.5vh;
+    text-align: center;
+    background: #FDC830; 
+    color: white;
+    border-radius: 5px;
+}
+#TitlePanelDeleteButton{
+    height: 4vh;
+    font-size: 3vh;
+    line-height: 4vh;
+    width: 10vh;
+    margin: 0.5vh;
+    text-align: center;
+    background-color: #ee0979;
+    color: white;
+    border-radius: 5px;
+}
+
+#TitlePanelName{
+    padding:0 5% 0 5%;
+    font-size: 5vh;
+    font-weight: bold;
+    white-space:nowrap;
+    word-wrap:normal;
+    overflow:hidden;
+}
+#TitlePanel::after{
+    content:"";
+    height: 5px;
+    width: 90%;
+    margin: 0 5%;
+    border-radius: 100px;
+    background-color: black;
+}
+#PanelField{
+    width: 100%;
+    height: 55vh;
+    overflow: hidden;
+}
+/* 선택 패널 */
+#SelectPanel{
+    width: 100%;
+    display: flex;
+    height: 50vh;
+    margin: 0 0 5vh 0;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.SelectPanelBnt{
+    width: 90%;
+    margin: 1vh auto;
+    height: 12vh;
+    background-color: #999;
+    transition: background-color 0.1s;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 0 5%;
+    box-shadow: 2px 2px 5px #77777760;
+    transition: box-shadow 0.5s;
+}
+.SelectPanelBnt:hover{
+    box-shadow: 2px 2px 10px #222222;
+}
+.PanelSelectFront{
+    height: 10vh;
+    margin: 1vh 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.PanelSelectName{
+    font-size: 4vh;
+    color: white;
+    font-weight: bold;
+}
+.PanelSelectSummary{
+    font-size: 2.5vh;
+    color: white;
+    font-weight: bold;  
+}
+
+
+/* QR코드 셋팅 */
+#QRreadePanel{
+    width: 100%;
+    display: flex;
+    height: 50vh;
+    margin: 0 0 5vh 0;
+    padding: 0 5%;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#cheakLevel{
+    height: 15vh;
+    overflow: hidden;
+}
+
+.cheakTimeSelect{
+    width: 100%;
+    display: flex;
+    height: 8vh;
+    margin: 2vh 0;
+    background-color: #F6F7F9;
+    border-radius: 15px;
+    box-shadow: 2px 2px 5px #77777760;
+    display: flex;
+    transition: box-shadow 0.5s;
+}
+.cheakTimeSelect:hover{
+    box-shadow: 2px 2px 5px #666;
+}
+.cheakTime{
+    width: 20%;
+    text-align: center;
+    line-height: 8vh;
+    font-size: 3.5vh;
+}
+.inputLeft{
+    text-align: right;
+}
+.cheakTimeSelectZone{
+    display: flex;
+    height: 40vh;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.cheakTimeUser{
+    display: flex;
+}
+.cheakTimeUser > input{
+    width: 40%;
+    border: 0px;
+    background-color: #00000000;
+    text-align: center;
+    line-height: 8vh;
+    font-size: 3.5vh;
+    font-family: 'Do Hyeon', sans-serif;
+}
+.cheakText{
+    width: 80%;
+    padding: 1vh;
+    box-sizing: border-box;
+    padding-left: 5%;
+    color: #fff;
+    font-size: 2.5vh;
+    border-radius: 30px 15px 15px 30px;
+    text-shadow: 1px 1px 2px #77777760;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: #c8c8c8;
+    transition: background-color 0.3s;
+}
+.cheakTimeExplanation{
+    font-size: 2.5vh;
+}
+.cheakTimeInfo{
+    display: flex;
+    justify-content: flex-start;
+    font-size: 1.5vh;
+}
+.cheakTimeInfoTag{
+    border-radius: 3px;
+    margin: 2px 5px 2px 0px;
+    padding: 2px;
+    background-color: white;
+}
+
+#QRreadeBnts{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 10vh;
+    border-radius: 10px;
+    background-color: #d9d9d9;
+    text-align: center;
+    font-size: 3vh;  
+    font-weight: bold;
+}
+#QRcodeSetBnt{
+    width: 50%;
+    height: 8vh;
+    line-height: 8vh;
+    margin: 1vh 2.5%;
+    color: #d9d9d9;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #FFFEFF;
+    box-shadow: 2px 2px 5px #77777760;
+    transition: box-shadow 0.5s;
+}
+#QRcodeSetBnt:hover{
+    box-shadow: 2px 2px 5px #666;  
+}
+#QRcodeMakeBnt{
+    width: 20%;
+    height: 8vh;
+    line-height: 8vh;
+    margin: 1vh 2.5%;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #FFFEFF;
+    box-shadow: 2px 2px 5px #77777760;
+    transition: box-shadow 0.5s;
+}
+#QRcodeMakeBnt:hover{
+    box-shadow: 2px 2px 5px #666;   
+}
+/* QR코드 - 출석부 */
+#QRactivePanel{
+    width: 100%;
+    display: flex;
+    height: 50vh;
+    padding: 0 5%;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#attendancelist{
+    overflow: auto;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+#attendancelist::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+}
+.attendanceUser{
+    width: 90%;
+    background-color: #d9d9d9;
+    height: 5vh;
+    font-size: 3vh;
+    color: #fff;
+    padding: 0 5%;
+    line-height: 4vh;
+    margin: 0.5vh 0;
+    border-radius: 10px;
+}
+
+/* 클레스 삭제 */
+#ClassDelete {
+    width: 100%;
+    display: flex;
+    height: 50vh;
+    margin: 0 0 5vh 0;
+    padding: 0 5%;
+    box-sizing: border-box;
+    flex-direction: column;
+}
+#ClassDeleteWarning{
+    background-color: #f953c6;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+    margin: 30px 0px;
+}
+#ClassDeleteWarning > span{ 
+    font-size: 3vh;
+}
+
+#ClassDeleteinfoTitle{
+    height: 5vh;
+    margin: 10px 0;
+    font-size: 3vh;
+    color: #000;
+    display: flex;
+}
+
+#ClassDeleteinfoTitle > span{
+    border-bottom: 3px solid #000;
+}
+
+#ClassDeleteinfo{
+    height: 20vh;
+    width: 80%;
+    padding: 10px 10%;
+    text-align: left;
+    background-color: #F6F7F9;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#ClassDeleteLogin{
+    width: 100%;
+    margin: 10px 0;
+    font-size: 2vh;
+    border-radius: 5px;
+    border: 0px;
+    text-align: center;
+}
+#ClassDeleteLoginButton{
+    border: 2px solid #000;
+    text-align: center;
+    height: 5vh;
+    font-size: 2.5vh;
+    line-height: 5vh;
+    border-radius: 5px;
+}
+#ClassDeleteinput{
+    width: 100%;
+    margin: 10px auto;
+    font-size: 2vh;
+    border-radius: 5px;
+    border: 0px;
+    text-align: center;
+}
+#classDeleteButton{
+    width: 100%;
+    margin: 1vh auto;
+    height: 8vh;
+    font-size: 5vh;
+    line-height: 8vh;
+    border-radius: 5px;
+    text-align: center;
+}
+.classDeleteButtonOff{
+    box-shadow: 2px 2px 5px #77777760;
+    background-color: #ccc;
+    color: white;
+}
+
+.classDeleteButtonOn{
+    box-shadow: 2px 2px 5px #77777760;
+    background-color: red;
+    color: white;
+}
+
+/* 출석체크 */
+#AttendanceCheckPanel{
+    padding: 0 5%;
+}
+#AttendanceCheckPanelTitle{
+    height: 5vh;
+    font-size: 3vh;
+}
+#AttendanceViewSelect{
+    height: 8vh;
+    width: 100%;
+    margin: 1vh 0;
+    background-color: #ccc;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 8vh;
+    font-size: 5vh;
+    color: #fff;
+}
+
+#allWeek{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    height: 45vh;
+    overflow: auto;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+#allWeek::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+}
+
+.AttendanceWeek{
+    width: 30%;
+    height: 8vh;
+    margin: 1vh 0;
+    background-color: #ccc;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px #77777760;
+    color: #fff;
+}
+.AttendanceWeekNo{
+    font-size: 2.5vh;
+    text-align: center;
+}
+.AttendanceDate{
+    font-size: 1.5vh;
+    text-align: center;
+}
+.AttendanceState{
+    text-align: center;
+}
+.AttendanceStateAttendance{
+    padding: 2px;
+    display: inline-block;
+    background-color: rgb(153, 197, 86);
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px #77777760;
+}
+.AttendanceStateTrady{
+    padding: 2px;
+    display: inline-block;
+    background-color: orange;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px #77777760;
+}
+.AttendanceStateAbsent{
+    padding: 2px;
+    display: inline-block;
+    background-color: red;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px #77777760;
+}

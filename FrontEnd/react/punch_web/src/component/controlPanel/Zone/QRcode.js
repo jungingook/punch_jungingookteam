@@ -1,8 +1,8 @@
 // 모듈 연결
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { connect } from "react-redux"; // 리덕스 연결
 // [리듀스]스토어 연결
-import store from "../../store";
+import store from "../../../store";
 // [ajax] axios 연결
 import axios from 'axios';
 // 컴포넌트 연결
@@ -56,12 +56,24 @@ class QRcode extends Component {
         });
 
     }
+    
     componentWillMount() {
-        setInterval(this.qrChange, 1000, "1초 간격")
+         let qrInterval = setInterval(this.qrChange, 1000, "1초 간격")
+         this.setState({
+            Interval : qrInterval
+         },)
+
       }
+      componentWillUnmount(){
+        clearInterval(this.state.Interval)
+        console.log('인터벌 헤제')
+      }
+
+    
     render() {
         let d = new Date();
         let textColor={Color:this.state.qrColor}
+
         return (
         <div id = "qr">
             <div id = "ClassTimer" style={textColor}>{this.sortTime(12,d.getHours(),d.getMinutes())}</div>

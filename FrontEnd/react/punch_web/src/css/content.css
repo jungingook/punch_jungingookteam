@@ -591,3 +591,6 @@
 .tardyViewText{
     white-space :nowrap;
 }
+#tardyView div {
+    transition: flex 0.5s ease-out;
+}

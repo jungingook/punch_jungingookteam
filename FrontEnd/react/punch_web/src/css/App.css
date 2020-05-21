@@ -100,8 +100,15 @@
 @import url("background.css"); 
 /* 컨텐츠 레이어 */
 @import url("content.css");
-/* 컨트롤 */
+
+/* --------------------------- */
+/* 컨트롤*/
 @import url("content/control.css");
+/* 패널*/
+@import url("content/panel.css");
+/* 존*/
+@import url("content/zone.css");
+/* --------------------------- */
 /* 로그인 */
 @import url("content/login.css");
 
@@ -127,4 +134,7 @@
 
 .transitionBackground{
   transition: background-color 0.5s;
+}
+.transitionflex{
+  transition: flex 0.5s;
 }

@@ -95,12 +95,17 @@ class AddCalss extends Component {
             return () => clearTimeout(SetTime);
     }
 
+    dayToNum = (day) => {
+
+        return 
+    }
+
     timeCallBack = (data=["","",""]) => {
         const { backClassTimeList } = this.state;
         let test = backClassTimeList.filter(info => info.id !== data[3])
-
+        let weekday = {'일요일':0,'월요일':1,'화요일':2,'수요일':3,'목요일':4,'금요일':5,'토요일':6}
         this.setState({
-            backClassTimeList : test.concat({ key:data[3], id:data[3], day: data[0],startTime: data[1],endTime: data[2]}),
+            backClassTimeList : test.concat({ key:data[3], id:data[3], day: weekday[data[0]],startTime: data[1],endTime: data[2]}),
             timeError :  false,
         },()=>this.isReady())       
     }
@@ -126,7 +131,7 @@ class AddCalss extends Component {
         else if  (mode == "absent"){
             time = time + 20          
         }
-        return (Math.floor(time/60)<10? "0"+Math.floor(time/60): Math.floor(time/60)) + ":" + (time%60<10? "0"  +time%60 : time%60)
+        return (Math.floor(time/60)<10? "0"+Math.floor(time/60): Math.floor(time/60)) + " : " + (time%60<10? "0"  +time%60 : time%60)
     } 
 
     // 여러 수업시간중 최소 시간을 구하는 함수 지각 정책 설정을 위해 필요
@@ -165,17 +170,20 @@ class AddCalss extends Component {
     axios = () => {
         console.log(this.state.backClassTimeList[0]) 
         if (this.state.allReady){
+            // console.log('수업이름 : ',this.state.className,'수업요일 : ',this.state.backClassTimeList[0].day,'수업시간 : ',this.state.backClassTimeList[0].startTime,'~',this.state.backClassTimeList[0].endTime,'수업 컬러  : ',this.state.classColor,'수업디자인 : ',this.state.classDesign,)
             // 임시로 다중 시간을 입력하지 않고 입력된 첫 시간만 보냄 
             axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList', {
-                InputClassName: this.props.select.id,
-                InputClassDay : this.state.backClassTimeList[0].day,
-                InputClassStartTime : this.state.backClassTimeList[0].startTime,//
-                InputClassEndTime : this.state.backClassTimeList[0].endTime,//
+                InputClassName: this.state.className,
+                InputClassDay : this.state.backClassTimeList[0].day, // 단일처리 
+                InputClassStartTime : this.state.backClassTimeList[0].startTime,// 단일처리 
+                InputClassEndTime : this.state.backClassTimeList[0].endTime,// 단일처리 
                 inputClassColor : this.state.classColor,
                 InputClassDesign : this.state.classDesign,
-                inputPrfessorId : 1, // 1 승진좌
+                InputClassCode: 500, // 해당 항목은 없어저야함
+                // inputPrfessorId : 1, // 1 승진좌
             })
             .then( response => {
+                this.props.updata()
                 this.props.addClassReturn()
             })
             .catch( error => {
@@ -184,12 +192,12 @@ class AddCalss extends Component {
         }
     }
 
-
     render() {
         let output ;
         let classTimeText;
+        let numToDay = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']
         classTimeText = this.state.backClassTimeList.map(
-            info => (<div className="classTimes" key={info.id}> {info.day}{this.timeCalculation(info.startTime)}~{this.timeCalculation(info.startTime+info.endTime)}</div>)   
+            info => (<div className="classTimes" key={info.id}> {numToDay[info.day]} {this.timeCalculation(info.startTime)}~{this.timeCalculation(info.startTime+info.endTime)}</div>)   
         );
         // console.log("시간값:",classTimeText)
         output = this.state.classTimeList.map(

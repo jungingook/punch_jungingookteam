@@ -2,7 +2,7 @@
 import React, { Component , Fragment } from 'react';
 import { connect } from "react-redux"; // 리덕스 연결
 // [리듀스]스토어 연결
-import store from "../../store";
+import store from "../../../store";
 // 컴포넌트 연결
 class QRactive extends Component {
 
@@ -34,6 +34,5 @@ const mapStateToProps = (state) => ({
     classList : state.classList,
     selectCard : state.selectCard
   })
-
 
 export default connect(mapStateToProps)(QRactive);

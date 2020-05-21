@@ -17,6 +17,19 @@ class ClassInfoList extends Component {
         classLength : 0 // 수업의 숫자
     }
 
+    listUpdata = () => {
+        let classList
+        axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/main')
+        .then( response => {
+            classList = response.data;
+            store.dispatch({ type: "classList",classList})
+            this.setState({ classLength : classList.length });
+        })
+        .catch( error => {
+            this.setState({ classLength : -1 });
+          })      
+    }
+
     componentWillMount() {
         let classList
         axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/main')
@@ -32,8 +45,11 @@ class ClassInfoList extends Component {
       
     render() {
         let list = ""
-        console.log(this.state.classLength)
-        console.log(this.props.classList)
+        if(this.props.Refresh){
+            this.props.classListRefresh(false)
+            console.log('새로고침됨 : ', this.props.Refresh)
+            this.listUpdata()
+        }
         if (this.state.classLength > 0){
             list = this.props.classList.map(
                 info => (<ClassInfo key={info.id} info={info}/>)   
@@ -46,16 +62,23 @@ class ClassInfoList extends Component {
         return (
             <div id="ClassInfoList">
                 <div id = "ClassInfoListTitle"> 수업목록</div>
-                {(this.props.addClass?<AddClass/>:"")}
+                {(this.props.addClass?<AddClass updata={this.listUpdata}/>:"")}
                 {list}    
             </div>
         );
       }      
 }
 
+
+function mapDispatchToProps(dispatch){
+    return {
+      classListRefresh : (value) => dispatch({ type: "classListRefresh",refresh : value}),
+    }
+  }
 const mapStateToProps = (state) => ({
     classList : state.classList,
-    addClass :  state.addClass
+    addClass :  state.addClass,
+    Refresh : state.classListRefresh,
   })
 
-export default connect(mapStateToProps)(ClassInfoList);
+export default connect(mapStateToProps,mapDispatchToProps)(ClassInfoList);

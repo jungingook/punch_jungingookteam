@@ -2,7 +2,7 @@
 import React, { Component , Fragment } from 'react';
 import { connect } from "react-redux"; // 리덕스 연결
 // [리듀스]스토어 연결
-import store from "../../store";
+import store from "../../../store";
 // [ajax] axios 연결
 import axios from 'axios';
 // 컴포넌트 연결

@@ -86,7 +86,7 @@ class AddTardy extends Component {
                     </div>
                 </div>
                 <div id = 'tardyView' >
-                    <div id = 'AttendanceCell' style={{flex : Attendance}}>
+                    <div id = 'AttendanceCell'  style={{flex : Attendance}}>
                         출석
                     </div>
                     <div id = 'tardyCell' style={{flex : trady}}>

@@ -6,23 +6,23 @@ import { connect } from "react-redux"; // 리덕스 연결
 import store from "../../store";
 
 // 컴포넌트 연결
-import Standby from './Standby'; // 패널 비활성화
-import ActivePanel from './ActivePanel'; // 패널 활성화
-import QRcode from "./QRcode";
+import Standby from './Panel/Standby'; // 패널 비활성화
+import ActivePanel from './Panel/ActivePanel'; // 패널 활성화
+import InfoZone from "./Zone/InfoZone"; // 존 
 
 
 class Panel extends Component {
     
-    handle = () => {
-        let id = this.props.info.id
-        store.dispatch({ type: "selectCard",id : id})
-        store.dispatch({ type: "panelMode",panelMode : "Select"})
-    }
+    // handle = () => {
+    //     let id = this.props.info.id
+    //     store.dispatch({ type: "selectCard",id : id})
+    //     store.dispatch({ type: "panelMode",panelMode : "Select"})
+    // }
 
     render() {
         let bgColor={backgroundColor:"#FFFEFF"}
-        let mode = <Standby/>;
-        let qrcode = null;
+        let Panel = <Standby/>;
+        let info = <InfoZone/>;
         if(this.props.selectCard != null){
             
             console.log(this.props.selectCard+"카드 선택")
@@ -30,8 +30,8 @@ class Panel extends Component {
             for (let index = 0; index <  this.props.classList.length; index++) {
                 if (this.props.classList[index].id == this.props.selectCard){
                     bgColor={background:this.props.cardColor[this.props.classList[index].color][0]}
-                    mode = <ActivePanel select={this.props.classList[index]}/>;
-                    qrcode = <QRcode select={this.props.classList[index]}/>
+                    Panel = <ActivePanel select={this.props.classList[index]}/>;
+                    info = <InfoZone select={this.props.classList[index]}/>
                 }
             }
             
@@ -40,17 +40,22 @@ class Panel extends Component {
         return (
             <div id = "Panel" style={bgColor}>
                 <div id = "PanelBox">
-                    {mode}
+                    {Panel}
                 </div>
-                <div id = "QRzone">
-                    {qrcode == null? "":qrcode}
-                </div>
+                {info}
             </div>
             
         );
     }
 }
 //export default Panel;
+// function mapDispatchToProps(dispatch){
+//     return {
+//         selectCard2 : (id) => dispatch({ type: "selectCard",id : id}),
+//         panelMode2 : (mode) => dispatch({ type: "panelMode",panelMode : mode})
+//     }
+// }
+
 const mapStateToProps = (state) => ({
     classList : state.classList,
     selectCard : state.selectCard,

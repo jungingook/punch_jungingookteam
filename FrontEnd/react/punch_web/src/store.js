@@ -9,6 +9,8 @@ const defaultState = {
     selectCard: null,
     loginActivation: true,
     addClass : false,
+    classListRefresh: false,
+    attendanceNo  : 1,
     cardColor : {
         default : ["#00B0F0","#009FF0"], // 블루와 같음
         red : ["#E93A2E","#C92A1D"], // 확정
@@ -116,7 +118,17 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 addClass: false,
-            }       
+            }         
+        case "classListRefresh" :
+            return {
+                ...state,
+                classListRefresh: action.refresh,
+            }     
+        case "selectAttendanceWeek" :
+            return {
+                ...state,
+                attendanceNo: action.attendanceNo,
+            }             
         default:
             //console.log("리듀스 성공");
             return state; 

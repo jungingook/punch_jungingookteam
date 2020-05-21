@@ -230,9 +230,7 @@ class AddTime extends Component {
             cssClass: "AddClassTime",
         })     
     }
-
     
-
     // 상위 컴포넌트에게 시간값을 전달합니다.
     uplode = () => {
 

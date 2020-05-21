@@ -16,7 +16,7 @@ class App extends Component {
   
   contentMove = (mode) => {
     let output = "contentMove_0"
-    if (mode == "QRactive") {
+    if (mode == "QRactive"||mode == "AttendanceWeek") {
       output = "contentMove_50"
     }
     else {
@@ -36,9 +36,9 @@ class App extends Component {
           <div id = "ContentPointer" className={this.contentMove(this.props.panelMode)}>
             <div id = "ContentLeft"> 
               <div id = "SideBar">
-                <div id = "SideBarAddClass" className ="SideButton" onClick={() => this.props.addClass()} ></div>
-                <div id = "SideBarSetting" className ="SideButton" onClick={() => this.props.logout()} ></div>
-                <div id = "SideBarLogoutBt" className ="SideButton" onClick={() => this.props.logout()} ></div>
+                <div id = "SideBarAddClass" className ="SideButton" onClick={() => this.props.addClass()} title="수업생성" ></div>
+                <div id = "SideBarSetting" className ="SideButton" onClick={() => this.props.logout()} title="계정설정" ></div>
+                <div id = "SideBarLogoutBt" className ="SideButton" onClick={() => this.props.logout()} title="로그아웃" ></div>
               </div>
               <ClassInfoList/>
             </div>
@@ -48,7 +48,7 @@ class App extends Component {
           </div>
         </div>
         <div id = "L_Interface">
-          {this.props.panelMode == "QRactive" ? <BackBnt/>:""}
+          {this.props.panelMode == "QRactive"|| this.props.panelMode == "AttendanceWeek" ? <BackBnt/>:""}
         </div>
         <div id = "L_Login" className={(this.props.loginActivation ? "LoginActivation" : "LoginDisabled" )}>
           <Login/>

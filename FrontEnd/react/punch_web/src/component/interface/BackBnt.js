@@ -9,24 +9,38 @@ import store from "../../store";
 
 class BackBnt extends Component {
     
-    handle = () => {
-        store.dispatch({ type: "panelMode",panelMode : "QRreade"})
+    click = () => {
+        switch (this.props.panelMode){
+
+            case 'QRactive' : 
+                this.props.PanelSelect( "QRreade")
+                break;
+
+            case 'AttendanceWeek' : 
+                this.props.PanelSelect( "Select")
+                break;
+        }
+
+
           }
     
     render() {
         return (
-            <div id="leftBnt" onClick={this.handle}> 
+            <div id="leftBnt" onClick={()=>this.click()}> 
             <span>◀</span> 
             </div>
         );
     }
 }
 
-//export default Panel;
 const mapStateToProps = (state) => ({
-    classList : state.classList,
-    selectCard : state.selectCard,
-    cardColor : state.cardColor
+    panelMode : state.panelMode,
 })
 
-export default connect(mapStateToProps)(BackBnt);
+function mapDispatchToProps(dispatch){
+    return {
+        PanelSelect : (mode) => dispatch({ type: "panelMode",panelMode :mode}),
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(BackBnt);
