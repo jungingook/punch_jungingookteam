@@ -43,6 +43,7 @@ class LoginForm(QWidget):
 
         button_login = QPushButton('로그인')
         button_login.clicked.connect(self.check_password)
+        button_login.setShortcut("Return")
 
         layout.addWidget(button_login, 3, 0)
 
