@@ -4,6 +4,7 @@ var cors = require('cors');
 var app = express();
 var port  = 3000;
 var methodOverride = require('method-override')
+var cookieParser = require('cookie-parser')
 
 // var indexRouter = require('./routes/index');
 
@@ -20,10 +21,16 @@ connection.connect()
 
 app.use(methodOverride('_method'));
 app.use(cors());
+app.use(cookieParser())
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'))
+
+// Router 설정
+app.use('/desk', require('./routes/desk'));
+app.use('/mobile', require('./routes/mobile'));
+
 
 // ID, PW test
 app.post('/test/login', (req, res) => {
@@ -87,8 +94,6 @@ app.get('/desk/qr', (req, res) => {
 // express 자체의 RestFul방식을 적용 가능 한지 찾아봐야함
 
 // Part. Professor
-app.use('/desk', require('./routes/desk'));
-
 
 // 1. 교수 메인창
 // app.get('/desk/professor/main', (req, res) => {

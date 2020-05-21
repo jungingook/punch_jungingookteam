@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const crypto = require('crypto');
 
 // //mysql 
 var mysql = require('mysql')
@@ -13,10 +14,6 @@ var connection = mysql.createConnection({
 connection.connect()
 
 
-router.get('/testRouter', (req, res) => {
-    res.send('good Test Well!');
-})
-
 // 1. 교수 메인창
 router.get('/professor/main', (req, res) => {
      // get parameter로 받는 형식으로 변경
@@ -27,9 +24,16 @@ router.get('/professor/main', (req, res) => {
      left join classList as cl on cl.professor_id = p.id
      where p.id = 1
      `, function(err, results, fields){
-         if(err) throw err
- 
-         res.json(results)
+        if(err) throw err
+
+        //console.log("쿠키: " + req.cookies)
+
+        // if(req.cookies){
+        //     console.log(req.cookies);
+        // }else{
+        //     console.log("쿠키 없음")
+        // }
+        res.json(results)
      })
  })
 
@@ -90,5 +94,72 @@ router.post('/professor/classList', (req, res) => {
 // app.post('/desk/professor/classList/attendance/modify', (req, res) => {
 
 
+// 9. sign_up 회원가입 페이지
+router.post('/professor/sign_up', (req, res)=>{
+    let logId = req.body.inputId;
+    let password = req.body.inputPw;
+    let name = req.body.inputName;
+    let email = req.body.inputEmail;
+
+    let salt = Math.round((new Date().valueOf() * Math.random())) + "";
+    console.log("salt = "  +salt);
+    let hashPassword = crypto.createHash("sha512").update(password + salt).digest("hex");
+    console.log("hasPs = " + hashPassword);
+
+    connection.query(`
+        INSERT INTO student (name, email, login_id, login_pw, salt) 
+        VALUES ( ?, ?, ?, ?, ?);
+    `, [name, email, logId, hashPassword, salt], function(err, result) {
+        if(err){
+            console.error(err);
+            throw err;
+        }
+
+        console.log("회원 가입 완료");
+        res.redirect('/desk/professor/main');
+    })
+})
+
+
+// 10. login페이지
+router.post('/professor/login', (req, res) => {   
+   let logId = req.body.inputId;
+   let password = req.body.inputPw;
+   let email = req.body.inputEmail // for cookie
+
+   connection.query(`
+        select login_pw, salt
+        from student
+        where login_id = ?
+   `, [logId], function(err, result) {
+       if(err){
+           console.error(err);
+           throw err;           
+       }
+
+       let dbPassword = result[0].login_pw;
+       let salt = result[0].salt;       
+       let hashPassword = crypto.createHash("sha512").update(password + salt).digest("hex");
+
+       if(hashPassword === dbPassword){
+           console.log("비밀번호 일치");
+           // 쿠키 설정
+           res.cookie("professor", email, {
+               expires: new Date(Date.now() + 900000),// 쿠키의 만료 시간을 표준 시간 으로 설정
+               httpOnly: true, // HTTP 프로토콜만 쿠키 사용 가능,
+               path: '/desk/professor/main'
+           })
+           res.redirect("/desk/professor/main");
+       }else{
+           console.log("비밀번호 불일치")
+           res.redirect("/desk/professor/login");
+       }
+   })
+})
+
+// 11. 로그인 화면 GET
+router.get('/professor/login', (req, res) => {
+    res.send("로그인 GET화면!!!!!")
+})
 
 module.exports = router;
