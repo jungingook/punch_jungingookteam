@@ -30,16 +30,16 @@ class MyApp(QWidget):
         qt_image = ImageQt.ImageQt(img)
         pixmap = QPixmap.fromImage(qt_image)
 
-
         # QR코드 표시
         lbl_img = QLabel()
-        lbl_img.setPixmap(pixmap)
+        lbl_img.setPixmap(pixmap.scaled(pixmap.width(), pixmap.height(), Qt.KeepAspectRatio))
+        lbl_img.hasHeightForWidth()
         # qr코드를 화면에 맞춰줘서 확대하면 qr코드가 같이 확대됨
         lbl_img.setScaledContents(True)
-        lbl_img.devicePixelRatioFScale()
 
         vbox = QVBoxLayout()
         vbox.addWidget(lbl_img)
+
 
         # 투명도 조절을 위한 슬라이더 바
         slider = QSlider(Qt.Horizontal, self)

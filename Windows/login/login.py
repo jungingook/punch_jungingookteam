@@ -120,7 +120,7 @@ class QR(QWidget):
         self.move(300, 300)
         self.show()
 
-        t = threading.Thread(target=self.refreshImg)
+        t = threading.Thread(target=self.refreshImg, daemon=True)
         t.start()
 
     def refreshImg(self):
