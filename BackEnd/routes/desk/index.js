@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+const bodyParser = require('body-parser');
+
+const app = express();
 
 // //mysql 
-var mysql = require('mysql')
-var connection = mysql.createConnection({
+const mysql = require('mysql')
+const connection = mysql.createConnection({
     host: 'qr.c5wiyouiqpec.ap-northeast-2.rds.amazonaws.com',
     user: 'admin',
     password: 'dlwhdgh009',
@@ -13,10 +18,24 @@ var connection = mysql.createConnection({
 })
 connection.connect()
 
+/** use */
+app.use(session({
+    key: 'session_cookie_name',
+    secret: 'session_cookie_secret', // 세션을 암호화 해줌
+    resave: false, // 세션을 항상 저장할지 여부를 정하는 값. (false 권장)
+    saveUninitialized: true,// 초기화되지 않은채 스토어에 저장되는 세션
+    store: new MySQLStore({ // 데이터를 저장되는 형식
+        host: 'qr.c5wiyouiqpec.ap-northeast-2.rds.amazonaws.com',
+        user:'admin',
+        password: 'dlwhdgh009',
+        port: '3306',
+        database: 'qrqr'
+    })
+}))
+
 
 // 1. 교수 메인창
 router.get('/professor/main', (req, res) => {
-     // get parameter로 받는 형식으로 변경
 
      connection.query(`
      select cl.id as id, cl.name as name, p.name as professor, cl.code as code, cl.day, cl.startTime, cl.endTime, cl.color, cl.design
@@ -26,13 +45,9 @@ router.get('/professor/main', (req, res) => {
      `, function(err, results, fields){
         if(err) throw err
 
-        //console.log("쿠키: " + req.cookies)
 
-        // if(req.cookies){
-        //     console.log(req.cookies);
-        // }else{
-        //     console.log("쿠키 없음")
-        // }
+        console.log("session.logId = " + req.session.logId);        
+
         res.json(results)
      })
  })
@@ -107,7 +122,7 @@ router.post('/professor/sign_up', (req, res)=>{
     console.log("hasPs = " + hashPassword);
 
     connection.query(`
-        INSERT INTO student (name, email, login_id, login_pw, salt) 
+        INSERT INTO professor (name, email, login_id, login_pw, salt) 
         VALUES ( ?, ?, ?, ?, ?);
     `, [name, email, logId, hashPassword, salt], function(err, result) {
         if(err){
@@ -115,7 +130,7 @@ router.post('/professor/sign_up', (req, res)=>{
             throw err;
         }
 
-        console.log("회원 가입 완료");
+        console.log(" 교수 회원 가입 완료");
         res.redirect('/desk/professor/main');
     })
 })
@@ -125,11 +140,10 @@ router.post('/professor/sign_up', (req, res)=>{
 router.post('/professor/login', (req, res) => {   
    let logId = req.body.inputId;
    let password = req.body.inputPw;
-   let email = req.body.inputEmail // for cookie
 
    connection.query(`
         select login_pw, salt
-        from student
+        from professor
         where login_id = ?
    `, [logId], function(err, result) {
        if(err){
@@ -143,16 +157,18 @@ router.post('/professor/login', (req, res) => {
 
        if(hashPassword === dbPassword){
            console.log("비밀번호 일치");
-           // 쿠키 설정
-           res.cookie("professor", email, {
-               expires: new Date(Date.now() + 900000),// 쿠키의 만료 시간을 표준 시간 으로 설정
-               httpOnly: true, // HTTP 프로토콜만 쿠키 사용 가능,
-               path: '/desk/professor/main'
-           })
-           res.redirect("/desk/professor/main");
+
+            // session 설정
+            req.session.logId = logId;
+            console.log("session_id = " )
+            console.log(req.session);
+            req.session.save( () => {
+                res.json(req.session);
+                // res.redirect('/desk/professor/main');
+            })
        }else{
-           console.log("비밀번호 불일치")
-           res.redirect("/desk/professor/login");
+            console.log("비밀번호 불일치")
+            res.redirect("/desk/professor/login");
        }
    })
 })

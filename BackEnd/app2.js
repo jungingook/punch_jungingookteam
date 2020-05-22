@@ -1,16 +1,17 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var cors = require('cors');
-var app = express();
-var port  = 3000;
-var methodOverride = require('method-override')
-var cookieParser = require('cookie-parser')
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const app = express();
+const port  = 3000;
+const methodOverride = require('method-override')
+const cookieParser = require('cookie-parser')
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 
-// var indexRouter = require('./routes/index');
 
 // //mysql 
-var mysql = require('mysql')
-var connection = mysql.createConnection({
+const mysql = require('mysql')
+const connection = mysql.createConnection({
     host: 'qr.c5wiyouiqpec.ap-northeast-2.rds.amazonaws.com',
     user: 'admin',
     password: 'dlwhdgh009',
@@ -19,13 +20,28 @@ var connection = mysql.createConnection({
 })
 connection.connect()
 
-app.use(methodOverride('_method'));
-app.use(cors());
-app.use(cookieParser())
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'))
+
+app.use(cors());
+app.use(cookieParser())
+
+// session
+app.use(session({
+    key: 'session_cookie_name',
+    secret: 'session_cookie_secret', // 세션을 암호화 해줌
+    resave: false, // 세션을 항상 저장할지 여부를 정하는 값. (false 권장)
+    saveUninitialized: true,// 초기화되지 않은채 스토어에 저장되는 세션
+    store: new MySQLStore({ // 데이터를 저장되는 형식
+        host: 'qr.c5wiyouiqpec.ap-northeast-2.rds.amazonaws.com',
+        user:'admin',
+        password: 'dlwhdgh009',
+        port: '3306',
+        database: 'qrqr'
+    })
+}));
 
 // Router 설정
 app.use('/desk', require('./routes/desk'));
