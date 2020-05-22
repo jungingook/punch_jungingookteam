@@ -33,7 +33,7 @@ app.use(session({
     key: 'session_cookie_name',
     secret: 'session_cookie_secret', // 세션을 암호화 해줌
     resave: false, // 세션을 항상 저장할지 여부를 정하는 값. (false 권장)
-    saveUninitialized: true,// 초기화되지 않은채 스토어에 저장되는 세션
+    saveUninitialized: false,// 초기화되지 않은채 스토어에 저장되는 세션
     store: new MySQLStore({ // 데이터를 저장되는 형식
         host: 'qr.c5wiyouiqpec.ap-northeast-2.rds.amazonaws.com',
         user:'admin',
