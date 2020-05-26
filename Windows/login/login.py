@@ -4,7 +4,8 @@ import requests
 import threading
 import time
 
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox, QVBoxLayout, QSlider
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QLineEdit, \
+    QGridLayout, QMessageBox, QVBoxLayout, QSlider
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PIL import ImageQt
@@ -13,6 +14,7 @@ from PIL import ImageQt
 class LoginForm(QWidget):
     def __init__(self):
         super().__init__()
+
         self.setStyleSheet("background-color:white;")
 
         self.setWindowTitle('펀치 QR 생성')
@@ -21,31 +23,40 @@ class LoginForm(QWidget):
         layout = QGridLayout()
 
         self.lbl = QLabel()
-        self.img = QPixmap("logo.png")
-        self.lbl.setPixmap(self.img.scaled(300, 300))
-        self.lbl.setStyleSheet("background-color:white;")
+        self.lbl.setMinimumSize(300, 400)
+        self.img = QPixmap("logoW.png")
+        self.lbl.setPixmap(self.img.scaledToWidth(170))
+        self.lbl.setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, "
+                               "stop: 0.4 #FF4B2B,"
+                               "stop: 1.0 #FF416C,);"
+                               "border-radius : 15px;")
         self.lbl.setAlignment(Qt.AlignCenter)
-
         layout.addWidget(self.lbl, 0, 0)
 
         self.lineEdit_username = QLineEdit()
-        self.lineEdit_username.setStyleSheet("font-size: 30px;")
+        self.lineEdit_username.setStyleSheet("font-family: NanumSquare; font-size: 20px; font-weight:bold; "
+                                             "padding-left: 10px;"
+                                             "background-color: #f6f7f9; border-radius:10px; height:45px;")
         self.lineEdit_username.setPlaceholderText('아이디')
         self.lineEdit_username.resize(50, 10)
 
-        layout.addWidget(self.lineEdit_username, 1, 0)
+        layout.addWidget(self.lineEdit_username, 2, 0)
 
         self.lineEdit_password = QLineEdit()
-        self.lineEdit_password.setStyleSheet("font-size: 30px;")
+        self.lineEdit_password.setStyleSheet("font-family: NanumSquare; font-size: 20px; font-weight:bold; "
+                                             "padding-left: 10px;"
+                                             "background-color: #f6f7f9; border-radius:10px; height:45px;")
         self.lineEdit_password.setEchoMode(QLineEdit.Password)
         self.lineEdit_password.setPlaceholderText('비밀번호')
-        layout.addWidget(self.lineEdit_password, 2, 0)
+        layout.addWidget(self.lineEdit_password, 3, 0)
 
         button_login = QPushButton('로그인')
         button_login.clicked.connect(self.check_password)
         button_login.setShortcut("Return")
+        button_login.setStyleSheet("font-size : 25px; background-color: #fff; font-family: NanumSquare;"
+                                   "background-color: #fff;")
 
-        layout.addWidget(button_login, 3, 0)
+        layout.addWidget(button_login, 4, 0)
 
         self.setLayout(layout)
 
