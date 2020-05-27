@@ -14,7 +14,9 @@ from PIL import ImageQt
 class LoginForm(QWidget):
     def __init__(self):
         super().__init__()
+        self.initUI()
 
+    def initUI(self):
         self.setStyleSheet("background-color:white;")
 
         self.setWindowTitle('펀치 QR 생성')
@@ -53,8 +55,9 @@ class LoginForm(QWidget):
         button_login = QPushButton('로그인')
         button_login.clicked.connect(self.check_password)
         button_login.setShortcut("Return")
-        button_login.setStyleSheet("font-size : 25px; background-color: #fff; font-family: NanumSquare;"
-                                   "background-color: #fff;")
+        button_login.setStyleSheet("font-size : 20px; background-color: #fff; font-family: NanumSquare;"
+                                   "background-color: #fff;"
+                                   "height: 45px; margin-top:10px; padding 5px;")
 
         layout.addWidget(button_login, 4, 0)
 
@@ -77,8 +80,8 @@ class LoginForm(QWidget):
                     msg.exec_()
                 else:
                     # login_code = response.json() <-추후 json으로 받아올 경우를 대비한 코드
-                    qr = QR()
-                    qr.show()
+                    self.qr = QR()
+                    self.qr.show()
                     self.close()
             else:
                 msg = QMessageBox()
