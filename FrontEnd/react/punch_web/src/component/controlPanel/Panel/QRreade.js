@@ -113,8 +113,56 @@ class QRreade extends Component {
         })                
     }
 
-    startTime = (startTime) => {
-        return Math.floor(startTime/60) + ":" + (startTime%60<10? "0"  +startTime%60 : startTime%60 )
+    nearClassTime (classTime,mode='all'){
+        let now = new Date
+        let result
+        let nearTime = null
+        let near = Infinity
+        let nowTime = now.getHours()*60+now.getMinutes()
+
+        // 오늘과 같은 요일을 찾아 해당하는 객체만 리턴해준다.
+        result = classTime.filter(list =>( list.day == now.getDay()))
+        // 지금 시간과 가장 가까운 수업을 찾는다. 단 이미 지나간 수업은 찾지 않는다.
+        for (let index = 0; index < result.length; index++) {
+            
+            let classTime = result[index].startTime+result[index].endTime
+            if(classTime-nowTime > 0 ){
+                if(near > classTime-nowTime){
+                    near = classTime-nowTime
+                    nearTime = index
+                    console.log(near,'인덱스 : ',index)
+                }
+            }
+        }
+        // 만약 오늘 지금 시간 이후에 있는 수업이 있다면 리턴해준다.
+        if (nearTime != null){ 
+            return result[nearTime]
+        }
+
+        // 내일부터 다음주 같은 요일을 찾아 해당하는 객체만 리턴해준다.
+        for (let day = 0; day < 6; day++) {
+            result = classTime.filter(list =>( list.day == (now.getDay()+day+1>6 ?(now.getDay()+day+1)-7: now.getDay()+day+1)))
+            if (result.length > 0 )break;
+        }
+        
+        // 가장 빠른 수업을 찾는다.
+        near = Infinity
+        for (let index = 0; index < result.length; index++) {
+            let classTime = result[index].startTime+result[index].endTime
+            if(near > classTime-nowTime){
+                near = classTime-nowTime
+                nearTime = index
+                console.log(near,'인덱스 : ',index)
+            }
+        }
+        return result[nearTime]
+    }
+
+    startTime = (classTime) => {
+        console.log(classTime)
+        let nearTime = this.nearClassTime(classTime)
+        console.log(nearTime)
+        return Math.floor(nearTime.startTime/60) + ":" + (nearTime.startTime%60<10? "0"  +nearTime.startTime%60 : nearTime.startTime%60)
     }
     // 지금 시간을 계산하는 함수
     nowTime = () =>{
@@ -134,7 +182,6 @@ class QRreade extends Component {
     } 
     // 클릭한것의 배경색을 바꿔주는 함수
     thisSelect = (select, div) =>{
-
         if (div =='cheakText') {
             let css = {backgroundColor : '#c8c8c8'}
             if (select == this.state.cheakMode){
@@ -163,10 +210,10 @@ class QRreade extends Component {
                     <div className = "cheakTimeSelectZone">
 
                         <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("ClassTime")} style={this.thisSelect('ClassTime','cheakTimeSelect')} >
-                            <div className = "cheakTime"> {this.startTime(this.props.select.startTime)} </div>
+                            <div className = "cheakTime"> {this.startTime(this.props.select.classTime)} </div>
                             <div className = "cheakText" style={this.thisSelect('ClassTime','cheakText')}>
                             <div className = "cheakTimeExplanation"> 수업시간으로 출석체크 </div>
-                            <div className = "cheakTimeInfo"> <div className = "cheakTimeInfoTag"> </div>{this.timeCalculation(this.props.select.startTime,"late")} 부터 지각 {this.timeCalculation(this.props.select.startTime,"absent")} 부터는 결석이 됩니다.</div>
+                            <div className = "cheakTimeInfo"> <div className = "cheakTimeInfoTag"> </div>{this.timeCalculation(this.nearClassTime(this.props.select.classTime).startTime,"late")} 부터 지각 {this.timeCalculation(this.nearClassTime(this.props.select.classTime).startTime,"absent")} 부터는 결석이 됩니다.</div>
                             </div>
                         </div>
                         <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("NowTime")} style={this.thisSelect('NowTime','cheakTimeSelect')} >

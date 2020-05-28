@@ -35,9 +35,10 @@ class AttendWeekStudent extends Component {
 
     render() {
         let bgcolor = { 출석 : {backgroundColor : 'rgb(153, 197, 86)'},지각 : {backgroundColor : 'orange'},결석 : {backgroundColor : 'red'} }
+        console.log(this.props.name,':',this.props.order,)
         return (
-            <div className = "AttendWeekStudentView">
-                <div className = "AttendWeekStudentDefault">
+            <div className = "AttendWeekStudentView" style={(this.props.show?{margin : '10px 0', filter: 'opacity(100%)', order : this.props.order}:{margin : '0px', filter: 'opacity(0%)'})}>
+                <div className = "AttendWeekStudentDefault" style={(this.props.show?{height : '100px'}:{height : '0px'})}>
                     <div className = "AttendWeekStudentLeft">
                         <div className = "AttendWeekStudentNo"> {this.props.studentNo} </div>
                         <div className = "AttendWeekStudentLeftBottom">
@@ -59,7 +60,7 @@ class AttendWeekStudent extends Component {
                         </div>
                     </div>
                 </div>
-                { this.state.expansion ? 
+                { this.state.expansion && this.props.show ? 
                  <div className = "AttendWeekStudentExpansion">
                      <div className = "AttendMapLOG">
                         <div className="AttendMap"/>

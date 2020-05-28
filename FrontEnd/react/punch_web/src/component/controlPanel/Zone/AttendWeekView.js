@@ -4,10 +4,12 @@ import { connect } from "react-redux"; // 리덕스 연결
 
 // [리듀스]스토어 연결
 import store from "../../../store";
+// [ajax] axios 연결
+import axios from 'axios';
 
 // 컴포넌트 연결
 import QRcode from './QRcode'; // 큐알코드 생성 
-import AttendWeekStudent from './AttendWeekStudent'; // 큐알코드 생성 
+import AttendWeekStudent from './AttendWeekStudent'; // 학생출석표 생성 
 
 class AttendWeekView extends Component {
 
@@ -15,44 +17,71 @@ class AttendWeekView extends Component {
         search : '',
         student :[
         {name :'정인국', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'여은성', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'김민혁', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'정인국', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'여은성', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'김민혁', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'정인국', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'여은성', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'김민혁', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'정인국', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'여은성', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'김민혁', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334023, attendTime:'13시 23분 07초'},
+        {name :'이종호', studentNo:201334024, attendTime:'13시 23분 07초'},
+        {name :'여은성', studentNo:201334025, attendTime:'13시 23분 07초'},
+        {name :'김민혁', studentNo:201334026, attendTime:'13시 23분 07초'},
+        {name :'정인식', studentNo:201334027, attendTime:'13시 23분 07초'},
+        {name :'정인국', studentNo:201334028, attendTime:'13시 23분 07초'},
+        {name :'장성원', studentNo:201334029, attendTime:'13시 23분 07초'},
+        {name :'배민환', studentNo:201334030, attendTime:'13시 23분 07초'},
+        {name :'한용재', studentNo:201334031, attendTime:'13시 23분 07초'},
+        {name :'변민영', studentNo:201334032, attendTime:'13시 23분 07초'},
+        {name :'이상민', studentNo:201334033, attendTime:'13시 23분 07초'},
+        {name :'이종호', studentNo:201334034, attendTime:'13시 23분 07초'},
+        {name :'강민성', studentNo:201334035, attendTime:'13시 23분 07초'},
+        {name :'김민혁', studentNo:201334036, attendTime:'13시 23분 07초'},
+        {name :'이종호', studentNo:201334037, attendTime:'13시 23분 07초'},
+        {name :'정인국', studentNo:201334038, attendTime:'13시 23분 07초'},
+        {name :'이종호', studentNo:201334039, attendTime:'13시 23분 07초'},
+        {name :'여은성', studentNo:201334040, attendTime:'13시 23분 07초'},
+        {name :'김민혁', studentNo:201334041, attendTime:'13시 23분 07초'},
+        {name :'이종호', studentNo:201334042, attendTime:'13시 23분 07초'},
         ],
 
     }
+
     studentSearch = (e) => {
         this.setState({
             search : e.target.value,
         })
     }
 
+    listUpdata = () => {
+        console.log('토큰값 : ','http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/attendance?token='+this.props.token)
+        let classList
+        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/attendance?token='+this.props.token,{
+            professor_ID: 1,
+            classListID : 1,
+        }, { credentials: true })
+        .then( response => {
+            console.log('출석 리스트 : ',response)
+            this.props.loginSuccess(response.data.token)
+        })
+        .catch( error => {
+            console.log('출석 리스트 에러 ',error)          
+            })      
+    }
+    componentWillMount() {
+        // this.listUpdata()
+        }
     render() {
-        console.log(this.props.attendanceNo)
-        console.log(this.props.panelMode)
-
-        const result = this.state.student.filter(s =>(s.name.search(this.state.search) != -1));
-        console.log(result)
-        let id = 0
-        let list = result.map(
-            info => (<AttendWeekStudent key={id++} name={info.name} studentNo={info.studentNo}  attendTime={info.attendTime} />)   
+        let result  
+        if (Number(this.state.search)|| this.state.search =='0'){
+            // console.log('학번으로 검색')
+            result = this.state.student.filter(s =>((s.studentNo+'').search(this.state.search) != -1))
+        }else {
+            // console.log('이름으로 검색')
+            result = this.state.student.filter(s =>(s.name.search(this.state.search) != -1));
+        }
+        // console.log('렌더',result)
+        let show = result.map(
+            info => (info.studentNo)   
+        );     
+        // console.log('쇼',show)
+        let list = this.state.student.map(
+            info => (<AttendWeekStudent key={info.studentNo} order={info.name.search(this.state.search)} show={(show.indexOf(info.studentNo) == -1 ? false : true )} name={info.name} studentNo={info.studentNo}  attendTime={info.attendTime} />)   
         );          
+
 
         return (
             <div id = "AttendWeekZone">
@@ -66,12 +95,10 @@ class AttendWeekView extends Component {
                     </div>
                 </div>
                 <div id = "AttendWeekInfoButton">
-                이름으로 검색 : <input className= "AttendInfoinput" placeholder="학생검색" onChange={this.studentSearch}/>
-                    <div className="AttendInfoButton" > 출석자만 보기 </div>
-                    <div className="AttendInfoButton" > 지각자만 보기 </div>
-                    <div className="AttendInfoButton" > 결석자만 보기 </div>                   
+                    <div className= "AttendInfoinput" > <span>학생 검색 : </span><input placeholder="학번 또는 이름" onChange={this.studentSearch}/> </div>
+                    <div className="AttendInfoButton" > 출석자 제외 </div>               
                 </div>
-                <div>
+                <div  id = "AttendWeekStudentZone">
                     {list}
                 </div>
             </div>
@@ -80,8 +107,14 @@ class AttendWeekView extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    attendanceNo : state.attendanceNo,
-    panelMode : state.panelMode,
-  })
+        attendanceNo : state.attendanceNo,
+        panelMode : state.panelMode,
+        token :  state.jwtToken
+    })
 
-export default connect(mapStateToProps)(AttendWeekView);
+function mapDispatchToProps(dispatch){
+    return {
+        loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
+        }
+    }
+export default connect(mapStateToProps,mapDispatchToProps)(AttendWeekView);

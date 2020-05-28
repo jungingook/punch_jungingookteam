@@ -51,13 +51,22 @@
     height: 5vh;
 }
 #TitlePanelTime{
-    position: relative;
-    z-index: 1;
     box-sizing: content-box;
     font-size: 3vh;
+    height: 5vh;
+    width: 100%;
     font-weight: bold;
     line-height: 5vh;
     overflow: hidden;
+    background-color: #fff;
+}
+#TitlePaneNowlTime{
+    display: inline-block;
+}
+#allTimeShow{
+    display: inline-block;
+    font-size: 2vh;
+    height: 3vh;
 }
 
 /* 수업 수정과 삭제가 있는 설정메뉴 */
@@ -333,9 +342,13 @@
     padding: 0 5%;
     box-sizing: border-box;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 #attendancelist{
+    background: #FFFEFF; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #FFFEFF, #f2f2f2, #dbdbdb, #eaeaea); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, #FFFEFF, #f2f2f2, #dbdbdb, #eaeaea); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-radius: 0px 0px 15px 15px;
     overflow: auto;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
@@ -345,14 +358,28 @@
 }
 .attendanceUser{
     width: 90%;
-    background-color: #d9d9d9;
+    padding: 0 2%;
+    margin: 0.5vh auto;
+    background-color: #F6F7F9;
+    box-shadow: 2px 2px 5px #77777760;
+    border-radius: 5px;
+    transition: all 0.5s;
+    display: flex;
+    justify-content: space-around;
+}
+.attendanceUserName{
     height: 5vh;
+    width: 20%;
     font-size: 3vh;
-    color: #fff;
-    padding: 0 5%;
-    line-height: 4vh;
-    margin: 0.5vh 0;
-    border-radius: 10px;
+    line-height: 5vh;
+    transition: all 0.5s;
+}
+.attendanceUserState{
+    height: 5vh;
+    width: 80%;
+    font-size: 3vh;
+    line-height: 5vh;
+    transition: all 0.5s;
 }
 
 /* 클레스 삭제 */

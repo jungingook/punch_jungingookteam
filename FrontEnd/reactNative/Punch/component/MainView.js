@@ -13,15 +13,15 @@ import Footer from './footer/Footer'; // 앱의 메인 화면 구성을 담당�
 const layout = StyleSheet.create({
   header: {
     backgroundColor :"#ffffff",
-    flex : 1,
+    height : 60,
   },
   contents:{
-    flex : 8,
+    flex : 1,
     backgroundColor :"#F6F7F9",
   },
   footer: {
     backgroundColor :"#ffffff",
-    flex : 1,
+    height : 60,
   },
   Main: {
     flex: 1,

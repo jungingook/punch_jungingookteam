@@ -48,7 +48,6 @@ class QRcode extends Component {
             this.setState({
                 qrCode: random,
                 classCode : this.props.select.code,
-                qrColor : (this.props.select.color == "black"? "#FFFFFF":"#000000")
               });
         })
         .catch( error => {
@@ -76,10 +75,10 @@ class QRcode extends Component {
 
         return (
         <div id = "qr">
-            <div id = "ClassTimer" style={textColor}>{this.sortTime(12,d.getHours(),d.getMinutes())}</div>
-            <QRCodeMaker id="temp" value={this.state.qrCode} renderAs="canvas" size="1000" bgColor="#ffffff00" fgColor={this.state.qrColor}/>
+            <div id = "ClassTimer" style={{color:(this.props.select.color == "black"? "#FFFFFF":"#000000")}}>{this.sortTime(12,d.getHours(),d.getMinutes())}</div>
+            <QRCodeMaker id="temp" value={this.state.qrCode} renderAs="canvas" size="1000" bgColor="#ffffff00" fgColor={(this.props.select.color == "black"? "#FFFFFF":"#000000")}/>
             {/* size = 숫자 넣으면 에러가 뜨나 작동은 정상적으로 됨  */}
-            <div id="tempClass" style={textColor}> 
+            <div id="tempClass" style={{color:(this.props.select.color == "black"? "#FFFFFF":"#000000")}}> 
             앱을 통해 출석 체크 하세요
             </div>
         </div>
@@ -87,11 +86,18 @@ class QRcode extends Component {
     }
 }
 //export default Panel;
+function mapDispatchToProps(dispatch){
+    return {
+        loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
+    }
+}
+
 const mapStateToProps = (state) => ({
     classList : state.classList,
-    selectCard : state.selectCard
+    selectCard : state.selectCard,
+    token :  state.jwtToken
   })
 
-export default connect(mapStateToProps)(QRcode);
+export default connect(mapStateToProps,mapDispatchToProps)(QRcode);
 
 

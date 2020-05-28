@@ -168,21 +168,27 @@ class AddCalss extends Component {
     }
     // 수업을 생성합니다.
     axios = () => {
-        console.log(this.state.backClassTimeList[0]) 
+        console.log(this.state.backClassTimeList) 
+        console.log('수업생성 토큰 : ',this.props.token) 
+        let InputClassTime = new Array()
+        for (let index = 0; index < this.state.backClassTimeList.length; index++) {
+            InputClassTime.push({startTime : this.state.backClassTimeList[index].startTime,endTime : this.state.backClassTimeList[index].endTime,day : this.state.backClassTimeList[index].day})
+        }
+
         if (this.state.allReady){
             // console.log('수업이름 : ',this.state.className,'수업요일 : ',this.state.backClassTimeList[0].day,'수업시간 : ',this.state.backClassTimeList[0].startTime,'~',this.state.backClassTimeList[0].endTime,'수업 컬러  : ',this.state.classColor,'수업디자인 : ',this.state.classDesign,)
             // 임시로 다중 시간을 입력하지 않고 입력된 첫 시간만 보냄 
-            axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList', {
+            axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList?token='+this.props.token, {
                 InputClassName: this.state.className,
-                InputClassDay : this.state.backClassTimeList[0].day, // 단일처리 
-                InputClassStartTime : this.state.backClassTimeList[0].startTime,// 단일처리 
-                InputClassEndTime : this.state.backClassTimeList[0].endTime,// 단일처리 
+                InputClassTime : InputClassTime,
                 inputClassColor : this.state.classColor,
                 InputClassDesign : this.state.classDesign,
                 InputClassCode: 500, // 해당 항목은 없어저야함
                 // inputPrfessorId : 1, // 1 승진좌
             })
             .then( response => {
+                console.log(response)
+                this.props.loginSuccess(response.data.token)
                 this.props.updata()
                 this.props.addClassReturn()
             })
@@ -296,12 +302,14 @@ class AddCalss extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    cardColor : state.cardColor
+    cardColor : state.cardColor,
+    token :  state.jwtToken
   })
 
 function mapDispatchToProps(dispatch){
     return {
-      addClassReturn : () => dispatch({type:'ADDCLASSBACK'}),
+        loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
+        addClassReturn : () => dispatch({type:'ADDCLASSBACK'}),
     }
   }
 export default connect(mapStateToProps,mapDispatchToProps)(AddCalss);

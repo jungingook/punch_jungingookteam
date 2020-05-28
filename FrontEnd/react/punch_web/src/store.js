@@ -11,6 +11,7 @@ const defaultState = {
     addClass : false,
     classListRefresh: false,
     attendanceNo  : 1,
+    jwtToken : null,
     cardColor : {
         default : ["#00B0F0","#009FF0"], // 블루와 같음
         red : ["#E93A2E","#C92A1D"], // 확정
@@ -103,11 +104,13 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 loginActivation: false,
+                jwtToken : action.jwt
             }
         case "LOGOUT" :
             return {
                 ...state,
                 loginActivation: true,
+                jwtToken : null
             }  
         case "ADDCLASS" :
             return {

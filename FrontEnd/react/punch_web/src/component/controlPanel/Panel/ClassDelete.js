@@ -35,10 +35,11 @@ class ClassDelete extends Component {
     classDelete = () =>{
         console.log( '준비중 : ', this.props.select.name,  'id : ', this.props.select.id) 
             if (this.state.cssClass=='classDeleteButtonOn'){
-                axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/delete', {
+                axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/delete?token='+this.props.token, {
                     classListID: this.props.select.id,
                 })
                 .then( response => {
+                    this.props.loginSuccess(response.data.token)
                     this.props.classListRefresh(true)
                 })
                 .catch( error => {
@@ -86,13 +87,15 @@ class ClassDelete extends Component {
     //export default Panel;
 function mapDispatchToProps(dispatch){
     return {
+        loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
         classListRefresh : (value) => dispatch({ type: "classListRefresh",refresh : value}),
     }
 }
 
 const mapStateToProps = (state) => ({
     classList : state.classList,
-    selectCard : state.selectCard
+    selectCard : state.selectCard,
+    token :  state.jwtToken
   })
 
 
