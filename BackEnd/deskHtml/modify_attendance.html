@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>수동 출석결과 수정</h1>
+
+    <!--
+        let attendance_id = req.body.attendance_ID;
+        let edit_record = req.body.edit_record;
+        let edit_reason = req.body.edit_reason;
+
+    -->
+    <form action="http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/attendance/modify" method="POST">
+        <div>
+            <label>출석 id</label>
+            <input type="text" name="attendance_ID" >
+        </div>
+        <div>
+            <label>출석? 지각? 결석?</label>
+            <input type="text" name="edit_record" >
+        </div>
+        <div>
+            <label>고치는 이유 null 가능</label>
+            <input type="text" name="edit_reason" >
+        </div>
+
+        <input type="submit" value="출석 고치기">
+    </form>
+</body>
+</html>
