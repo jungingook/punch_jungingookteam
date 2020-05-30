@@ -1,6 +1,5 @@
 import { createStore } from "redux";
 
-const APPMODE = "AppMode";
 // const panelMode = "panelMode";
 // const classList = "classList";
 
@@ -11,10 +10,10 @@ const defaultState = {
 const reducer = (state = defaultState, action) => {
     switch (action.type) {
         // 카드 선택시
-        case APPMODE :
+        case 'AppMode' :
             return {
                 ...state,
-                AppMode: action.id
+                AppMode: action.mode
             } 
             default:
                 //console.log("리듀스 성공");

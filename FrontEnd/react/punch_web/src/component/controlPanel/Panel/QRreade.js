@@ -18,12 +18,13 @@ class QRreade extends Component {
 
     handle = () => {
         store.dispatch({ type: "panelMode",panelMode : "QRactive"})
-        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/open', {
+        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/open?token='+this.props.token, {
             classListId: this.props.select.id,
-            classHour : 1200,
+            classHour : 1200, // 수정 필요
           })
         .then( response => {
             console.log("QR코드 생성")
+            this.props.loginSuccess(response.data.token)
         })
         .catch( error => {
             console.log(error)
@@ -249,7 +250,13 @@ class QRreade extends Component {
 const mapStateToProps = (state) => ({
     classList : state.classList,
     selectCard : state.selectCard,
-    cardColor : state.cardColor
+    cardColor : state.cardColor,
+    token :  state.jwtToken,
   })
+function mapDispatchToProps(dispatch){
+    return {
+        loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
+    }
+}
 
-export default connect(mapStateToProps)(QRreade);
+export default connect(mapStateToProps,mapDispatchToProps)(QRreade);

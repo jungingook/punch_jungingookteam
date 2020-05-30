@@ -158,12 +158,14 @@ class ActivePanel extends Component {
 function mapDispatchToProps(dispatch){
     return {
       classDelete : () => dispatch({ type: "panelMode",panelMode : "ClassDelete"}),
+      loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
     }
   }
 const mapStateToProps = (state) => ({
     classList : state.classList,
     selectCard : state.selectCard,
     panelMode : state.panelMode,
+    token :  state.jwtToken,
   })
 
 export default connect(mapStateToProps,mapDispatchToProps)(ActivePanel);

@@ -156,10 +156,10 @@ class AddCalss extends Component {
             this.setState({ allReady : false, messenger : "하나이상의 수업시간을 입력해주세요" })
             return 0 
         }
-        if (this.state.startDay == false || this.state.startDay == false ) {
-            this.setState({ allReady : false, messenger : "수업기간을 입력해주세요" })
-            return 0 
-        }
+        // if (this.state.startDay == false || this.state.startDay == false ) {
+        //     this.setState({ allReady : false, messenger : "수업기간을 입력해주세요" })
+        //     return 0 
+        // }
         this.setState({         
             allReady : true,
             messenger : "수업을 생성할 수 있습니다.", 

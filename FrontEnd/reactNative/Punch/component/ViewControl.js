@@ -5,7 +5,8 @@ import { Text, View, ScrollView, StyleSheet, Button } from 'react-native';
 import {connect} from 'react-redux'
 // 컴포넌트 연결
 import MainView from './MainView'; // 앱의 메인 화면 구성을 담당하는 컴포넌트
-import QRSanner from '../QRSanner';
+import Login from './login/Login'; // 앱의 메인 화면 구성을 담당하는 컴포넌트
+import LoginInfo from './login/LoginInfo'; // 앱의 메인 화면 구성을 담당하는 컴포넌트
 
 const layout = StyleSheet.create({
   Main: {
@@ -18,18 +19,12 @@ class ViewControl extends Component {
 
    appView = (mode) => {
       let output = <MainView/>
-      if (mode == "NORMAL") {
-          output = <MainView/>
+      if (mode == "LOGIN") {
+          output = <Login/>
       }
-      else if (mode == "QRSCAN") {
-            output = <QRSanner/>
-      }
-      else if (mode == "QRscan1") {
-
-      }
-      else if (mode == "QRactive") { 
-
-      }
+      if (mode == "LOGININFO") {
+        output = <LoginInfo/>
+    }
       return output
   }
 

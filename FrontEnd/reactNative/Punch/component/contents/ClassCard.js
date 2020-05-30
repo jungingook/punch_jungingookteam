@@ -1,12 +1,15 @@
 // 리엑트 모듈
 import React, { Component } from 'react';
 import { Platform, TouchableOpacity, View, Text, StyleSheet, Button } from 'react-native';
-// 컴포넌트 연결
+// [redux]를 통한 데이터 통신
+import {connect} from 'react-redux'
 
 const classCard = StyleSheet.create({
     Layout : {
-        width : "100%",
-        height : 150,
+        width : "90%",
+        marginLeft : '5%' ,
+        marginRight : '5%' ,
+        height : 200,
         flexDirection : "column",
         borderRadius : 10,
         marginBottom : 20,
@@ -24,14 +27,16 @@ const classCard = StyleSheet.create({
     },
     upper : {
         flex : 3,
-        backgroundColor : "#00B0F0",
+        // backgroundColor : "#00B0F0",
         borderTopLeftRadius : 10,
         borderTopRightRadius : 10,
-        justifyContent : "space-between"
+        justifyContent : "space-between",
+        paddingLeft : '5%',
+        paddingRight : '5%',
     },
     lower : {
         flex : 2,
-        backgroundColor : "#009FF0",
+        // backgroundColor : "#009FF0",
         borderBottomLeftRadius : 10,
         borderBottomRightRadius : 10,
         flexDirection : "column",
@@ -40,34 +45,71 @@ const classCard = StyleSheet.create({
   });
 
   const cardDesign = StyleSheet.create({
-    calssTime : {
-        color: "#fff",
-        fontSize : 15,
-        paddingLeft : '5%',
-        paddingRight : '5%',
+    calssinfo : {
+        paddingTop : 10,
+
+    },
+    textColorWhite : {
+        color : '#ffffff',
+        fontSize : 20,
+        fontWeight : 'bold',
     },
     calssName : {
+        width : '90%',
         paddingLeft : '5%',
         paddingRight : '5%',
         color: "#fff",
         fontSize : 30,
+        fontWeight : 'bold',
+        overflow : 'hidden',
     },
   });
 
-class Contents extends Component {
+class ClassCard extends Component {
+
+    date = (day,startTime,endTime) => {
+        let weekday = new Array();
+        weekday[0]="일요일"; weekday[1]="월요일"; weekday[2]="화요일"; weekday[3]="수요일"; weekday[4]="목요일"; weekday[5]="금요일"; weekday[6]="토요일";
+        return weekday[day] +" "+ Math.floor(startTime/60) + " : " + (startTime%60<10? "0"  +startTime%60 : startTime%60 )+ " ~ " + Math.floor((startTime+endTime)/60) + " : " + ((startTime+endTime)%60<10? "0"  +(startTime+endTime)%60 : (startTime+endTime)%60 )
+    }
+
     render() {
+        const {
+            day, name, color// , professor, code, id // 사용하지 않는 상수
+            } = this.props.info;
+        let cardColor = this.props.cardColor["default"]
+        let bgColor={backgroundColor:cardColor[0]}
+        let titleColor ={backgroundColor:cardColor[1]}
+        let timeID = 0 
+        let classTimeText = this.props.info.classTime.map(
+            info => (<Text style={cardDesign.textColorWhite} key={timeID++}>{this.date(info.day,info.startTime,info.endTime)}</Text>)   
+        );
+        try {
+            cardColor = this.props.cardColor[color]
+            bgColor={backgroundColor:cardColor[0]}
+            titleColor ={backgroundColor:cardColor[1]}
+          } catch (e) {
+          }
       return (
-        <View style={classCard.Layout}>
-            <View style={classCard.upper}>
-                <Text style={cardDesign.calssTime}>이승진/6201</Text>
-                <Text style={cardDesign.calssTime}>월요일 11:00 ~ 15:00</Text>
+        <TouchableOpacity style={classCard.Layout}>
+            <View style={[classCard.upper,bgColor]}>
+                <View style={cardDesign.calssTime}><Text style={cardDesign.textColorWhite}>{this.props.info.professor}</Text></View>
+                <View style={cardDesign.calssTime}>{classTimeText}</View>
             </View>
-            <View style={classCard.lower}>
-                <Text style={cardDesign.calssName}>파이썬 프로젝트</Text>
+            <View style={[classCard.lower,titleColor]}>
+                <Text style={cardDesign.calssName}>{this.props.info.name}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
       );
     }
   }
-  
-  export default Contents;
+  const mapStateToProps = (state) => ({
+    cardColor : state.cardColor
+  })
+
+function mapDispatchToProps(dispatch){
+    return {
+        // selectCard : (id) => dispatch({ type: "selectCard",id :id}),
+    }
+  }
+export default connect(mapStateToProps,mapDispatchToProps)(ClassCard);

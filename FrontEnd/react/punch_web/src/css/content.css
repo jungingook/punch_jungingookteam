@@ -294,10 +294,15 @@
 }
 #AddClassSubmitReason{
     width: 80%;
-    height: 2vh;
+    height: 3vh;
     margin: 0px auto; 
     padding: 1%;
     box-sizing: border-box;
+    color: #FF7F00;
+    background-color: #F6F7F9;
+    border-radius: 5px;
+    font-size: 2vh;
+    text-align: center;
 }
 #AddClassSubmitButton{
     width: 80%;

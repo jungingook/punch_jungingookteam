@@ -29,22 +29,9 @@ const layout = StyleSheet.create({
 class Footer extends Component {
     render() {
       return (
-          <View style={layout.FooterBar}>
-            <View style={layout.LeftBar}>
-              <Text>{this.props.AppMode}</Text>
-            </View>
-            <View style={layout.QRbutton}>
-              <Button
-                  title={'출첵'}
-                  onPress={()=> this.props.qrButtonPush()}
-              />
-            </View>
-            <View style={layout.RightBar}>
-
-            </View>
-              
-
-          </View>
+        <View style={layout.attendanceButton}> 
+          <Image source={require('../../assets/QR.png')} style={{ justifyContent: 'center', alignItems: 'center',width : 70,height : 70,resizeMode:'contain'}}/>
+        </View>
       );
     }
   }
