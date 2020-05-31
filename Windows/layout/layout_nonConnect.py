@@ -15,7 +15,6 @@ class Login(QWidget):
 
     def initUI(self):
         self.setStyleSheet("background-color:white;")
-
         self.setWindowTitle('Punch')
         self.resize(300, 500)
 
@@ -55,7 +54,6 @@ class Login(QWidget):
         button_login.setStyleSheet("font-size : 20px; background-color: #fff; font-family: NanumSquare;"
                                    "background-color: #fff;"
                                    "height: 45px; margin-top:10px; padding 5px;")
-
         layout.addWidget(button_login, 4, 0)
 
         self.setLayout(layout)
