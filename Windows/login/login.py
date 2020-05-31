@@ -74,12 +74,14 @@ class LoginForm(QWidget):
             response = requests.post(url_post, json=login_json)
             print(response.status_code)
             if response.status_code == 200:
-                login_code = response.json()
-                if login_code['error']:
+                data_login = response.json()
+                if data_login['error']:
                     msg = QMessageBox()
                     msg.setText('아이디 혹은 비밀번호를 확인해주세요.')
                     msg.exec_()
                 else:
+                    global qr_token
+                    qr_token = data_login['token']
                     self.qr = QR()
                     self.qr.show()
                     self.close()
@@ -99,11 +101,6 @@ class QR(QWidget):
         # 파이썬 실행창을 항상 위로 유지해주는 코드
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
 
-        # 서버에서 json 값을 받아와 data_qr 변수에 저장
-        url_qr = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"
-        data_qr = requests.get(url_qr).json()
-
-        # data_qr 딕셔너리 중 randomNum 키의 value 값으로 qr코드 생성, 추후 다른 키 값과 조합하여 수정 예정
         self.setStyleSheet("background-color: #FFFFFF")
         qr = qrcode.QRCode(
             version=1,
@@ -111,7 +108,7 @@ class QR(QWidget):
             box_size=10,
             border=0,
         )
-        qr.add_data(str(data_qr['id']) + data_qr['randomNum'])
+        qr.add_data("start")
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
         qt_image = ImageQt.ImageQt(img)
@@ -143,10 +140,17 @@ class QR(QWidget):
         t.start()
 
     def refreshImg(self):
-        url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"
+        url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/python/qr?token=" + qr_token
         while True:
-            data = requests.get(url).json()
-            img = qrcode.make(str(data['id']) + data['randomNum'])
+            data = requests.post(url).json()
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=10,
+                border=0,
+            )
+            qr.add_data(data['randomNum'])
+            img = qr.make_image(fill_color="black", back_color="white")
             qt_image = ImageQt.ImageQt(img)
             self.pixmap = QPixmap.fromImage(qt_image)
             self.lbl_img.setPixmap(self.pixmap)
