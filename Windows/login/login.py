@@ -72,7 +72,6 @@ class LoginForm(QWidget):
             url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/python/login"
             login_json = {'inputId': self.lineEdit_username.text(), 'inputPw': self.lineEdit_password.text()}
             response = requests.post(url_post, json=login_json)
-            print(response.status_code)
             if response.status_code == 200:
                 data_login = response.json()
                 if data_login['error']:
@@ -119,6 +118,13 @@ class QR(QWidget):
         self.lbl_img.setScaledContents(True)
 
         self.vbox = QVBoxLayout()
+
+        # 로그아웃 버튼
+        button_logout = QPushButton('로그아웃')
+        button_logout.setStyleSheet("font-family: NanumSquare; font-size: 20px; font-weight:bold;")
+        button_logout.clicked.connect(self.logout)
+        self.vbox.addWidget(button_logout)
+
         self.vbox.addWidget(self.lbl_img)
         self.setLayout(self.vbox)
 
@@ -155,6 +161,21 @@ class QR(QWidget):
     def setOpacity(self, value):
         value = 1.1 - (value / 100)
         self.setWindowOpacity(value)
+
+    def logout(self):
+        msgBox = QMessageBox()
+        msgBox.setWindowTitle("로그아웃")
+        msgBox.setText("로그아웃하시겠습니까?")
+        msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        answer = msgBox.exec()
+
+        if answer == QMessageBox.Ok:
+            self.close()
+            self.login = LoginForm()
+            self.login.show()
+
+        elif answer == QMessageBox.Cancel:
+            msgBox.close()
 
 
 if __name__ == '__main__':
