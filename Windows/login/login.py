@@ -126,11 +126,7 @@ class QR(QWidget):
         self.slider.setRange(10, 90)
         self.vbox.addWidget(self.slider)
 
-        self.btn = QPushButton('초기화', self)
-        self.vbox.addWidget(self.btn)
-
         self.slider.valueChanged.connect(self.setOpacity)
-        self.btn.clicked.connect(self.resetOpacity)
 
         self.setWindowTitle('투명도 조절')
         self.move(300, 300)
@@ -155,9 +151,6 @@ class QR(QWidget):
             self.pixmap = QPixmap.fromImage(qt_image)
             self.lbl_img.setPixmap(self.pixmap)
             time.sleep(1)
-
-    def resetOpacity(self):
-        self.slider.setValue(1)
 
     def setOpacity(self, value):
         value = 1.1 - (value / 100)
