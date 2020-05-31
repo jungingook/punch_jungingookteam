@@ -69,17 +69,17 @@ class LoginForm(QWidget):
             msg.setText('아이디 혹은 비밀번호를 입력하세요.')
             msg.exec_()
         else:
-            url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/test/login"
-            login_json = {'id': self.lineEdit_username.text(), 'pw': self.lineEdit_password.text()}
+            url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/python/login"
+            login_json = {'inputId': self.lineEdit_username.text(), 'inputPw': self.lineEdit_password.text()}
             response = requests.post(url_post, json=login_json)
             print(response.status_code)
             if response.status_code == 200:
-                if response.text == 'what?':
+                login_code = response.json()
+                if login_code['error']:
                     msg = QMessageBox()
                     msg.setText('아이디 혹은 비밀번호를 확인해주세요.')
                     msg.exec_()
                 else:
-                    # login_code = response.json() <-추후 json으로 받아올 경우를 대비한 코드
                     self.qr = QR()
                     self.qr.show()
                     self.close()
