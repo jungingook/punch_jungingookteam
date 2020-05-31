@@ -84,6 +84,11 @@ class MainView extends Component {
   }
 
   render() {
+    // 토큰이 없으면 로그아웃 시키기
+    if(!this.props.token){
+      console.log('토큰만료로 인한 로그아웃')
+      this.props.logout()
+    }
     return (
       <View style={layout.Main}>
         <View style={layout.header}> 
@@ -115,7 +120,7 @@ class MainView extends Component {
 
 function mapStateToProps (state){
   return {
-
+    token: state.jwtToken,
   }
 }
 function mapDispatchToProps(dispatch){

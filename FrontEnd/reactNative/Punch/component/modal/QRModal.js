@@ -16,17 +16,17 @@ const layout = StyleSheet.create({
         height : 90,
         width : 90,
         backgroundColor :"#F6F7F9",
-        // ...Platform.select({ 
-        //   ios: { 
-        //       shadowColor: '#777777',
-        //       shadowOffset: { width: 2, height: 2, },
-        //       shadowOpacity: 0.6, shadowRadius: 4, 
-        //       },
-        //   android: { elevation: 8, },
-        //   web:{
+        ...Platform.select({ 
+          ios: { 
+              shadowColor: '#777777',
+              shadowOffset: { width: 2, height: 2, },
+              shadowOpacity: 0.6, shadowRadius: 4, 
+              },
+          android: { elevation: 8, },
+          web:{
               
-        //   }
-        //   }), 
+          }
+          }), 
       },
     backdrop: {
       position: 'absolute',top:0, left: 0, right: 0, bottom: 0,
@@ -46,17 +46,17 @@ const layout = StyleSheet.create({
       width : '80%',
       backgroundColor :"#F6F7F9",
       overflow : 'hidden',
-      // ...Platform.select({ 
-      //   ios: { 
-      //       shadowColor: '#777777',
-      //       shadowOffset: { width: 2, height: 2, },
-      //       shadowOpacity: 0.6, shadowRadius: 4, 
-      //       },
-      //   android: { elevation: 8, },
-      //   web:{
+      ...Platform.select({ 
+        ios: { 
+            shadowColor: '#777777',
+            shadowOffset: { width: 2, height: 2, },
+            shadowOpacity: 0.6, shadowRadius: 4, 
+            },
+        android: { elevation: 8, },
+        web:{
             
-      //   }
-      //   }), 
+        }
+        }), 
     },
     qrHeader : {
       flex : 1,
@@ -79,17 +79,17 @@ const layout = StyleSheet.create({
       width : '90%',
       backgroundColor :"#F6F7F9",
       overflow : 'hidden',
-      // ...Platform.select({ 
-      //   ios: { 
-      //       shadowColor: '#777777',
-      //       shadowOffset: { width: 2, height: 2, },
-      //       shadowOpacity: 0.6, shadowRadius: 4, 
-      //       },
-      //   android: { elevation: 8, },
-      //   web:{
+      ...Platform.select({ 
+        ios: { 
+            shadowColor: '#777777',
+            shadowOffset: { width: 2, height: 2, },
+            shadowOpacity: 0.6, shadowRadius: 4, 
+            },
+        android: { elevation: 8, },
+        web:{
             
-      //   }
-      //   }), 
+        }
+        }), 
     },
 });
 

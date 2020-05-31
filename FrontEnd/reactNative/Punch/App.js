@@ -1,6 +1,6 @@
 // 리엑트 모듈
 import React, { Component } from 'react';
-import { Text, View, SafeAreaView, StyleSheet, Button, Platform } from 'react-native';
+import { Text, View, StyleSheet, Button, Platform } from 'react-native';
 // [ajax] axios 연결
 import axios from 'axios';
 // [redux] 최상단 컴포넌트 설정 
@@ -21,6 +21,7 @@ const appStore = {
   AppMode : "LOGIN",
   jwtToken : null,
   classListRefresh : true,
+  selectCard: null,
   cardColor : {
     default : ["#00B0F0","#009FF0"], // 블루와 같음
     red : ["#E93A2E","#C92A1D"], // 확정
@@ -39,10 +40,16 @@ const reducer = (state = appStore,action) =>{
     case "AppMode" :
         return {
             ...state,
-            AppMode: action.mode
+            AppMode: action.mode,
+            classListRefresh : true,
         } 
     case "LOGINSUCCESS" :
-      console.log(action.token)
+        return {
+            ...state,
+            jwtToken : action.token
+        }
+    case "TokenRefresh" :
+      console.log('토큰 : ',action.token)
         return {
             ...state,
             jwtToken : action.token
@@ -58,6 +65,12 @@ const reducer = (state = appStore,action) =>{
             ...state,
             classListRefresh : action.bool,
         }
+    case "SelectCard" :
+      return {
+          ...state,
+          selectCard : action.card,
+          AppMode: 'CLASSVIEW'
+      }
     default:
         //console.log("리듀스 성공");
         return state; 
@@ -69,14 +82,6 @@ const reducer = (state = appStore,action) =>{
 
 const store = createStore(reducer); // createStore를 이용해 reducer를 store로 만들어서 const 변수에 넣음. 
 
-const layout = StyleSheet.create({
-  Main: {
-    flex: 1,
-    backgroundColor :"#F6F7F9",
-    paddingTop: Platform.OS === 'android' ? 25 : 0
-    
-  },
-});
 
 class App extends Component {
  
@@ -85,9 +90,7 @@ class App extends Component {
     return (
       // 
       <Provider store={store}>
-        <SafeAreaView style={layout.Main}> 
           <ViewControl/>
-        </SafeAreaView>
       </Provider>
     );
   }

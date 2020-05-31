@@ -1,6 +1,6 @@
 // 리엑트 모듈
 import React, { Component } from 'react';
-import { Platform, TouchableOpacity, View, Text, StyleSheet, Button } from 'react-native';
+import { Platform, TouchableOpacity, View, Text, StyleSheet, Button, BackHandler } from 'react-native';
 // [redux]를 통한 데이터 통신
 import {connect} from 'react-redux'
 
@@ -12,7 +12,8 @@ const classCard = StyleSheet.create({
         height : 200,
         flexDirection : "column",
         borderRadius : 10,
-        marginBottom : 20,
+        marginTop : 10,
+        marginBottom : 10,
         ...Platform.select({ 
             ios: { 
                 shadowColor: '#777777',
@@ -73,6 +74,10 @@ class ClassCard extends Component {
         return weekday[day] +" "+ Math.floor(startTime/60) + " : " + (startTime%60<10? "0"  +startTime%60 : startTime%60 )+ " ~ " + Math.floor((startTime+endTime)/60) + " : " + ((startTime+endTime)%60<10? "0"  +(startTime+endTime)%60 : (startTime+endTime)%60 )
     }
 
+    selectCard = () => {
+        this.props.selectCard(this.props.info)
+    }
+
     render() {
         const {
             day, name, color// , professor, code, id // 사용하지 않는 상수
@@ -91,7 +96,7 @@ class ClassCard extends Component {
           } catch (e) {
           }
       return (
-        <TouchableOpacity style={classCard.Layout}>
+        <TouchableOpacity style={classCard.Layout} onPress={()=>this.selectCard()}>
             <View style={[classCard.upper,bgColor]}>
                 <View style={cardDesign.calssTime}><Text style={cardDesign.textColorWhite}>{this.props.info.professor}</Text></View>
                 <View style={cardDesign.calssTime}>{classTimeText}</View>
@@ -106,10 +111,10 @@ class ClassCard extends Component {
   const mapStateToProps = (state) => ({
     cardColor : state.cardColor
   })
-
-function mapDispatchToProps(dispatch){
-    return {
-        // selectCard : (id) => dispatch({ type: "selectCard",id :id}),
-    }
+  function mapDispatchToProps(dispatch){
+      return {
+        appMode : (mode) => dispatch({type:'AppMode',mode:mode}),
+        selectCard : (classObject) => dispatch({type:'SelectCard',card:classObject}),
+      }
   }
 export default connect(mapStateToProps,mapDispatchToProps)(ClassCard);

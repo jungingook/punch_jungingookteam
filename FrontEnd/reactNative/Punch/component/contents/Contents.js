@@ -23,15 +23,15 @@ class Contents extends Component {
   }
 
 classLoad = () => {
-  console.log('ajax 시도 토큰 : ', this.props.token)
   // console.log('수업이름 : ',this.state.className,'수업요일 : ',this.state.backClassTimeList[0].day,'수업시간 : ',this.state.backClassTimeList[0].startTime,'~',this.state.backClassTimeList[0].endTime,'수업 컬러  : ',this.state.classColor,'수업디자인 : ',this.state.classDesign,)
   // 임시로 다중 시간을 입력하지 않고 입력된 첫 시간만 보냄 
   axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/mobile/student/main?token='+this.props.token,{ credentials: true })
   .then( response => {
-      console.log('받은데이터 : ',response.data.classList)
+      console.log('받은데이터 : ',response.data)
+      this.props.tokenRefresh(response.data.token)
         this.setState({
           classList : response.data.classList
-        },console.log('비교 : ', this.state.classList == response.data.classList))
+        })
   })
   .catch( error => {
       console.log('실패 : ',error)
@@ -42,6 +42,7 @@ classLoad = () => {
       if(this.props.Refresh){
         // 새로고침
         this.props.classListRefresh(false)
+
         this.classLoad()
       }
 
@@ -56,7 +57,7 @@ classLoad = () => {
       }
       else{
         list = this.state.classList.map(
-          info => (<ClassCard key={info.id} info={info}/>)   
+          info => (<ClassCard key={info.id} info={info}/>)    
         );   
       }
       return (
@@ -78,6 +79,7 @@ classLoad = () => {
       return {
         appMode : (mode) => dispatch({type:'AppMode',mode:mode}),
         classListRefresh : (bool) => dispatch({type:'ClassListRefresh',value:bool}),
+        tokenRefresh : (token) => dispatch({type:'TokenRefresh',token:token}),
       }
   }
     
