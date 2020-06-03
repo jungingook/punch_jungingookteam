@@ -10,6 +10,8 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PIL import ImageQt
 
+thread_code = False
+
 
 class LoginForm(QWidget):
     def __init__(self):
@@ -81,9 +83,9 @@ class LoginForm(QWidget):
                 else:
                     global qr_token
                     qr_token = data_login['token']
+                    self.close()
                     self.qr = QR()
                     self.qr.show()
-                    self.close()
             else:
                 msg = QMessageBox()
                 msg.setText('인터넷 연결을 확인해주세요.')
@@ -120,8 +122,8 @@ class QR(QWidget):
         self.vbox = QVBoxLayout()
 
         # 로그아웃 버튼
-        button_logout = QPushButton('로그아웃')
-        button_logout.setStyleSheet("font-family: NanumSquare; font-size: 20px; font-weight:bold;")
+        button_logout = QPushButton()
+        button_logout.setStyleSheet("image: url(logout.png); font-family: NanumSquare; font-size: 20px; font-weight:bold;")
         button_logout.clicked.connect(self.logout)
         self.vbox.addWidget(button_logout)
 
@@ -143,7 +145,11 @@ class QR(QWidget):
 
     def refreshImg(self):
         url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/python/qr?token=" + qr_token
-        while True:
+
+        global thread_code
+        thread_code = True
+
+        while thread_code:
             data = requests.post(url).json()
             qr = qrcode.QRCode(
                 version=1,
@@ -170,6 +176,8 @@ class QR(QWidget):
         answer = msgBox.exec()
 
         if answer == QMessageBox.Ok:
+            global thread_code
+            thread_code = False
             self.close()
             self.login = LoginForm()
             self.login.show()

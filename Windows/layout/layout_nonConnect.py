@@ -3,7 +3,7 @@ import qrcode
 
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QSlider, QPushButton, QGridLayout, QLineEdit, \
     QMessageBox
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QIcon, QRegion
 from PyQt5.QtCore import Qt
 from PIL import ImageQt
 
@@ -42,7 +42,7 @@ class Login(QWidget):
 
         self.lineEdit_password = QLineEdit()
         self.lineEdit_password.setStyleSheet("font-family: NanumSquare; font-size: 20px; font-weight:bold; "
-                                             "padding-left: 10px;"
+                                             "padding-left: 10px; box-shadow: none;"
                                              "background-color: #f6f7f9; border-radius:10px; height:45px;")
         self.lineEdit_password.setEchoMode(QLineEdit.Password)
         self.lineEdit_password.setPlaceholderText('비밀번호')
@@ -97,8 +97,9 @@ class QR(QWidget):
         vbox = QVBoxLayout()
 
         #로그아웃 버튼
-        button_logout = QPushButton('로그아웃')
-        button_logout.setStyleSheet("font-family: NanumSquare; font-size: 20px; font-weight:bold;")
+        button_logout = QPushButton()
+        button_logout.setStyleSheet("image:url(./logout.png); width: 5px")
+        #button_logout.setIcon(icon_logout)
         button_logout.clicked.connect(self.logout)
         vbox.addWidget(button_logout)
 
