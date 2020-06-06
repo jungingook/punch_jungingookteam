@@ -10,6 +10,8 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PIL import ImageQt
 
+thread_code = False
+
 
 class LoginForm(QWidget):
     def __init__(self):
@@ -69,20 +71,21 @@ class LoginForm(QWidget):
             msg.setText('아이디 혹은 비밀번호를 입력하세요.')
             msg.exec_()
         else:
-            url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/test/login"
-            login_json = {'id': self.lineEdit_username.text(), 'pw': self.lineEdit_password.text()}
+            url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/python/login"
+            login_json = {'inputId': self.lineEdit_username.text(), 'inputPw': self.lineEdit_password.text()}
             response = requests.post(url_post, json=login_json)
-            print(response.status_code)
             if response.status_code == 200:
-                if response.text == 'what?':
+                data_login = response.json()
+                if data_login['error']:
                     msg = QMessageBox()
                     msg.setText('아이디 혹은 비밀번호를 확인해주세요.')
                     msg.exec_()
                 else:
-                    # login_code = response.json() <-추후 json으로 받아올 경우를 대비한 코드
+                    global qr_token
+                    qr_token = data_login['token']
+                    self.close()
                     self.qr = QR()
                     self.qr.show()
-                    self.close()
             else:
                 msg = QMessageBox()
                 msg.setText('인터넷 연결을 확인해주세요.')
@@ -99,29 +102,22 @@ class QR(QWidget):
         # 파이썬 실행창을 항상 위로 유지해주는 코드
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
 
-        # 서버에서 json 값을 받아와 data_qr 변수에 저장
-        url_qr = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"
-        data_qr = requests.get(url_qr).json()
-
-        # data_qr 딕셔너리 중 randomNum 키의 value 값으로 qr코드 생성, 추후 다른 키 값과 조합하여 수정 예정
         self.setStyleSheet("background-color: #FFFFFF")
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=0,
-        )
-        qr.add_data(str(data_qr['id']) + data_qr['randomNum'])
-        qr.make(fit=True)
-        img = qr.make_image(fill_color="black", back_color="white")
-        qt_image = ImageQt.ImageQt(img)
-        self.pixmap = QPixmap.fromImage(qt_image)
+
+        self.vbox = QVBoxLayout()
+
+        self.pixmap = QPixmap('error.png')
 
         self.lbl_img = QLabel()
         self.lbl_img.setPixmap(self.pixmap)
         self.lbl_img.setScaledContents(True)
 
-        self.vbox = QVBoxLayout()
+        # 로그아웃 버튼
+        button_logout = QPushButton()
+        button_logout.setStyleSheet("image: url(logout.png); font-family: NanumSquare; font-size: 20px; font-weight:bold;")
+        button_logout.clicked.connect(self.logout)
+        self.vbox.addWidget(button_logout)
+
         self.vbox.addWidget(self.lbl_img)
         self.setLayout(self.vbox)
 
@@ -129,11 +125,7 @@ class QR(QWidget):
         self.slider.setRange(10, 90)
         self.vbox.addWidget(self.slider)
 
-        self.btn = QPushButton('초기화', self)
-        self.vbox.addWidget(self.btn)
-
         self.slider.valueChanged.connect(self.setOpacity)
-        self.btn.clicked.connect(self.resetOpacity)
 
         self.setWindowTitle('투명도 조절')
         self.move(300, 300)
@@ -143,21 +135,51 @@ class QR(QWidget):
         t.start()
 
     def refreshImg(self):
-        url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"
-        while True:
-            data = requests.get(url).json()
-            img = qrcode.make(str(data['id']) + data['randomNum'])
-            qt_image = ImageQt.ImageQt(img)
-            self.pixmap = QPixmap.fromImage(qt_image)
+        url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/python/qr?token=" + qr_token
+
+        global thread_code
+        thread_code = True
+
+        while thread_code:
+            data = requests.post(url).json()
+            if data['error']:
+                self.pixmap = QPixmap('error.png')
+            else:
+                qr = qrcode.QRCode(
+                    version=1,
+                    error_correction=qrcode.constants.ERROR_CORRECT_L,
+                    box_size=10,
+                    border=0,
+                )
+                qr.add_data(data['randomNum'])
+                img = qr.make_image(fill_color="black", back_color="white")
+                qt_image = ImageQt.ImageQt(img)
+                self.pixmap = QPixmap.fromImage(qt_image)
+
             self.lbl_img.setPixmap(self.pixmap)
             time.sleep(1)
 
-    def resetOpacity(self):
-        self.slider.setValue(1)
 
     def setOpacity(self, value):
         value = 1.1 - (value / 100)
         self.setWindowOpacity(value)
+
+    def logout(self):
+        msgBox = QMessageBox()
+        msgBox.setWindowTitle("로그아웃")
+        msgBox.setText("로그아웃하시겠습니까?")
+        msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        answer = msgBox.exec()
+
+        if answer == QMessageBox.Ok:
+            global thread_code
+            thread_code = False
+            self.close()
+            self.login = LoginForm()
+            self.login.show()
+
+        elif answer == QMessageBox.Cancel:
+            msgBox.close()
 
 
 if __name__ == '__main__':

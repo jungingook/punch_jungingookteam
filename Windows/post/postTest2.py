@@ -5,5 +5,10 @@ my_json = {'id': '101', 'pw': '2020'}
 
 response = requests.post(url, json=my_json)
 
+if response.text == 'what?':
+    print("error")
 
-print(response.text)
+else:
+
+    data = response.json()
+    print(data)
