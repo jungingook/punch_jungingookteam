@@ -103,23 +103,14 @@ class QR(QWidget):
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
 
         self.setStyleSheet("background-color: #FFFFFF")
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=0,
-        )
-        qr.add_data("start")
-        qr.make(fit=True)
-        img = qr.make_image(fill_color="black", back_color="white")
-        qt_image = ImageQt.ImageQt(img)
-        self.pixmap = QPixmap.fromImage(qt_image)
+
+        self.vbox = QVBoxLayout()
+
+        self.pixmap = QPixmap('error.png')
 
         self.lbl_img = QLabel()
         self.lbl_img.setPixmap(self.pixmap)
         self.lbl_img.setScaledContents(True)
-
-        self.vbox = QVBoxLayout()
 
         # 로그아웃 버튼
         button_logout = QPushButton()
@@ -151,18 +142,23 @@ class QR(QWidget):
 
         while thread_code:
             data = requests.post(url).json()
-            qr = qrcode.QRCode(
-                version=1,
-                error_correction=qrcode.constants.ERROR_CORRECT_L,
-                box_size=10,
-                border=0,
-            )
-            qr.add_data(data['randomNum'])
-            img = qr.make_image(fill_color="black", back_color="white")
-            qt_image = ImageQt.ImageQt(img)
-            self.pixmap = QPixmap.fromImage(qt_image)
+            if data['error']:
+                self.pixmap = QPixmap('error.png')
+            else:
+                qr = qrcode.QRCode(
+                    version=1,
+                    error_correction=qrcode.constants.ERROR_CORRECT_L,
+                    box_size=10,
+                    border=0,
+                )
+                qr.add_data(data['randomNum'])
+                img = qr.make_image(fill_color="black", back_color="white")
+                qt_image = ImageQt.ImageQt(img)
+                self.pixmap = QPixmap.fromImage(qt_image)
+
             self.lbl_img.setPixmap(self.pixmap)
             time.sleep(1)
+
 
     def setOpacity(self, value):
         value = 1.1 - (value / 100)
