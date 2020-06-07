@@ -9,7 +9,18 @@ import store from "../../../store";
 
 // 출석체크의 중복이 의심되는 경우 표시해주는 페이지
 class WeekPanel extends Component {
-    
+
+    selectButton = (mode) =>{
+
+    if (mode == 'thisWeek'){
+        this.props.weekSelect(this.props.week-1)
+    }
+    if (mode == 'nextWeek'){
+        this.props.weekSelect(this.props.week)  
+    }
+    this.props.PanelSelect("QRreade")
+    }
+
     render() {
         let bgColor={backgroundColor: this.props.cardColor[this.props.select.color][0]}
         let fontColor={color: this.props.cardColor[this.props.select.color][1]}
@@ -21,11 +32,11 @@ class WeekPanel extends Component {
                 이어서 출석체크를 하시겠습니까 ? 
                 </div>
                 <div id='SelectWeekZone'>
-                    <div className='selectWeek' style={bgColor} onClick={() => this.props.PanelSelect(("QRreade"))}>
+                    <div className='selectWeek' style={bgColor} onClick={() => this.selectButton('thisWeek')}>
                         <div>이미지</div>
                         <div>이어서 출석 체크를 진행합니다.</div>
                     </div>
-                    <div className='selectWeek' onClick={() => this.props.PanelSelect(("QRreade"))}>
+                    <div className='selectWeek' onClick={() => this.selectButton('nextWeek')}>
                         <div>이미지</div>
                         <div>새로운 주차로 출석 체크를 진행합니다.</div>
                     </div>

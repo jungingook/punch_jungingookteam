@@ -109,7 +109,7 @@ class ActivePanel extends Component {
             output = <SelectPanel color={this.props.select.color} intervalTime={this.state.intervalTime} />
         }
         else if (mode == "Week" ) {
-            output = <WeekPanel select={this.props.select} week={this.state.week} lastTime ={this.state.lastTime}/>
+            output = <WeekPanel select={this.props.select} weekSelect={this.setWeek} week={this.state.week} lastTime ={this.state.lastTime}/>
         }
         else if (mode == "QRreade") {
             output = <QRreade select={this.props.select} week={this.state.week}/>
@@ -131,6 +131,14 @@ class ActivePanel extends Component {
 
         return {component : output, size : {height:panelsize} }
     }
+    getWeek = () =>{
+        return(this.state.week)
+    }
+    setWeek = (value) =>{
+        this.setState({
+            week : value
+        })
+    }
 
     weekfind = () => {
         axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/preOpen?token='+this.props.token, {
@@ -147,7 +155,7 @@ class ActivePanel extends Component {
             let now = new Date();
             console.log('마지막 수업으로 부터 지난 시간1 :',this.nearClassTime(this.props.select.classTime).endTime-Math.floor((now.getTime() - response.data.getTime)/60000))
             this.setState({
-                week : response.data.week,
+                week : response.data.week+1,
                 intervalTime : this.nearClassTime(this.props.select.classTime).endTime-Math.floor((now.getTime() - response.data.getTime)/60000),
                 lastTime : Math.floor((now.getTime() - response.data.getTime)/60000)
             })

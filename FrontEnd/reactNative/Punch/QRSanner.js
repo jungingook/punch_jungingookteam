@@ -52,7 +52,7 @@ class BarcodeScannerExample extends React.Component {
           position: 'absolute', top:0, left: 0, right: 0, bottom: 0,
           marginLeft : '-50%',
           height : '200%',
-          width : '200%',}}
+          width : '183%',}}
           // style={StyleSheet.absoluteFillObject}
         />
         <ScannerControl control={this.state.control}/>
@@ -81,6 +81,7 @@ class BarcodeScannerExample extends React.Component {
             console.log('성공',response.data);
             alert(`출석체크 :  ${response.data} `);
             this.props.check(response.data)
+            this.props.appMode('NORMAL')
         })
         .catch( error => {
             console.log('에러',error);

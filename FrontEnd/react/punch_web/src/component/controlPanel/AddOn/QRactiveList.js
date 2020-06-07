@@ -5,38 +5,43 @@ import { connect } from "react-redux"; // 리덕스 연결
 import store from "../../../store";
 // 컴포넌트 연결
 import AttendanceUser from './AttendanceUser'; // 학생출석표 생성 
+// [ajax] axios 연결
+import axios from 'axios';
 
 class QRactiveList extends Component {
     state = {
         search : '',
-        student :[
-        {name :'정인국', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334024, attendTime:'13시 23분 07초'},
-        {name :'여은성', studentNo:201334025, attendTime:'13시 23분 07초'},
-        {name :'김민혁', studentNo:201334026, attendTime:'13시 23분 07초'},
-        {name :'정인식', studentNo:201334027, attendTime:'13시 23분 07초'},
-        {name :'정인국', studentNo:201334028, attendTime:'13시 23분 07초'},
-        {name :'장성원', studentNo:201334029, attendTime:'13시 23분 07초'},
-        {name :'배민환', studentNo:201334030, attendTime:'13시 23분 07초'},
-        {name :'한용재', studentNo:201334031, attendTime:'13시 23분 07초'},
-        {name :'변민영', studentNo:201334032, attendTime:'13시 23분 07초'},
-        {name :'이상민', studentNo:201334033, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334034, attendTime:'13시 23분 07초'},
-        {name :'강민성', studentNo:201334035, attendTime:'13시 23분 07초'},
-        {name :'김민혁', studentNo:201334036, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334037, attendTime:'13시 23분 07초'},
-        {name :'정인국', studentNo:201334038, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334039, attendTime:'13시 23분 07초'},
-        {name :'여은성', studentNo:201334040, attendTime:'13시 23분 07초'},
-        {name :'김민혁', studentNo:201334041, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334042, attendTime:'13시 23분 07초'},
-        ],
+        student : [],
+        attend: 0,
+        tardy : 0,
+        absent : 0,
 
     }
     studentSearch = (e) => {
         this.setState({
             search : e.target.value,
         })
+    }
+    componentWillMount() {
+        console.log("출석리스트 받아오기 : ",this.props.selectCard)
+
+        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/attendance?token='+this.props.token,{
+            classListID : this.props.selectCard,
+            att_week : 1
+        }, { credentials: true })
+        .then( response => {
+            console.log('출석 리스트 222: ','주차',response.data)
+            // this.props.loginSuccess(response.data.token)
+            this.setState({
+                student : response.data.att_arr,
+                attend: response.data.attend_count,
+                tardy : response.data.late_count,
+                absent : response.data.absent_count,
+            })
+        })
+        .catch( error => {
+            console.log('출석 리스트 에러 ',error)          
+            })    
     }
     
     render() { 
@@ -74,7 +79,13 @@ class QRactiveList extends Component {
     //export default Panel;
 const mapStateToProps = (state) => ({
     classList : state.classList,
-    selectCard : state.selectCard
+    selectCard : state.selectCard,
+    token :  state.jwtToken
   })
 
-export default connect(mapStateToProps)(QRactiveList);
+function mapDispatchToProps(dispatch){
+return {
+    loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(QRactiveList);

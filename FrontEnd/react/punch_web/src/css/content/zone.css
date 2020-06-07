@@ -35,6 +35,24 @@
 #ClassTimer{
     font-size: 10vh;
 }
+#windowProgram{
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    width: 10vh;
+    height: 10vh;
+    background-color: #FFFEFF;
+    box-shadow: 2px 2px 5px #77777760;
+    border-radius: 10vh;
+    background-image: url(../../img/program.png);
+    background-size: 80% 80%;
+    background-position: center center;
+    transition: all 0.3s;
+}
+#windowProgram:hover{
+    background-size: 100% 100%;
+    box-shadow: 2px 2px 10px #222222;
+}
 /* 출석체크 (주차로 보기) */
 #AttendWeekZone{
     width: 90%;

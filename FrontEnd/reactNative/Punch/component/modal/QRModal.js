@@ -98,10 +98,10 @@ class QRModal extends Component {
         output = <TouchableOpacity onPress={()=> this.props.appMode('QRSCAN')} ><Image source={require('../../assets/QR.png')} style={{ justifyContent: 'center', alignItems: 'center',width : 70,height : 70,resizeMode:'contain'}}/></TouchableOpacity>
     }
     else if (mode == "QRSCAN") {
-          output = <View style={layout.qrModal}><View style={layout.qrHeader}><Text style={layout.qrHeaderFont}>출석체크[모드{mode}]</Text></View><View style={layout.qrScanner}><QRSanner check={this.attendcheck}/></View><View style={layout.qrHeader}><TouchableOpacity onPress={()=> this.props.appMode('NORMAL')} ><Text>뒤로</Text></TouchableOpacity></View></View>
+          output = <View style={layout.qrModal}><View style={layout.qrHeader}><Text style={layout.qrHeaderFont}>출석체크</Text></View><View style={layout.qrScanner}><QRSanner check={this.attendcheck}/></View><View style={layout.qrHeader}><TouchableOpacity onPress={()=> this.props.appMode('NORMAL')} ><Text>뒤로</Text></TouchableOpacity></View></View>
     }
     else if (mode == "QRATTEND") {
-          output = <View style={layout.qrModal}><View style={layout.qrHeader}><Text style={layout.qrHeaderFont}>출석체크[모드{mode}]</Text></View><View style={layout.qrScanner}><QRSanner/></View><View style={layout.qrHeader}><TouchableOpacity onPress={()=> this.props.appMode('AppMode')} ><Text>뒤로</Text></TouchableOpacity></View></View>
+          output = <View style={layout.qrModal}><View style={layout.qrHeader}><Text style={layout.qrHeaderFont}>출석체크</Text></View><View style={layout.qrScanner}><QRSanner/></View><View style={layout.qrHeader}><TouchableOpacity onPress={()=> this.props.appMode('AppMode')} ><Text>뒤로</Text></TouchableOpacity></View></View>
     }
     else if (mode == "QRactive") { 
       

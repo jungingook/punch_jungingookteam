@@ -81,6 +81,7 @@ class QRcode extends Component {
             <div id="tempClass" style={{color:(this.props.select.color == "black"? "#FFFFFF":"#000000")}}> 
             앱을 통해 출석 체크 하세요
             </div>
+            <a id ="windowProgram" href="Punch://"></a>
         </div>
         );
     }
@@ -88,7 +89,7 @@ class QRcode extends Component {
 //export default Panel;
 function mapDispatchToProps(dispatch){
     return {
-        loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
+        loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token})
     }
 }
 

@@ -248,7 +248,7 @@ class QRreade extends Component {
         return (
             <div id = "QRreadePanel">
                 <div id ="cheakTime">
-                    <div id ="QRreadePanelInfo"><span style={fontColor}>{this.props.week+1}회차</span> 수업의 출석체크를 진행합니다.</div>
+                    <div id ="QRreadePanelInfo"><span style={fontColor}>{this.props.week}회차</span> 수업의 출석체크를 진행합니다.</div>
                     <div className = "cheakTimeSelectZone">
 
                         <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("ClassTime")} style={this.thisSelect('ClassTime','cheakTimeSelect')} >
