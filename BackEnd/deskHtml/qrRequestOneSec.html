@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">    
+</head>
+<body>
+    <h1>
+        1초마다 요청하여 새로운 qrNumm값을 받아가는 페이지
+    </h1>
+
+    <!--
+        let classListID = req.body.classListId;
+    -->
+     <form action="http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/request" method="POST">
+        <div>
+            <label>요청하는 수업 id</label>
+            <input type="text" name="classListId">
+        </div>
+        <br><br>
+        <input type="submit" value="새로운 qr값을 주세요">
+    </form>
+</body>
+</html>

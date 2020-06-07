@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>수업 삭제</h1>
+
+    <!-- 
+        let classListID = 5; // 임의로 보낸 값
+    -->
+    <form action="http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/delete" method="POST">
+        <div>
+            <label>삭제한 수업 코드 id</label>
+            <input type="text" name="classListID">
+        </div>
+        
+        <input type="submit" value="삭제!">
+    </form>
+</body>
+</html>
