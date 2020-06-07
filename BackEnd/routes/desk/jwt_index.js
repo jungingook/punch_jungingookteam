@@ -4,11 +4,6 @@ const crypto = require('crypto');
 
 let jwt = require('jsonwebtoken');
 let secretObj = require('../../config/jwt');
-// const session = require('express-session');
-// const MySQLStore = require('express-mysql-session')(session);
-// const bodyParser = require('body-parser');
-
-global.classStartTimeHour;  // 수업 개설 시 main에 보내줘야하는 값
 
 
 
@@ -46,6 +41,7 @@ router.get('/professor/main', (req, res) => {
         console.log(decoded);
 
         let login_id = decoded.logId;
+        console.log("클라이언트가 줘야하는 정보: login_id: ", login_id);
 
 
         connection.query(`
@@ -59,10 +55,22 @@ router.get('/professor/main', (req, res) => {
                 throw err;
             }
 
-            console.log("시간 값이 채워지기 전 classList = ");
-            console.log(classList);
-
-            connection.query(`
+            if(classList[0].id == null) {
+                console.log("등록된 수업이 없음으로 null을 리턴하고 반환을 종료합니다.")
+                //jwt 생성 후 전송
+                let newToken = jwt.sign(
+                    { logId :login_id }, 
+                    secretObj.secret, 
+                    { expiresIn: '10h' }
+                )
+                res.json({
+                    classList : null,
+                    message: "등록된 수업이 없습니다.",
+                    token:newToken
+                })
+                return;
+            }else{
+                connection.query(`
                 select * from class_date                
             `, (err2, classTime) => {
                 if(err2){
@@ -70,8 +78,7 @@ router.get('/professor/main', (req, res) => {
                     throw err2;
                 }
 
-                console.log("classTime = ");
-                console.log(classTime);
+                
 
                 for (let i = 0; i < classList.length; i++) {
                     classList[i].classTime = [];
@@ -88,14 +95,13 @@ router.get('/professor/main', (req, res) => {
                     }
                 }
                 // 모든 classList의 classTime속성이 채워진 상태
-                console.log("채워진 후의 classList = ")
-                console.log(classList);
+               
 
                 //jwt 생성 후 전송
                 let newToken = jwt.sign(
                     { logId :login_id }, 
                     secretObj.secret, 
-                    { expiresIn: '5m' }
+                    { expiresIn: '10h' }
                 )
 
                 let result = {
@@ -105,6 +111,11 @@ router.get('/professor/main', (req, res) => {
                 }
                 res.json(result);
             })
+            }
+
+            
+
+            
         })
     })
  })
@@ -140,81 +151,103 @@ router.post('/professor/classList', (req, res) => {
                 console.error(err);
                 throw err;
             }
+            
+           
 
             if(!result) {
                 res.json({
-                    message: '잘못된 토큰이 왔습니다 2',
+                    message: '잘못된 토큰이 왔습니다 2, 해당 교수 아이디는 존재하지 않습니다.',
                     error: 'true'
                 })
                 return;
             }
-            console.log("result = ")
-            console.log(result);
 
             let {
                 InputClassName,
-                InputClassCode,
                 InputClassTime,
-                inputClassColor,
+                InputClassColor,
                 InputClassDesign,
-                inputClassLateTime,
-                inputClassAbsentTime,
-                inputClassWhenIsOpened
+                InputClassLateTime,
+                InputClassAbsentTime
             } = req.body;
             
-            let inputPrfessorId = result[0].id;
+            let InputPrfessorId = result[0].id;
             
-
-            let arr = [
-                InputClassName,
-                InputClassCode,
-                inputClassColor,
-                InputClassDesign,
-                inputClassLateTime,
-                inputClassAbsentTime,
-                inputPrfessorId
-            ];
-            console.log("Arr = ");//
-            console.log(arr);//
+            console.log("프론트가 수업 생성 시 보내줘야 하는 값들 목록: ");
+            console.log("professor_login_id: ", decoded.logId);
+            console.log("InputClassName: ", InputClassName);
+            console.log("InputClassTime: ", InputClassTime);
+            console.log("InputClassColor: ", InputClassColor);
+            console.log("InputClassDesign: ", InputClassDesign);
+            console.log("InputClassLateTime: ", InputClassLateTime);
+            console.log("InputClassAbsentTime: ", InputClassAbsentTime);
+            console.log(" ");
 
             connection.query(`
-                INSERT INTO classList (name, code, color, design, lateTime, absentTime, professor_id) 
-                VALUES (?, ?, ?, ?, ?, ?, ?);
-            `, arr, (err, result1) => {
-                if (err){
-                    console.error(err);
-                    throw err;
+                select id 
+                from classList 
+                order by id desc limit 1
+            `, (err3, result3) => {
+                if (err3){
+                    console.error(err3);
+                    throw err3;
                 } 
+                let class_code = result3[0].id + 1;
+                console.log("실제 수업의 code값: ", class_code)
 
-                let class_id = result1.insertId;
-
-                for (let i = 0; i < InputClassTime.length; i++) {
-                    connection.query(`
-                        insert into class_date (startTime, endTime, day, class_id)
-                        values (?, ?, ?, ?)
-                    `, [InputClassTime[i].startTime, InputClassTime[i].endTime, InputClassTime[i].day, class_id], (err2, result2) => {
-                        if(err2) {
-                            console.error(err2);
-                            throw err2;
-                        }
-                    })
-                }
-
-                console.log(InputClassName + "수업 생성 완료");
-
-                //jwt 생성 후 전송
-                let newToken = jwt.sign(
-                    { logId: decoded.logId }, 
-                    secretObj.secret, 
-                    { expiresIn: '5m' }
-                )
+                let arr = [
+                    InputClassName,
+                    class_code,
+                    InputClassColor,
+                    InputClassDesign,
+                    InputClassLateTime,
+                    InputClassAbsentTime,
+                    InputPrfessorId
+                ];
                 
-                res.json({
-                    message: '수업 생성 성공',
-                    error: 'false',
-                    token: newToken
-                })
+                connection.query(`
+                    INSERT INTO classList (name, code, color, design, lateTime, absentTime, professor_id) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?);
+                `, arr, (err, result1) => {
+                    if (err){
+                        console.error(err);
+                        throw err;
+                    } 
+                    
+                    let class_id = result1.insertId;
+                    console.log("생성된 수업의 id를 가져온다: ", class_id)
 
+                    for (let i = 0; i < InputClassTime.length; i++) {
+                        connection.query(`
+                            insert into class_date (startTime, endTime, day, class_id)
+                            values (?, ?, ?, ?)
+                        `, [InputClassTime[i].startTime, InputClassTime[i].endTime, InputClassTime[i].day, class_id], (err2, result2) => {
+                            if(err2) {
+                                console.error(err2);
+                                throw err2;
+                            }
+
+                            console.log("수업의 날짜가 잘 저장되었다.")
+                            
+                        })
+                    }
+
+                    console.log(InputClassName + "수업 생성 완료");
+
+                    //jwt 생성 후 전송
+                    let newToken = jwt.sign(
+                        { logId: decoded.logId }, 
+                        secretObj.secret, 
+                        { expiresIn: '5m' }
+                    )
+                    
+                    res.json({
+                        message: '수업 생성 성공',
+                        error: 'false',
+                        token: newToken
+                    })
+
+                })
             })
         })
     });
@@ -239,7 +272,7 @@ router.post('/professor/classList/update', (req, res) => {
             })
             return;
         }
-
+        console.log("교수의 login_id: ", decoded.logId);
 
         let {
             classListId,
@@ -250,6 +283,16 @@ router.post('/professor/classList/update', (req, res) => {
             edit_absentTime,
             edit_week
         } = req.body;
+
+        console.log("프론트가 보내줘야하는 값 목록들: ")
+        console.log("classListId: ", classListId);
+        console.log("edit_classTime: ", edit_classTime);
+        console.log("edit_color: ", edit_color);
+        console.log("edit_design: ", edit_design);
+        console.log("edit_lateTime: ", edit_lateTime);
+        console.log("edit_absentTime: ", edit_absentTime);
+        console.log("edit_week: ", edit_week);
+        console.log();
     
         connection.query(`
             update classList 
@@ -267,6 +310,8 @@ router.post('/professor/classList/update', (req, res) => {
                 select * from class_date
                 where class_id = ?
             `, [class_id], (err2, result2) => {
+                if(err2) throw err2;
+
                 console.log(edit_classTime)
                 console.log(edit_classTime[0])
                 for (let i = 0; i < edit_classTime.length; i++) {
@@ -326,8 +371,12 @@ router.post('/professor/classList/delete', (req, res) => {
             return;
         }
 
-        let classListID = req.body.classListID;
+        console.log("교수의 login_id: ", decoded.logId);
 
+        let classListID = req.body.classListID;
+        console.log("프론트가 보내줘야하는 값: ")
+        console.log("classListID: ", classListID);
+        console.log();
                 
         connection.query(`
             delete from classList
@@ -354,7 +403,62 @@ router.post('/professor/classList/delete', (req, res) => {
     })
 })
 
-// 5. 교수 수업 개설.classStartTimeHour
+// 5-1 preOpen
+router.post('/professor/classList/qr/preOpen', (req, res) => {
+    let token = req.headers['x-access-token'] || req.query.token;
+    
+    if(!token){
+        res.json({
+            message: '토큰이 없습니다.',
+            error: 'true'
+        })
+        return;
+    }
+    jwt.verify(token, secretObj.secret, (err, decoded) => {
+        if(err){
+            res.json({
+                message: '잘못된 토큰이 왔습니다.',
+                error: true
+            })
+            return;
+        }
+
+        let class_id = req.body.class_id;
+        console.log("프로트가 보내줘야 하는 값 : ")
+        console.log("class_id: ", class_id);
+        console.log();
+
+        connection.query(`
+            select when_is_opened_getTime, week
+            from classList
+            where id = ?
+        `, [class_id], (err, result) => {
+            if(err) throw err;
+            
+            let getTime = result[0].when_is_opened_getTime;
+            let week = result[0].week;
+
+            console.log("getTime: ", getTime);
+            console.log("week: ", week);            
+
+            // 모든 결과가 끝남
+            let newToken = jwt.sign(
+                { logId: decoded.logId }, 
+                secretObj.secret, 
+                { expiresIn: '2h' }
+            )
+
+            res.json({
+                getTime,
+                week,               
+                error: false,
+                token: newToken
+            })  
+        })
+    })
+})
+
+// 5. 교수 수업 개설.
 router.post('/professor/classList/qr/open', (req, res)=> {
     let token = req.headers['x-access-token'] || req.query.token;
     
@@ -377,19 +481,25 @@ router.post('/professor/classList/qr/open', (req, res)=> {
     
         let {
             classListId,
-            classStartTimeHour  // 1. 교수의 수업시간, 2. 교수가 임의로 정한시간, 3. 뭐 어쨋든 잘 알아서 프론트에선 넘어온 값
+            classStartTimeHour,  // 1. 교수의 수업시간, 2. 교수가 임의로 정한시간, 3. 뭐 어쨋든 잘 알아서 프론트에선 넘어온 값
+            week
         } = req.body;
 
-        global.classStartTimeHour = classStartTimeHour; // 글로벌 변수에 넣는다.
-        console.log("global.classStartTimeHour = " + global.classStartTimeHour + "글로벌 변수에 잘 들어갔는지 확인");
+        console.log("프론트가 보내줘야 하는 값 목록: ")
+        console.log("professor_login_id: ", decoded.logId);
+        console.log("classListId: ", classListId);
+        console.log("classStartTimeHour: ", classStartTimeHour);
+        console.log("week: ", week);
+        console.log();
+
 
         let flag = false; // 만약 이미 수업이 열려있는 경우 판단하는 flag이다.
         let date = classStartTimeHour;
         let is_none = false;    // 없는 수업을 요청하였을  경우 판단하는 값
-        
+        let is_week_already_exist = false;
     
         connection.query(`
-            select cl.id, week, isOpened
+            select cl.id, isOpened
             from classList as cl
             left join professor as p on p.id = cl.professor_id
             where p.login_id = ?
@@ -399,9 +509,7 @@ router.post('/professor/classList/qr/open', (req, res)=> {
                 throw err2;
             }
 
-            console.log("classList = ");
-            console.log(classList)
-            console.log(decoded.logId)
+            
 
             for (let i = 0; i < classList.length; i++) {
                 if( classList[i].isOpened && classList[i].id != classListId ) {
@@ -417,40 +525,102 @@ router.post('/professor/classList/qr/open', (req, res)=> {
                             throw err3;
                         }
                     })
-                } else if( classList[i].isOpened && classList[i].id == classListId ) {
-                    // 이미 생성되었는데도 불구하고 다시 요청을 하는 경우
-                    console.log("이미 생성되었는데도 불구하고 다시 요청을 하는 경우");
-                    flag = true;
-
-                    let newToken = jwt.sign(
-                        { logId: decoded.logId }, 
-                        secretObj.secret, 
-                        { expiresIn: '3h' }
-                    )
-        
-                    is_none = true;
-                    res.json({
-                        message: `이미 수업이 열려 있습니다.`,
-                        error: true,
-                        token: newToken
-                    })
-                    return;
-
-                } else if( !classList[i].isOpened && classList[i].id == classListId ) {
-                    // 원하는 수업이 안열렸을 경우 수업의 isOpened값을 true로 변경한다.
-                    console.log("원하는 수업이 안열렸을 경우 수업의 isOpened값을 true로 변경한다.");
-                    is_none = true;
+                }  else if( classList[i].id == classListId ) {
+                    is_none = true; 
+                    console.log("현재 개설하려는 수업이 생성되어 있음을 확인하였습니다.")
 
                     connection.query(`
                         update classList
-                        set isOpened = ?, when_is_opened = ?
+                        set isOpened = ?, when_is_opened = ?, week = ?, when_is_opened_getTime = ?
                         where id = ?
-                    `, [true, date, classListId], (err3, update_result) => {
+                    `, [true, date, week, new Date().getTime(), classListId], (err3, update_result) => {
                         if(err3) {
                             console.error(err3);
                             throw err3;
                         }
+                        /**
+                         *  정말 필요한 구문인지 확신이 서지 않는다.
+                         * 
+                         */
+                        // 같은 회차가 존재하는지 확인해 본다.
+                        connection.query(`
+                            select week 
+                            from week
+                            where class_id = ?
+                        `, [classListId], (err4, result4) => {
+                            if(err4) {
+                                console.error(err4);
+                                throw err4;
+                            }
 
+                            
+                            for (let i = 0; i < result4.length; i++) {                                
+                                let i_week = result4[i].week;                                
+                                if(i_week == week) {
+                                    // 이미 같은 수업에 같은 회차의 정보가 존재하고 있다.
+                                    is_week_already_exist = true;
+                                    break;                                    
+                                }                    
+                            }
+                            if(!is_week_already_exist){
+                                console.log("수업의 회차를 저장하려 하고 있습니다.");
+                                connection.query(`
+                                    INSERT INTO week (week, class_day, class_time, class_id) 
+                                    VALUES (?, ?, ?, ?);
+                                `, [week, new Date(), date, classListId], (err5, result5) => {
+                                    if(err5){
+                                        console.error(err5)
+                                        throw err5;
+                                    }
+    
+                                    console.log(`${classListId}번째 수업의 ${week}회차가 생성되었습니다.`);
+    
+                                    // 해당 수업에 등록한 학생 전부 attendance를 생성한다.
+                                    console.log("해당 수업에 등록한 학생 전부의 attendance를 생성하겠습니다.")
+                                    connection.query(`
+                                        select student_id, cl.*
+                                        from Student_has_class as sc
+                                        left join classList as cl on cl.id = sc.class_id
+                                        where sc.class_id = ?
+                                    `, [classListId], (err4, result4) => {
+                                        if(err4) {
+                                            console.error(err4);
+                                            throw err4;                                    
+                                        }
+    
+                                        let class_day = new Date();
+                                        let class_time = result4[0].when_is_opened;
+                                        let class_week = result4[0].week;
+                                        console.log("class_day: ", class_day);
+                                        console.log("class_time: ", class_time);
+                                        console.log("class_week: ", class_week);
+    
+    
+                                        console.log(`${classListId} 수업을 등록한 모든 학생의 attendance를 추가하도록 하겠습니다.`)
+                                        console.log(`추가하려는 학생 목록: `)
+                                        for (let i1 = 0; i1 < result4.length; i1++) {
+                                            console.log(`${result4[i1].student_id} 을 생성하겠습니다.`)
+                                            let student_id_i1 = result4[i1].student_id;
+    
+                                            connection.query(`
+                                                insert into attendance (record, reason, created_day, created_time, updated_day, updated_time, is_verified, week_id, student_id, class_id)
+                                                values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                            `, ["결석", "", class_day, class_time, class_day, class_time, 0, class_week, student_id_i1, classListId], (err5, result5) => {
+                                                if(err5){
+                                                    console.error(err5);
+                                                    throw err5;
+                                                }
+    
+                                                console.log(`${result5.insertId}번째 학생의 출석을 생성하였습니다.`)
+                                            })
+                                        }
+    
+    
+                                    })
+                                })
+                            }
+                            
+                        })
                     })
                 } 
             }
@@ -463,7 +633,7 @@ router.post('/professor/classList/qr/open', (req, res)=> {
                 return;
             }
 
-            if(!flag){
+            if(!flag && !is_week_already_exist){
                 // 모든 결과가 끝남
                 let newToken = jwt.sign(
                     { logId: decoded.logId }, 
@@ -482,27 +652,19 @@ router.post('/professor/classList/qr/open', (req, res)=> {
     })
 })
 
-/**
- * 
- * //jwt 생성 후 전송
-            let newToken = jwt.sign(
-                { logId: decoded.logId }, 
-                secretObj.secret, 
-                { expiresIn: '5m' }
-            )
+function getDate(date) {
+    let year = date.getUTCFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
 
-            res.json({
-                message: `${classListID} 번 수업 Open.`,
-                error: false,
-                expiresIn: '5m',
-                token: newToken
-            })
- */
+    let result = (year +"-" + month+"-"+day)
 
-// 6. 1초 마다 들어오는 qr 요청
-// app.post('/desk/professor/classList/qr/request', (req, res) => {
+    return result;
+}
 
-// 7. 교수가 자신의 과목에 대한 모든 출결현황 보기
+
+
+// 7. 교수가 자신의 과목에 대한 전 회차 또는 각 회차 출결리스트 반환
 // app.post('/desk/professor/classList/attendance', (req, res) => {
 router.post('/professor/classList/attendance', (req, res) => {
     let token = req.headers['x-access-token'] || req.query.token;
@@ -522,25 +684,52 @@ router.post('/professor/classList/attendance', (req, res) => {
             })
             return;
         }
-
+        
 
         // let professor_id = req.body.professor_ID;
         let class_id = req.body.classListID;
         let week = req.body.att_week;
-        console.log("week = " + week);
+        console.log("프론트에서 특정 수업의 출결을 알고 싶은 경우 주어야하는 파라미터 값들: ")
+        console.log("class_id: ", class_id);
+        console.log("att_week: ", week, "이 값은 없다면 모든 회차의 출결을 알고싶은 경우이다.");
+        console.log("");
+        
 
-        if (week) {  //특정한 회차의 출결을 보고싶은 경우
+        if (week) {  // 특정 회차의 출결을 보고싶은 경우
             connection.query(`
-                select * from attendance as att
-                left join classList as cl on att.class_id = cl.id
-                where cl.id = ? and att.att_week = ?;
-            `, [class_id, week], (err, result) => {
+                select att.id as attendance_id, att.record as studentState, st.name, st.no as studentNo, att.created_day, att.created_time, is_fingerprint, is_gtx, is_qr, is_passive 
+                from attendance as att
+                left join student as st on st.id = att.student_id
+                where att.class_id = ? and att.week_id = ?
+            `, [class_id, week], (err, attendanceArr) => {
                 if (err) {
                     console.error(err);
                     throw err;
                 }
 
-                // res.json(result);
+                let att_arr = Object.values(attendanceArr);
+
+                console.log("특정 회차의 모든 정보: ")
+                console.log(attendanceArr)
+                console.log();
+
+                let attend_count = 0;
+                let late_count = 0;
+                let absent_count = 0;
+
+                // let student_state = {
+                //     is_fingerprint: attendanceArr
+                // }
+
+                for (let i = 0; i < att_arr.length; i++) {
+                    if(att_arr[i].studentState == '출석')  {
+                        attend_count++;
+                    } else if(att_arr[i].studentState == '지각') {
+                        late_count++;
+                    } else if(att_arr[i].studentState == '결석') {
+                        absent_count++;
+                    }
+                }                
 
                 //jwt 생성 후 전송
                 let newToken = jwt.sign(
@@ -548,48 +737,103 @@ router.post('/professor/classList/attendance', (req, res) => {
                     secretObj.secret,
                     { expiresIn: '5m' }
                 )
-                console.log("attendance = ")
-                console.log(result);
+
+                console.log("한 회차의 모든 출결 정보 배열: ", att_arr);
+                console.log("한 회차의 모든 출석 정보: ", attend_count);
+                console.log("한 회차의 모든 지각 정보: ", late_count);
+                console.log("한 회차의 모든 결석 정보: ", absent_count);
 
                 res.json({
-                    attendance: result,
+                    att_arr,
+                    attend_count,
+                    late_count,
+                    absent_count,
                     token: newToken,
                     error: false,
                     message: `${class_id} 번 수업 Open.`
                 })
             })
-        } else {
+        } else {     // 전 회차의 각각의 회차의 모든 출결 정보 return;
             connection.query(`
-                select * from attendance as att
-                left join classList as cl on att.class_id = cl.id
-                where cl.id = ?;
-            `, [class_id], (err, result) => {
-                if (err) {
-                    console.error(err);
-                    throw err;
+                select * 
+                from week as we
+                where we.class_id = ?
+                group by we.week
+                order by we.week
+            `, [class_id], (err1, week_result) => {
+                if(err1) {
+                    console.error(err1);
+                    throw err1;
                 }
 
-                // res.json(result);
+               
 
-                //jwt 생성 후 전송
-                let newToken = jwt.sign(
-                    { logId: decoded.logId },
-                    secretObj.secret,
-                    { expiresIn: '5m' }
-                )
-                console.log("attendance = ")
-                console.log(result);
+                let attendance_count = 0;
+                let late_count = 0;
+                let absent_count = 0;
+                let week_object = {};
 
-                res.json({
-                    attendance: result,
-                    token: newToken,
-                    error: false,
-                    message: `${class_id} 번 수업 Open.`
-                })
+                let result_arr = [];
+                
+
+                for (let i = 0; i < week_result.length; i++) {                    
+                    connection.query(`
+                        select * 
+                        from attendance as att
+                        where att.week_id = ? and class_id = ?
+                    `, [week_result[i].week, class_id], (err2, attendance_result) => {
+                        if(err2){
+                            console.error(err2);
+                            throw err2;                            
+                        }
+
+                        
+
+                        for (let j = 0; j < attendance_result.length; j++) {                            
+                            if(attendance_result[j].record == '출석') {
+                                attendance_count++;
+                            }else if(attendance_result[j].record == '지각') {
+                                late_count++;
+                            }else if(attendance_result[j].record == '결석') {
+                                absent_count++;
+                            }
+                        }
+                        week_object = {
+                            week: week_result[i].week,
+                            day: getDate(week_result[i].class_day),
+                            time: week_result[i].class_time,
+                            attendance_count,
+                            late_count,
+                            absent_count
+                        }
+                        result_arr.push(week_object);
+                        attendance_count = 0;
+                        late_count = 0;
+                        absent_count = 0;
+
+                        if(i == week_result.length - 1) {
+                            //jwt 생성 후 전송
+                            let newToken = jwt.sign(
+                                { logId: decoded.logId },
+                                secretObj.secret,
+                                { expiresIn: '5m' }
+                            )
+
+                            let result10 = {
+                                result_arr,
+                                error:false, 
+                                message: "잘 보내짐",
+                                token: newToken
+                            }
+                            res.json(result10)
+                        }
+                    })                    
+                }
             })
         }    
     })
 })
+
 
 // 8. 교수가 수동으로 출석 변경
 // app.post('/desk/professor/classList/attendance/modify', (req, res) => {
@@ -613,33 +857,30 @@ router.post('/professor/classList/attendance/modify', (req, res) => {
         }
 
 
-        let attendance_id = req.body.attendance_ID;
-        let edit_record = req.body.edit_record;
-        let edit_reason = req.body.edit_reason;
-    
-        // 변경은 recored와 reason을 변경한다.
-        // 특정 날짜를 알 수 있어야 한다. 아니 attendanceID만 알고 있으면 변경할 수 있다 어차피 이 url에 접근할 수 있는 유저는 해당 교수밖에 없으므로.    
+        let {
+            att_id,            
+            record, 
+            reason
+        } = req.body;            
+
         connection.query(`
-            UPDATE attendance 
-            SET record = ?, reason = ? 
-            WHERE id = ?
-        `, [edit_record, edit_reason, attendance_id], (err, result)=> {
-            if(err){
-                console.error(err);
-                throw err;
-            }
-    
+            update attendance
+            set record = ?, reason = ?
+            where id = ?
+        `, [record, reason, att_id], (err1, result1) => {
+            if(err1) throw err1;
+
             //jwt 생성 후 전송
             let newToken = jwt.sign(
-                { logId: decoded.logId }, 
-                secretObj.secret, 
+                { logId: decoded.logId },
+                secretObj.secret,
                 { expiresIn: '5m' }
             )
 
             res.json({
-                token: newToken,
                 error: false,
-                
+                message: "특정 출결 변경이 성공했습니다.",
+                token: newToken
             })
         })
     
@@ -650,6 +891,9 @@ router.post('/professor/classList/attendance/modify', (req, res) => {
 // 9. sign_up 회원가입 페이지
 router.post('/professor/sign_up', (req, res)=>{
     let logId = req.body.inputId;
+    let password = req.body.inputPw;
+    let name = req.body.inputName;
+    let email = req.body.inputEmail;
 
     connection.query(`
         select login_id, email 
@@ -660,18 +904,14 @@ router.post('/professor/sign_up', (req, res)=>{
             console.error(err);
             throw err;
         }
-
-        if(result1){
+        console.log(result1);
+        if(result1.length != 0){
             res.json({
                 message: "동일한 아이디를 가진 유저가 존재합니다!!",
                 error: "Fail SignUp"
             });
             return;
         }
-
-        let password = req.body.inputPw;
-        let name = req.body.inputName;
-        let email = req.body.inputEmail;
     
         let salt = Math.round((new Date().valueOf() * Math.random())) + "";
         let hashPassword = crypto.createHash("sha512").update(password + salt).digest("hex");
@@ -729,10 +969,9 @@ router.post('/professor/login', (req, res) => {
                 let token = jwt.sign(
                     { logId }, 
                     secretObj.secret, 
-                    { expiresIn: '2h' }
+                    { expiresIn: '10h' }
                 )
-                console.log("token = ");
-                console.log(token);
+                
 
                 res.json({
                     error: false,
@@ -765,21 +1004,266 @@ router.get("/professor/logout", (req, res) => {
     }
 })
 
-// 12. test용 logout page만들기
-router.get('/professor/logout', (req, res) => {
-    let html = `
-    <h1>logout</h1>
-
-    <form action="http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/logout" method="POST">
-        <input type="submit" value="logout">
-    </form>
-`;
-    res.send(html);
-    
-})
-
-
 
 
 
 module.exports = router;
+
+/**
+ * 
+ * connection.query(`
+                select we.week, we.class_day, we.class_time, att.record
+                from week as we
+                left join attendance as att on att.week_id = we.week
+                where we.class_id = ?
+                order by we.week
+            `, [class_id], (err6, result6) => {
+                if(err6) {
+                    console.error(err6);
+                    throw err6;                    
+                }
+                
+
+                let week_index = result6[0].week;   // 첫 번째 week값
+                let week_Object = {
+                    week: week_index,
+                    week_day: result6[0].class_day,
+                    week_time: result6[0].class_time
+                };
+                WeekARRAY.push(week_Object);
+
+                let att_count = 0;
+                let late_count = 0;
+                let absent_count = 0;
+
+                for (let k = 0; k < result6.length; k++) {
+                    if(week_index < result6[k].week) { // 새로운 회차의 값이다.
+                        week_Object = {
+                            ...week_Object,
+                            att_count,
+                            late_count,
+                            absent_count
+                        }
+                        WeekARRAY.push(week_Object);
+                        // 한 회차의 정보가 입력 완료 되었다.
+                        
+                        week_Object = {
+                            week: week_index,
+                            week_day: result6[k].class_day,
+                            week_time: result6[k].class_time
+                        };
+
+                        att_count = 0;
+                        late_count = 0;
+                        absent_count = 0;
+                    }
+
+                    if(result6[k].record == '출석') {
+                        att_count++;
+                    } else if(result6[i].record == '지각') {
+                        late_count++;
+                    } else if(result6[i].record == '결석') {
+                        absent_count++;
+                    }
+                }
+
+
+
+                // let week_count = 0;
+                // let att_count = 0;
+                // let late_count = 0;
+                // let absent_count = 0;
+                // // let week_arr = [];
+
+                // for (let i = 0; i < result6.length; i++) {
+                //     if(week_count < result6[i].week){
+                //         week_arr[result6[i].week - 1] = {
+                //             week: result6[i].week,
+                //             class_day : getDate(result6[i].class_day),
+                //             class_time: result6[i].class_time
+                //         }
+                //         att_count = 0;
+                //         late_count = 0;
+                //         absent_count = 0;
+                //         week_count++;
+                //     }
+                    
+                //     if(result6[i].record == '출석') { 
+                //         att_count++;
+                //     }else if(result6[i].record == '지각') {
+                //         late_count++;
+                //     } else if(result6[i].record == '결석') {
+                //         absent_count++;
+                //     }
+                // }
+
+                //jwt 생성 후 전송
+                let newToken = jwt.sign(
+                    { logId: decoded.logId },
+                    secretObj.secret,
+                    { expiresIn: '5m' }
+                )
+
+                let result10 = {
+                    result6,
+                    error:false, 
+                    message: "잘 보내짐",
+                    token: newToken
+                }
+                res.json(result10)
+            })
+ * 
+ */
+
+/**
+ * 
+ * connection.query(`
+                select we.week as week, we.class_day, we.class_time, record, att.id as attendance_id  
+                from week as we
+                left join attendance as att on att.week_id = we.id
+                where class_id = ?
+            `, [class_id], async (err1, attendanceArr) => { // 현재 회차별로 안묶여짐
+                if(err1) throw err1;
+
+                let attend_count = 0;
+                let late_count = 0;
+                let absent_count = 0;
+                let max_week = 0;
+
+                for (let i = 0; i < attendanceArr.length; i++) {
+                    if(max_week < attendanceArr[i].week){ 
+                        max_week = attendanceArr[i].week;
+                    }
+
+                    if(attendanceArr[i].record == '출석')  {
+                        attend_count++;
+                    } else if(attendanceArr[i].record == '지각') {
+                        late_count++;
+                    } else if(attendanceArr[i].record == '결석') {
+                        absent_count++;
+                    }
+                }
+
+                // attendanceArr = {
+                    
+                //     attend_count,
+                //     late_count,
+                //     absent_count,                    
+                // }
+                console.log(attendanceArr);
+
+                let week_arr = Object.values(attendanceArr);
+                let count = 0;
+
+                for (let index = max_week; index > 0; index--) {
+                    await connection.query(`
+                        select * from week 
+                        left join attendance as att on att.week_id = week.week
+                        where week.id = ? and class_id = ?
+                    `, [index, class_id], (err3, result3) => {
+                        if(err3) throw err3;
+
+                        let attendance = {};
+
+                        let attend_count1 = 0;
+                        let late_count1 = 0;
+                        let absent_count1 = 0;
+
+                        for (let i = 0; i < result3.length; i++) {                            
+                            if(result3[i].record == '출석')  {
+                                attend_count1++;
+                            } else if(result3[i].record == '지각') {
+                                late_count1++;
+                            } else if(result3[i].record == '결석') {
+                                absent_count1++;
+                            }
+                        }
+                        if(result3.length != 0){
+                            attendance = {
+                                week : index,
+                                class_day: result3[0].class_day,
+                                class_time: result3[0].class_time,
+                                attend_count: attend_count1,
+                                late_count: late_count1,
+                                absent_count: absent_count1
+                            }
+                            week_arr[count]=attendance;
+                            count++;
+                            console.log(week_arr)
+                            console.log("채웠다 채웠다 채웠다 채웠다 채웠다 채웠다 채웠다 ")
+                        }
+                        
+                    })                            
+                }
+
+                //jwt 생성 후 전송
+                let newToken = jwt.sign(
+                    { logId: decoded.logId },
+                    secretObj.secret,
+                    { expiresIn: '5m' }
+                )
+
+                // res.json(attendanceArr);
+                console.log(week_arr)
+                console.log("sahdjfgdjsghdlgakkhldashdslaghasgfaadghsagadshgakghkadghdsl")
+                await res.json({
+                    week_arr: week_arr,
+                    token: newToken,
+                    error: false,
+                    message: `${class_id} 번 수업의 출석.`
+                })        
+                
+                
+            })
+ */
+
+// 6. 수업의 회차 정보 보기 ==> 이미 7번에서 같이 해결
+// router.post("/professor/classList/weekAll", (req, res) => {
+//     let token = req.headers['x-access-token'] || req.query.token;
+    
+//     if(!token){
+//         res.json({
+//             message: '토큰이 없습니다.',
+//             error: 'true'
+//         })
+//         return;
+//     }
+//     jwt.verify(token, secretObj.secret, (err, decoded) => {
+//         if(err){
+//             res.json({
+//                 message: '잘못된 토큰이 왔습니다.',
+//                 error: true
+//             })
+//             return;
+//         }
+
+//         console.log(decoded);
+
+//         // 한 수업의 모든 week값을 토대로 값이 존재
+//         // week_id, 해당 week의 열린 시간
+//         let class_id = req.body.class_id;
+
+        
+//     })
+// })
+
+
+/**
+ * 
+ * //jwt 생성 후 전송
+            let newToken = jwt.sign(
+                { logId: decoded.logId }, 
+                secretObj.secret, 
+                { expiresIn: '5m' }
+            )
+
+            res.json({
+                message: `${classListID} 번 수업 Open.`,
+                error: false,
+                expiresIn: '5m',
+                token: newToken
+            })
+ */
+
+// 6. 1초 마다 들어오는 qr 요청
+// app.post('/desk/professor/classList/qr/request', (req, res) => {
