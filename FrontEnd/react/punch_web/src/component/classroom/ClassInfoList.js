@@ -20,16 +20,29 @@ class ClassInfoList extends Component {
     listUpdata = () => {
         console.log('토큰값 : ','http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/main?token='+this.props.token)
         let classList
+        if(!this.props.token){
+            this.logout()
+            return
+        }
         axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/main?token='+this.props.token)
         .then( response => {
+            if (response.message == "잘못된 토큰이 왔습니다."){
+                this.logout()
+                return
+            }
             classList = response.data.classList;
-            console.log(classList.length)
             console.log('수업 목록 리스트 : ',response)
             store.dispatch({ type: "classList",classList})
             this.props.loginSuccess(response.data.token)
+            console.log('토큰 :',response.data.token)
+            if (classList){
             this.setState({ classLength : classList.length });
+            } else if (classList==null){
+                this.setState({ classLength : 0 });                
+            } 
         })
         .catch( error => {
+            console.log('에러',error)
             this.setState({ classLength : -1 });
           })      
     }
@@ -65,7 +78,8 @@ class ClassInfoList extends Component {
         }
         let list = ""
         console.log(this.state.classLength)
-        if (this.state.classLength > 0){
+        console.log(this.props.classList)
+        if (this.state.classLength > 0 ){
             list = this.props.classList.map(
                 info => (<ClassInfo key={info.id} info={info}/>)   
             );          
@@ -89,6 +103,7 @@ function mapDispatchToProps(dispatch){
     return {
         loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
         classListRefresh : (value) => dispatch({ type: "classListRefresh",refresh : value}),
+        logout : () => dispatch({type:'LOGOUT'}),
     }
   }
 const mapStateToProps = (state) => ({

@@ -35,7 +35,7 @@ class ClassInfo extends Component {
 
     //랜더부
     render() {
-        // prop의 정보를 상수로 만듭니다.ㅌㅈ
+        // prop의 정보를 상수로 만듭니다.
         const {
         day, name, color// , professor, code, id // 사용하지 않는 상수
         } = this.props.info;

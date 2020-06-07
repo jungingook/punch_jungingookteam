@@ -181,10 +181,11 @@ class AddCalss extends Component {
             axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList?token='+this.props.token, {
                 InputClassName: this.state.className,
                 InputClassTime : InputClassTime,
-                inputClassColor : this.state.classColor,
+                InputClassColor : this.state.classColor,
                 InputClassDesign : this.state.classDesign,
                 InputClassCode: 500, // 해당 항목은 없어저야함
-                // inputPrfessorId : 1, // 1 승진좌
+                InputClassLateTime : this.state.tardy,
+                InputClassAbsentTime : this.state.absent,
             })
             .then( response => {
                 console.log(response)
@@ -261,14 +262,14 @@ class AddCalss extends Component {
                         <div id="AddClassTimeApeend" onClick={()=>this.appendTime()}> 수업시간 추가 </div>
                     </div>
 
-                    <div className = "AddClassSelector"> 
+                    {/* <div className = "AddClassSelector"> 
                         <div className = "AddClassSelectorName">
                             수업 기간
                         </div>
                         <div className = "AddClassSelectorInput">
                             <AddDate dataBack={this.dateCallBack} />
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className = "AddClassSelector"> 
                         <div className = "AddClassSelectorName">

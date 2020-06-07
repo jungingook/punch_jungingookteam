@@ -9,7 +9,7 @@ class Standby extends Component {
       }
     render() {
         return (
-            <div>
+            <div id="StandbyReversal">
                 <div id ="StandbyUpper">
                     <img id="StandbyLogo" src={ require('../../../img/logo.png') }/>
                 </div>

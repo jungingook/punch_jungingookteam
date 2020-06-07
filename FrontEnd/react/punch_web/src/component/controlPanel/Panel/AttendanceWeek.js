@@ -9,10 +9,9 @@ import store from "../../../store";
 class AttendanceWeek extends Component {
 
     attendanceClick = () => {
-       this.props.selectAttendanceWeek(this.props.data.no)
+       this.props.selectAttendanceWeek(this.props.data.week)
        this.props.PanelSelect('AttendanceWeek')
     }
-
 
     render() {
 
@@ -20,9 +19,9 @@ class AttendanceWeek extends Component {
 
         return (
             <div className = "AttendanceWeek" onClick={()=> this.attendanceClick()} >
-                <div className = "AttendanceWeekNo"> {this.props.data.no} 차 수업 </div>
-                <div className = "AttendanceDate"> {date.toDateString()} </div>
-                <div className = "AttendanceState"> <span className="AttendanceStateAttendance">출 {this.props.data.attendance}</span> <span className="AttendanceStateTrady">지 {this.props.data.trady}</span> <span className="AttendanceStateAbsent">결 {this.props.data.absent}</span></div>
+                <div className = "AttendanceWeekNo"> {this.props.data.week} 차 수업 </div>
+                <div className = "AttendanceDate"> {this.props.data.day} </div>
+                <div className = "AttendanceState"> <span className="AttendanceStateAttendance">출 {this.props.data.attendance_count}</span> <span className="AttendanceStateTrady">지 {this.props.data.late_count}</span> <span className="AttendanceStateAbsent">결 {this.props.data.absent_count}</span></div>
             </div>
         );
     }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">    
+    <!-- vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
+</head>
+
+<body>
+    <div id="app">
+    <h1>회원가입 페이지</h1>
+
+    <!--
+        inputId
+        inputPw
+        inputName
+        inputEmail        
+    -->
+
+    <!-- <form action="http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/sign_up" method="POST"> -->
+        <div>
+            <label>로그인 id</label>
+            <input type="text" name="inputId" placeholder="inputId" v-model="id">
+        </div>
+        <div>
+            <label>로그인 pw</label>
+            <input type="text" name="inputPw" placeholder="inputPw" v-model="password">
+        </div>
+        <div>
+            <label>로그인 name</label>
+            <input type="text" name="inputName" placeholder="inputName" v-model="name">
+        </div>
+        <div>
+            <label>로그인 email</label>
+            <input type="text" name="inputEmail" placeholder="inputEmail" v-model="email">
+        </div>
+        <input type="submit" value="회원가입">
+        <div>{{id}}{{password}}{{name}}{{email}}</div>
+    <!-- </form> -->
+    </div>
+    <script type="text/javascript">
+        var app = new Vue({
+          el: '#app',
+          data: {
+            professorId: '',
+            professorPw: '',
+            professorName: '',
+            professorMail: ''
+          }
+        })
+    </script>
+    
+</body>
+</html>

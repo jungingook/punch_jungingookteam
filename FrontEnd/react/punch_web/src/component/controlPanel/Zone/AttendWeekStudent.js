@@ -14,7 +14,7 @@ class AttendWeekStudent extends Component {
         display : true,
         expansion : false,
         stateChange : false,
-        studentState : '출석'
+        studentState : this.props.student.studentState
     }
     
     more = (value) =>  {
@@ -34,18 +34,18 @@ class AttendWeekStudent extends Component {
     }
 
     render() {
+        console.log('상태',this.props.student.studentState)
         let bgcolor = { 출석 : {backgroundColor : 'rgb(153, 197, 86)'},지각 : {backgroundColor : 'orange'},결석 : {backgroundColor : 'red'} }
-        console.log(this.props.name,':',this.props.order,)
         return (
             <div className = "AttendWeekStudentView" style={(this.props.show?{margin : '10px 0', filter: 'opacity(100%)', order : this.props.order}:{margin : '0px', filter: 'opacity(0%)'})}>
                 <div className = "AttendWeekStudentDefault" style={(this.props.show?{height : '100px'}:{height : '0px'})}>
                     <div className = "AttendWeekStudentLeft">
-                        <div className = "AttendWeekStudentNo"> {this.props.studentNo} </div>
+                        <div className = "AttendWeekStudentNo"> {this.props.student.studentNo} </div>
                         <div className = "AttendWeekStudentLeftBottom">
-                            <div className = "AttendWeekStudentName"> {this.props.name} </div>
+                            <div className = "AttendWeekStudentName"> {this.props.student.name} </div>
                             {this.state.stateChange ? 
                             <div className = "AttendWeekStudentStateChange" onClick={()=>this.stateChangeView(true)}> <span className ="StateChangeAttend" onClick={()=>this.stateChange('출석')}> 출석 </span> <span className ="StateChangeTrady" onClick={()=>this.stateChange('지각')}> 지각 </span> <span className ="StateChangeAbsent" onClick={()=>this.stateChange('결석')}> 결석 </span> </div>:
-                            <div className = "AttendWeekStudentState" title="클릭해서 출석상태를 변경할 수 있습니다." onClick={()=>this.stateChangeView(false)} style={bgcolor[this.state.studentState]}> {this.state.studentState} <span className = "AttendWeekStudentTime" >{this.props.attendTime}</span></div>
+                            <div className = "AttendWeekStudentState" title="클릭해서 출석상태를 변경할 수 있습니다." onClick={()=>this.stateChangeView(false)} style={bgcolor[this.props.student.studentState]}> {this.props.student.studentState} <span className = "AttendWeekStudentTime" >{this.props.attendTime}</span></div>
                             }
                         </div>
                     </div>

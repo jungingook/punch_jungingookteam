@@ -79,21 +79,18 @@ const layout = StyleSheet.create({
       width : '90%',
       backgroundColor :"#F6F7F9",
       overflow : 'hidden',
-      ...Platform.select({ 
-        ios: { 
-            shadowColor: '#777777',
-            shadowOffset: { width: 2, height: 2, },
-            shadowOpacity: 0.6, shadowRadius: 4, 
-            },
-        android: { elevation: 8, },
-        web:{
-            
-        }
-        }), 
     },
 });
 
 class QRModal extends Component {
+
+  state = {
+    attend : false 
+  }
+  
+  attendcheck = (value) => {
+    console.log(value)
+  }
 
   appView = (mode) => {
     let output = <TouchableOpacity onPress={()=> this.props.appMode('QRSCAN')} ><Image source={require('../../assets/QR.png')} style={{ justifyContent: 'center', alignItems: 'center',width : 70,height : 70,resizeMode:'contain'}}/></TouchableOpacity>
@@ -101,10 +98,10 @@ class QRModal extends Component {
         output = <TouchableOpacity onPress={()=> this.props.appMode('QRSCAN')} ><Image source={require('../../assets/QR.png')} style={{ justifyContent: 'center', alignItems: 'center',width : 70,height : 70,resizeMode:'contain'}}/></TouchableOpacity>
     }
     else if (mode == "QRSCAN") {
-          output = <View style={layout.qrModal}><View style={layout.qrHeader}><Text style={layout.qrHeaderFont}>출석체크</Text></View><View style={layout.qrScanner}><QRSanner/></View><View style={layout.qrHeader}><TouchableOpacity onPress={()=> this.props.appMode('NORMAL')} ><Text>뒤로</Text></TouchableOpacity></View></View>
+          output = <View style={layout.qrModal}><View style={layout.qrHeader}><Text style={layout.qrHeaderFont}>출석체크[모드{mode}]</Text></View><View style={layout.qrScanner}><QRSanner check={this.attendcheck}/></View><View style={layout.qrHeader}><TouchableOpacity onPress={()=> this.props.appMode('NORMAL')} ><Text>뒤로</Text></TouchableOpacity></View></View>
     }
     else if (mode == "QRATTEND") {
-          output = <View style={layout.qrModal}><View style={layout.qrHeader}><Text style={layout.qrHeaderFont}>출석체크</Text></View><View style={layout.qrScanner}><QRSanner/></View><View style={layout.qrHeader}><TouchableOpacity onPress={()=> this.props.appMode('AppMode')} ><Text>뒤로</Text></TouchableOpacity></View></View>
+          output = <View style={layout.qrModal}><View style={layout.qrHeader}><Text style={layout.qrHeaderFont}>출석체크[모드{mode}]</Text></View><View style={layout.qrScanner}><QRSanner/></View><View style={layout.qrHeader}><TouchableOpacity onPress={()=> this.props.appMode('AppMode')} ><Text>뒤로</Text></TouchableOpacity></View></View>
     }
     else if (mode == "QRactive") { 
       

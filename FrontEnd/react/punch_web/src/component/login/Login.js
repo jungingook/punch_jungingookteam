@@ -46,6 +46,8 @@ class Login extends Component {
                 password : ''
             })
         })
+        var password = document.getElementById('loginPassWord');
+        password.value = null;
     }
 
 

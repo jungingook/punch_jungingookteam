@@ -37,8 +37,8 @@ class QRcode extends Component {
     }
     qrChange = () => {
         let random = "1111"
-        console.log()
-        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/request',{
+        // console.log('클래스 아이디 : ',this.props.select.id)
+        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/request?token='+this.props.token,{
             classListId : this.props.select.id
         })
         .then( response => {

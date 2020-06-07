@@ -32,7 +32,7 @@ class BarcodeScannerExample extends React.Component {
     const { hasCameraPermission, scanned } = this.state;
 
     if (hasCameraPermission === null) {
-      return <Text></Text>;
+      return <Text>카메라 로딩중</Text>;
     }
     if (hasCameraPermission === false) {
       return <Text>카메라에 연결할수 없습니다.</Text>;
@@ -69,18 +69,18 @@ class BarcodeScannerExample extends React.Component {
   handleBarCodeScanned = ({ type, data }) => {
     this.setState({ scanned: true});
     this.setState({ control : "MAIN"});
-    alert(`인증실패 :  ${this.state.control} `);
+    // alert(`??? :  ${this.state.control} `);
     let d = new Date();
+    console.log('출석 시작 토큰 : ',this.props.token);
     axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/mobile/qr/verify?token='+this.props.token,{
             qrNum: data, // QR코드 읽은값
             allowTime: d.getTime(), //  1970년 이후 밀리초 값
-            studentId: 1, // 학생 id값
             classStartTimeHour : 950,
-            login_id : 's1id',
           })
         .then( response => {
             console.log('성공',response.data);
             alert(`출석체크 :  ${response.data} `);
+            this.props.check(response.data)
         })
         .catch( error => {
             console.log('에러',error);

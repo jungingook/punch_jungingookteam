@@ -4,9 +4,9 @@ import { connect } from "react-redux"; // 리덕스 연결
 // [리듀스]스토어 연결
 import store from "../../../store";
 // 컴포넌트 연결
-import AttendanceUser from '../AddOn/AttendanceUser'; // 학생출석표 생성 
+import AttendanceUser from './AttendanceUser'; // 학생출석표 생성 
 
-class QRactive extends Component {
+class QRactiveList extends Component {
     state = {
         search : '',
         student :[
@@ -54,10 +54,19 @@ class QRactive extends Component {
         );     
         let list = this.state.student.map(
             info => (<AttendanceUser key={info.studentNo} name={info.name} order={info.name.search(this.state.search)} show={(show.indexOf(info.studentNo) == -1 ? false : true )}  studentNo={info.studentNo}  attendTime={info.attendTime} />)   
-        );
+        );        
         return (
-            <div id = "QRActivePanel">
-                {this.props.week}주차 수업
+            <div id ="QRactivePanelList">
+                <div id = "QRactiveSearch">
+                    <div id = "AttendWeekInfoButton">
+                        <div className= "AttendInfoinput" > <span>학생 검색 : </span><input placeholder="학번 또는 이름" onChange={this.studentSearch}/> </div>
+                        <div className="AttendInfoButton" > 미 출석자</div>   
+                        <div className="AttendInfoButton" > 출석자</div>               
+                    </div>
+                </div>
+                <div id ="attendancelist"> 
+                {/* {list} */}
+                </div>
             </div>      
             );
         }
@@ -68,4 +77,4 @@ const mapStateToProps = (state) => ({
     selectCard : state.selectCard
   })
 
-export default connect(mapStateToProps)(QRactive);
+export default connect(mapStateToProps)(QRactiveList);

@@ -192,13 +192,14 @@ class ClassInfo extends Component {
     }, { credentials: true })
     .then( response => {
         console.log('성공 : ',response.data)
-        console.log('데이터리스트 : ',response.data.result)
+        console.log('데이터리스트 : ',response.data)
         this.setState({
           attendList : response.data.result
         },console.log('set  : ',this.state.attendList))
     })
     .catch( error => {
-        console.log('실패 : ',error)
+        console.log('클래스 인포를 불러오지 못했습니다. 실패 : ',error)
+        this.props.logout()
     })
   } 
 
@@ -215,7 +216,7 @@ class ClassInfo extends Component {
       info => (<Text style={layout.timeText} key={timeID++}>{this.date(info.day,info.startTime,info.endTime)}</Text>)   
     );
     // 수업리스트
-    let attendList = <View></View>
+    let attendList = <Text>수업을 불러오고 있습니다.</Text>
     if (this.state.attendList != 'load') {
       attendList = this.state.attendList.map(
         info => ( <ClassAttend key={info.week_id} info={info}></ClassAttend>)    
@@ -226,6 +227,9 @@ class ClassInfo extends Component {
       bgColor={backgroundColor:cardColor[0]}
       titleColor ={backgroundColor:cardColor[1]}
     } catch (e) {
+    }
+    if(attendList.length == 0){
+      attendList = <Text>아직 수업이 진행되지 않았습니다.</Text>
     }
     return (
       <View style={[bgColor,{flex: 1 }]}>
@@ -248,20 +252,20 @@ class ClassInfo extends Component {
               </View>
           </View>
           <ScrollView style={layout.contents}>
-            <View style={layout.box}>
+            {/* <View style={layout.box}>
               <View>
               <Text>수업 정책</Text>
               </View>
               <View style={layout.tardybox}>
                 <View><Text>시작시간</Text></View>
                 <View style={layout.tardybox}>
-                  <View></View>
-                  <View></View>
-                  <View></View>
+                  <View><Text>출석</Text></View>
+                  <View><Text>지각</Text></View>
+                  <View><Text>결석</Text></View>
                 </View>
                 <View><Text>종료시간</Text></View>
               </View>
-            </View>
+            </View> */}
             {attendList}
           </ScrollView>
           <View style={[layout.footer,titleColor]}>
@@ -283,6 +287,7 @@ class ClassInfo extends Component {
   
   function mapDispatchToProps(dispatch){
       return {
+        logout : () => dispatch({type:'LOGOUT'}),
         appMode : (mode) => dispatch({type:'AppMode',mode:mode}),
         classListRefresh : (bool) => dispatch({type:'ClassListRefresh',value:bool}),
         tokenRefresh : (token) => dispatch({type:'TokenRefresh',token:token}),

@@ -14,21 +14,53 @@ class QRreade extends Component {
         selectTime : false,
         selectHour : "",
         selectMin : "",
+        classTime : false, 
+        now : false,
+        tardy : this.props.select.lateTime,
+        absent : this.props.select.absentTime,
       }
 
     handle = () => {
-        store.dispatch({ type: "panelMode",panelMode : "QRactive"})
-        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/open?token='+this.props.token, {
-            classListId: this.props.select.id,
-            classHour : 1200, // 수정 필요
-          })
-        .then( response => {
-            console.log("QR코드 생성")
-            this.props.loginSuccess(response.data.token)
-        })
-        .catch( error => {
-            console.log(error)
-          })
+        let uplodeTime
+        console.log('주차:',this.props.week)
+        if(this.state.cheakMode == 'ClassTime'){
+            uplodeTime = this.nearClassTime(this.props.select.classTime).startTime
+        }
+        if(this.state.cheakMode == 'NowTime'){
+            let d = new Date();
+            uplodeTime = d.getHours()*60 + d.getMinutes() 
+        }
+        if(this.state.cheakMode == 'SelectTime'){
+            uplodeTime = this.state.selectTime
+        }
+        if(0 <= uplodeTime && uplodeTime <1440 && typeof(uplodeTime)==="number"){
+            if(!this.props.token){
+                this.logout()
+                return
+            }
+            if(this.props.week==null||this.props.week==NaN){
+                this.logout()
+                return
+            }
+            store.dispatch({ type: "panelMode",panelMode : "QRactive"})
+            axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/open?token='+this.props.token, {
+                classListId: this.props.select.id,
+                classStartTimeHour : uplodeTime,
+                week : this.props.week+1,
+            })
+            .then( response => {
+                if (response.message == "잘못된 토큰이 왔습니다."){
+                    this.logout()
+                    return
+                }
+                console.log("QR코드 생성")
+                this.props.loginSuccess(response.data.token)
+            })
+            .catch( error => {
+                console.log(error)
+            })
+        }
+
     }
     cheakClick = (mode) =>{
         this.setState({
@@ -42,7 +74,7 @@ class QRreade extends Component {
                 selectHour : "",
             })
         } 
-        else if (val > 24){
+        else if (val > 23){
             this.setState({
                 selectHour : "",
             })
@@ -141,7 +173,7 @@ class QRreade extends Component {
         }
 
         // 내일부터 다음주 같은 요일을 찾아 해당하는 객체만 리턴해준다.
-        for (let day = 0; day < 6; day++) {
+        for (let day = 0; day < 7; day++) {
             result = classTime.filter(list =>( list.day == (now.getDay()+day+1>6 ?(now.getDay()+day+1)-7: now.getDay()+day+1)))
             if (result.length > 0 )break;
         }
@@ -173,11 +205,12 @@ class QRreade extends Component {
     }
     // 지각시간을 계산해주는 함수
     timeCalculation = (time, mode="normal") => {
+        console.log(this.state.absent,this.state.tardy)
         if (mode == "late"){
-            time = time + 5
+            time = time + this.state.tardy
         } 
         else if  (mode == "absent"){
-            time = time + 20          
+            time = time + this.state.absent        
         }
         return (Math.floor(time/60)<10? "0"+Math.floor(time/60): Math.floor(time/60)) + ":" + (time%60<10? "0"  +time%60 : time%60)
     } 
@@ -198,16 +231,24 @@ class QRreade extends Component {
             return css
         }
     }
-    render() { 
 
+    logout = () => {
+        console.log('로그아웃')
+        axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/logout')
+        this.props.logout()
+    }
+
+    
+    render() { 
         let bgColor={backgroundColor: this.props.cardColor[this.props.select.color][0]}
+        let fontColor={color: this.props.cardColor[this.props.select.color][1]}
         const timeText = <span>{this.timeCalculation(this.state.selectTime,"late")} 부터 지각 {this.timeCalculation(this.state.selectTime,"absent")} 부터는 결석이 됩니다.</span>
         const selectText = <span>수업을 시작할 시간을 설정해주세요</span>
 
         return (
             <div id = "QRreadePanel">
                 <div id ="cheakTime">
-                    <div className ="QRreadePanelSetsummar">출석체크의 시간기준을 설정합니다.</div>
+                    <div id ="QRreadePanelInfo"><span style={fontColor}>{this.props.week+1}회차</span> 수업의 출석체크를 진행합니다.</div>
                     <div className = "cheakTimeSelectZone">
 
                         <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("ClassTime")} style={this.thisSelect('ClassTime','cheakTimeSelect')} >
@@ -220,7 +261,7 @@ class QRreade extends Component {
                         <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("NowTime")} style={this.thisSelect('NowTime','cheakTimeSelect')} >
                             <div className = "cheakTime"> {this.timeCalculation(this.nowTime())} </div>
                             <div className = "cheakText" style={this.thisSelect('NowTime','cheakText')}>
-                            <div className = "cheakTimeExplanation"> 지금시간으로 출석체크 </div>
+                            <div className = "cheakTimeExplanation"> 현재시간으로 출석체크 </div>
                             <div className = "cheakTimeInfo"> <div className = "cheakTimeInfoTag"> </div>{this.timeCalculation(this.nowTime(),"late")} 부터 지각 {this.timeCalculation(this.nowTime(),"absent")} 부터는 결석이 됩니다.</div>
                             </div>
                         </div>
@@ -239,7 +280,7 @@ class QRreade extends Component {
                     </div>
                 </div>
                 <div id ="QRreadeBnts">
-                    <div id ="QRcodeSetBnt">세부설정</div>
+                    <div id ="QRcodeSetBnt">출석시간 세부설정</div>
                     <div id ="QRcodeMakeBnt" style={bgColor} onClick={this.handle} >QR생성</div>
                 </div>
             </div>
@@ -256,6 +297,7 @@ const mapStateToProps = (state) => ({
 function mapDispatchToProps(dispatch){
     return {
         loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
+        logout : () => dispatch({type:'LOGOUT'}),
     }
 }
 

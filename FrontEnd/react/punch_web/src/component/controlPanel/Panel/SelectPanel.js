@@ -12,7 +12,7 @@ class SelectPanel extends Component {
         let bgColor={backgroundColor: this.props.cardColor[this.props.color][0]}
         return (
             <div id = "SelectPanel">
-                <div id = "PanelCheckBnt" className ="SelectPanelBnt" onClick={() => this.props.PanelSelect("QRreade")} style ={bgColor} >
+                <div id = "PanelCheckBnt" className ="SelectPanelBnt" onClick={() => this.props.PanelSelect((this.props.intervalTime > 0? "Week":"QRreade"))} style ={bgColor} >
                     <div className ="PanelSelectFront">
                         <div className ="PanelSelectName">출석체크 </div>
                         <div className ="PanelSelectSummary">출석 체크를 위한 QR코드를 생성합니다.</div> 
@@ -30,7 +30,7 @@ class SelectPanel extends Component {
 
                     </div>
                 </div>
-                <div id = "PanelMessageBnt" className ="SelectPanelBnt" onClick={() => this.props.PanelSelect("QRreade")}>
+                <div id = "PanelMessageBnt" className ="SelectPanelBnt" onClick={() => this.props.PanelSelect()}>
                 <div className ="PanelSelectFront">
                         <div className ="PanelSelectName">메시지 </div>
                         <div className ="PanelSelectSummary">학생들과 메시지를 주고 받을 수 있습니다.</div> 

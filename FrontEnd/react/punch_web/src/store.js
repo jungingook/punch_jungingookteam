@@ -34,50 +34,6 @@ const defaultState = {
         color :'green',
         design : "default"
     },
-    {
-        id: 1,
-        name: '[테스트모드] 웹프로그래밍',
-        professor: '정인국',
-        code: '000001',
-        day: 0,
-        startTime: 600,
-        endTime: 180,
-        color :'pink',
-        design : "default"
-    },
-    {
-        id: 2,
-        name: '[테스트모드] C++',
-        professor: '담당 교수',
-        code: '000002',
-        day: 0,
-        startTime: 600,
-        endTime: 180,
-        color :'red',
-        design : "default"
-    },
-    {
-        id: 3,
-        name: '[테스트모드] 소프트웨어 캡스톤디자인',
-        professor: '담당 교수',
-        code: '000003',
-        day: 0,
-        startTime: 600,
-        endTime: 180,
-        color :'purple',
-        design : "default"
-    },
-    {
-        id: 4,
-        name: '[테스트모드] 파이썬',
-        professor: '담당 교수',
-        code: '000004',
-        day: 0,
-        startTime: 600,
-        endTime: 180,
-        color :'black',
-        design : "default"
-    },
     ],
     
 };
@@ -104,7 +60,8 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 loginActivation: false,
-                jwtToken : action.jwt
+                jwtToken : action.jwt,
+                classListRefresh: action.refresh,
             }
         case "LOGOUT" :
             return {

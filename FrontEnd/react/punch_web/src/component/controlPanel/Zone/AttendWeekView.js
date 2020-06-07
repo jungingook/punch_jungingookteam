@@ -14,6 +14,7 @@ import AttendWeekStudent from './AttendWeekStudent'; // 학생출석표 생성
 class AttendWeekView extends Component {
 
     state = {
+        attendanceNo : null,
         search : '',
         student :[
         {name :'정인국', studentNo:201334023, attendTime:'13시 23분 07초'},
@@ -37,6 +38,9 @@ class AttendWeekView extends Component {
         {name :'김민혁', studentNo:201334041, attendTime:'13시 23분 07초'},
         {name :'이종호', studentNo:201334042, attendTime:'13시 23분 07초'},
         ],
+        attend: 0,
+        tardy : 0,
+        absent: 0,
 
     }
 
@@ -50,22 +54,36 @@ class AttendWeekView extends Component {
         console.log('토큰값 : ','http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/attendance?token='+this.props.token)
         let classList
         axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/attendance?token='+this.props.token,{
-            professor_ID: 1,
-            classListID : 1,
+            classListID : this.props.select.id,
+            att_week : this.props.attendanceNo
         }, { credentials: true })
         .then( response => {
-            console.log('출석 리스트 : ',response)
+            console.log('출석 리스트 222: ',this.props.attendanceNo,'주차',response.data)
             this.props.loginSuccess(response.data.token)
+            this.setState({
+                student : response.data.att_arr,
+                attend: response.data.attend_count,
+                tardy : response.data.late_count,
+                absent : response.data.absent_count,
+                
+            })
         })
         .catch( error => {
             console.log('출석 리스트 에러 ',error)          
             })      
     }
     componentWillMount() {
-        // this.listUpdata()
+        this.listUpdata()
         }
     render() {
         let result  
+        if (this.state.attendanceNo!=this.props.attendanceNo){
+            this.listUpdata()
+            this.setState({
+                attendanceNo : this.props.attendanceNo,
+            })
+        }
+
         if (Number(this.state.search)|| this.state.search =='0'){
             // console.log('학번으로 검색')
             result = this.state.student.filter(s =>((s.studentNo+'').search(this.state.search) != -1))
@@ -78,20 +96,21 @@ class AttendWeekView extends Component {
             info => (info.studentNo)   
         );     
         // console.log('쇼',show)
+        console.log('리 렌더링')
         let list = this.state.student.map(
-            info => (<AttendWeekStudent key={info.studentNo} order={info.name.search(this.state.search)} show={(show.indexOf(info.studentNo) == -1 ? false : true )} name={info.name} studentNo={info.studentNo}  attendTime={info.attendTime} />)   
+            info => (<AttendWeekStudent key={info.attendance_id} order={info.name.search(this.state.search)} show={(show.indexOf(info.studentNo) == -1 ? false : true )} student={info} />)   
         );          
 
-
         return (
+      
             <div id = "AttendWeekZone">
                 <div id = "AttendWeekInfo">
                     <div id = "AttendWeekInfoTitle"> {this.props.attendanceNo}회차 수업 </div>
                     <div id = "AttendWeekInfoDate"> 2020년 11월 10일 월요일 13:23 </div>
                     <div id = "AttendWeekInfoState"> 
-                        <span className="AttendStateAttendance">출석 : 33</span> 
-                        <span className="AttendStateTrady">지각 :  12</span> 
-                        <span className="AttendStateAbsent">결석 :  03</span>
+                        <span className="AttendStateAttendance">출석 : {this.state.attend}</span> 
+                        <span className="AttendStateTrady">지각 :  {this.state.tardy}</span> 
+                        <span className="AttendStateAbsent">결석 :  {this.state.absent}</span>
                     </div>
                 </div>
                 <div id = "AttendWeekInfoButton">
