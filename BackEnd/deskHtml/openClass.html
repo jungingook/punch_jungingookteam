@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2>수업 출첵 시작</h2>
+    <!-- 
+        let classListID = req.body.classListId;
+        _attendanceTime  =  req.body.classHour; 
+    -->
+    <p>해당 수업의 isOpen을 true로 바꿔준다</p>
+    <p>
+        <span style="background-color: yellow;">
+            ps. <br>
+            1. 후에 같은 교수id를 가진 수업을 열려고하면 그 전에 open되었던 수업을 닫는 메소드를 실행한다. <br>
+            2. 현재 _attendanceTime을 사용하고 있진 않은데 후에 이 값을 통해 교수가 수업 인정시간을 늘릴 수 있도록 한다.
+        </span>
+    </p>
+    <form action="http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/open" method="POST">
+        <div>
+            <label>출첵할 수업 id</label>
+            <input type="text" name="classListId">
+        </div>        
+        <br><br>    
+        <input type="submit" value="수첩 출첵 시작">
+    </form>
+</body>
+</html>

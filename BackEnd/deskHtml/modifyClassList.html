@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>수업 수정</h1>
+    <!--
+    let classListID = req.body.classListId;
+    let startTime = req.body.edit_startTime;
+    let endTime = req.body.edit_endTime;
+    let color = req.body.edit_color;
+    let design = req.body.edit_design;
+    -->
+    <form action="http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/update" method="POST">
+        <div>
+            <label>수정할 수업 id</label>
+            <input type="text" name="classListId">
+        </div>
+        
+        <div>
+            <label>수정할 수업 시작시간</label>
+            <input type="text" name="edit_startTime">
+        </div>
+        
+        <div>
+            <label>수정할 수업 종료시간</label>
+            <input type="text" name="edit_endTime">
+        </div>
+        
+        <div>
+            <label>수정할 수업 배경 색</label>
+            <input type="text" name="edit_color">
+        </div>
+        
+        <div>
+            <label>수정할 수업 디자인 패턴</label>
+            <input type="text" name="edit_design">
+        </div>
+
+        <input type="submit" value="수정완료">
+    </form>
+</body>
+</html>

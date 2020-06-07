@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>폰에서 qr코드 찍었을때 요청하는 url</h1>
+    <!--
+        let qrNum = req.body.qrNum;
+        let allowTime = req.body.allowTime;// 현재는 계속 작은 값을 보내줘 출석으로 되는데 테스트 할 때 실제 시간값을 보내줘서 체크할 수 있도록 한다.
+        let studentID = req.body.studentId;
+        let classStartTimeHour = req.body.classStartTime; 
+    -->
+
+    <form action="http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/mobile/qr/verify" method="POST">
+        <div>
+            <label>난수, 서버에서 계속해서 새로운 값을 생성하고 있다.</label>            
+            <input type="text" name="qrNum">
+        </div>
+        <div>
+            <label>폰에서 qr코드를 찍고 서버에 보내는 시간, 현재 시간을 밀리초로 </label>
+            <input type="text" name="allowTime">
+        </div>
+        <div>
+            <label>학생의 id</label>
+            <input type="text" name="studentId">
+        </div>
+        <div>
+            <label>형이 보내주는 시간값(10시 == 600) 수업 시간이 될 수있고 요청한 시간이 될 수 있고 형 맘</label>
+            <input type="text" name="classStartTime">
+        </div>
+        <input type="submit" value="제출">        
+    </form>
+</body>
+</html>
