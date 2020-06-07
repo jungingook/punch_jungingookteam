@@ -3,7 +3,7 @@ import qrcode
 
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QSlider, QPushButton, QGridLayout, QLineEdit, \
     QMessageBox
-from PyQt5.QtGui import QPixmap, QIcon, QRegion
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PIL import ImageQt
 
@@ -50,7 +50,9 @@ class Login(QWidget):
 
         button_login = QPushButton('로그인')
         button_login.clicked.connect(self.check_password)
-        button_login.setShortcut("Return")
+        shortcut = QKeySequenceEdit()
+        shortcut.setKeySequence("Return")
+        button_login.setShortcut(shortcut)
         button_login.setStyleSheet("font-size : 20px; background-color: #fff; font-family: NanumSquare;"
                                    "background-color: #fff;"
                                    "height: 45px; margin-top:10px; padding 5px;")
