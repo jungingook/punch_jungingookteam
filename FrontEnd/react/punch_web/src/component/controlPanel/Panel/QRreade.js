@@ -46,7 +46,7 @@ class QRreade extends Component {
             axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/open?token='+this.props.token, {
                 classListId: this.props.select.id,
                 classStartTimeHour : uplodeTime,
-                week : this.props.week+1,
+                week : this.props.week,
             })
             .then( response => {
                 if (response.message == "잘못된 토큰이 왔습니다."){
@@ -265,7 +265,7 @@ class QRreade extends Component {
                             <div className = "cheakTimeInfo"> <div className = "cheakTimeInfoTag"> </div>{this.timeCalculation(this.nowTime(),"late")} 부터 지각 {this.timeCalculation(this.nowTime(),"absent")} 부터는 결석이 됩니다.</div>
                             </div>
                         </div>
-                        <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("SelectTime")} style={this.thisSelect('SelectTime','cheakTimeSelect')} >
+                        {/* <div id= "" className = "cheakTimeSelect" onClick={ () => this.cheakClick("SelectTime")} style={this.thisSelect('SelectTime','cheakTimeSelect')} >
                             <div className = "cheakTime cheakTimeUser"> 
                             <input className="inputLeft" placeholder="13" maxLength="2" value={this.state.selectHour} onChange={this.hourChange} onFocus={this.hourFocus} onBlur={this.hourBlur}/>:<input placeholder="00" maxLength="2" value={this.state.selectMin} onChange={this.minChange} onFocus={this.minFocus} onBlur={this.minBlur}/>
                             </div>
@@ -276,7 +276,7 @@ class QRreade extends Component {
                                 {(this.state.selectTime ? timeText : selectText)}
                             </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div id ="QRreadeBnts">

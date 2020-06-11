@@ -21,13 +21,13 @@ class ClassInfoList extends Component {
         console.log('토큰값 : ','http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/main?token='+this.props.token)
         let classList
         if(!this.props.token){
-            this.logout()
+            // this.logout()
             return
         }
         axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/main?token='+this.props.token)
         .then( response => {
             if (response.message == "잘못된 토큰이 왔습니다."){
-                this.logout()
+                // this.logout()
                 return
             }
             classList = response.data.classList;
@@ -68,17 +68,22 @@ class ClassInfoList extends Component {
     //         console.log(' 업데이트 새로고침됨 : ', this.props.Refresh)
     //         this.listUpdata()   
     //     }
-    // }
-    
-    render() {
+    // }'
+    componentDidMount(){
+        this.listUpdata()   
+    }
+    componentDidUpdate(){
         if(this.props.Refresh){
             this.props.classListRefresh(false)
             console.log(' 업데이트 새로고침됨 : ', this.props.Refresh)
             this.listUpdata()   
         }
+       
+    }
+
+    render() {
+      
         let list = ""
-        console.log(this.state.classLength)
-        console.log(this.props.classList)
         if (this.state.classLength > 0 ){
             list = this.props.classList.map(
                 info => (<ClassInfo key={info.id} info={info}/>)   
@@ -91,7 +96,7 @@ class ClassInfoList extends Component {
         return (
             <div id="ClassInfoList">
                 <div id = "ClassInfoListTitle"> 수업목록</div>
-                {(this.props.addClass?<AddClass updata={this.listUpdata}/>:"")}
+                {(this.props.addClass?<AddClass/>:"")}
                 {list}    
             </div>
         );

@@ -89,7 +89,7 @@ class QRcode extends Component {
 //export default Panel;
 function mapDispatchToProps(dispatch){
     return {
-        loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token})
+        loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
     }
 }
 

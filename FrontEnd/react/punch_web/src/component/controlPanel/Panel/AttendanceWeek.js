@@ -15,13 +15,14 @@ class AttendanceWeek extends Component {
 
     render() {
 
-        const date = new Date();
-
+        const date = new Date(this.props.data.day);
+        const mon = date.getMonth()+1
+        const day = date.getDate()
         return (
-            <div className = "AttendanceWeek" onClick={()=> this.attendanceClick()} >
-                <div className = "AttendanceWeekNo"> {this.props.data.week} 차 수업 </div>
-                <div className = "AttendanceDate"> {this.props.data.day} </div>
-                <div className = "AttendanceState"> <span className="AttendanceStateAttendance">출 {this.props.data.attendance_count}</span> <span className="AttendanceStateTrady">지 {this.props.data.late_count}</span> <span className="AttendanceStateAbsent">결 {this.props.data.absent_count}</span></div>
+            <div className = "AttendanceWeek" onClick={()=> this.attendanceClick()} title={"출석"+this.props.data.attendance_count+"명 지각"+this.props.data.late_count+"명 결석"+this.props.data.absent_count+"명"}>
+                <div className = "AttendanceDate"> {mon}월{day}일</div>
+                <div className = "AttendanceWeekNo"> {this.props.data.week}<span className = "AttendanceWeekText" > 회차</span></div>
+                <div className = "AttendanceState"> <span className="AttendanceStateAttendance">{this.props.data.attendance_count}</span> <span className="AttendanceStateTrady">{this.props.data.late_count}</span> <span className="AttendanceStateAbsent">{this.props.data.absent_count}</span></div>
             </div>
         );
     }

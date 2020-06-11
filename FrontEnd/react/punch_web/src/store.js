@@ -11,6 +11,7 @@ const defaultState = {
     addClass : false,
     classListRefresh: false,
     attendanceNo  : 1,
+    qrCreactWeek : null,
     jwtToken : null,
     thisweek : false,
     cardColor : {
@@ -89,7 +90,12 @@ const reducer = (state = defaultState, action) => {
             return {
                 ...state,
                 attendanceNo: action.attendanceNo,
-            }             
+            }     
+        case "WEEKSLECET" :
+            return {
+                ...state,
+                qrCreactWeek: action.week,
+            }                 
         default:
             //console.log("리듀스 성공");
             return state; 

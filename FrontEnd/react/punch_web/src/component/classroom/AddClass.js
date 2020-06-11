@@ -190,7 +190,7 @@ class AddCalss extends Component {
             .then( response => {
                 console.log(response)
                 this.props.loginSuccess(response.data.token)
-                this.props.updata()
+                this.props.classListRefresh()
                 this.props.addClassReturn()
             })
             .catch( error => {
@@ -311,6 +311,7 @@ function mapDispatchToProps(dispatch){
     return {
         loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
         addClassReturn : () => dispatch({type:'ADDCLASSBACK'}),
+        classListRefresh  : () => dispatch({type:'classListRefresh',refresh : true}),
     }
   }
 export default connect(mapStateToProps,mapDispatchToProps)(AddCalss);

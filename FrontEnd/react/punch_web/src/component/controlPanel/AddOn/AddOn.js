@@ -7,10 +7,11 @@ import store from "../../../store";
 
 // 컴포넌트 연결
 import QRactiveList from '../AddOn/QRactiveList'; // QR코드 체크
+import Test from '../AddOn/Test'; // QR코드 체크
+import Progress from '../AddOn/Progress'; // QR코드 체크
 
 class Addon extends Component {
     addon = (mode) => {
-        console.log(mode)
         let output = <div></div>
         // let panelsize = '25vh'
         if (mode == "QRactive") {
@@ -24,7 +25,9 @@ class Addon extends Component {
         let addon =  this.addon(this.props.panelMode)
         return (
             <div id = "addon">
+                <Test/>
                 {addon.component}
+                <Progress/>
             </div>
             
         );
