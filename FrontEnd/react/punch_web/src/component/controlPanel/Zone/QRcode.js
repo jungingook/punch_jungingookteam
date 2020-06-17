@@ -1,8 +1,8 @@
 // 모듈 연결
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { connect } from "react-redux"; // 리덕스 연결
 // [리듀스]스토어 연결
-import store from "../../store";
+import store from "../../../store";
 // [ajax] axios 연결
 import axios from 'axios';
 // 컴포넌트 연결
@@ -37,8 +37,8 @@ class QRcode extends Component {
     }
     qrChange = () => {
         let random = "1111"
-        console.log()
-        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/request',{
+        // console.log('클래스 아이디 : ',this.props.select.id)
+        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/request?token='+this.props.token,{
             classListId : this.props.select.id
         })
         .then( response => {
@@ -48,7 +48,6 @@ class QRcode extends Component {
             this.setState({
                 qrCode: random,
                 classCode : this.props.select.code,
-                qrColor : (this.props.select.color == "black"? "#FFFFFF":"#000000")
               });
         })
         .catch( error => {
@@ -56,30 +55,50 @@ class QRcode extends Component {
         });
 
     }
+    
     componentWillMount() {
-        setInterval(this.qrChange, 1000, "1초 간격")
+         let qrInterval = setInterval(this.qrChange, 1000, "1초 간격")
+         this.setState({
+            Interval : qrInterval
+         },)
+
       }
+      componentWillUnmount(){
+        clearInterval(this.state.Interval)
+        console.log('인터벌 헤제')
+      }
+
+    
     render() {
         let d = new Date();
         let textColor={Color:this.state.qrColor}
+
         return (
         <div id = "qr">
-            <div id = "ClassTimer" style={textColor}>{this.sortTime(12,d.getHours(),d.getMinutes())}</div>
-            <QRCodeMaker id="temp" value={this.state.qrCode} renderAs="canvas" size="1000" bgColor="#ffffff00" fgColor={this.state.qrColor}/>
+            <div id = "ClassTimer" style={{color:(this.props.select.color == "black"? "#FFFFFF":"#000000")}}>{this.sortTime(12,d.getHours(),d.getMinutes())}</div>
+            <QRCodeMaker id="temp" value={this.state.qrCode} renderAs="canvas" size="1000" bgColor="#ffffff00" fgColor={(this.props.select.color == "black"? "#FFFFFF":"#000000")}/>
             {/* size = 숫자 넣으면 에러가 뜨나 작동은 정상적으로 됨  */}
-            <div id="tempClass" style={textColor}> 
+            <div id="tempClass" style={{color:(this.props.select.color == "black"? "#FFFFFF":"#000000")}}> 
             앱을 통해 출석 체크 하세요
             </div>
+            <a id ="windowProgram" href="Punch://"></a>
         </div>
         );
     }
 }
 //export default Panel;
+function mapDispatchToProps(dispatch){
+    return {
+        loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token})
+    }
+}
+
 const mapStateToProps = (state) => ({
     classList : state.classList,
-    selectCard : state.selectCard
+    selectCard : state.selectCard,
+    token :  state.jwtToken
   })
 
-export default connect(mapStateToProps)(QRcode);
+export default connect(mapStateToProps,mapDispatchToProps)(QRcode);
 
 

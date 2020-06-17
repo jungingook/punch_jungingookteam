@@ -22,9 +22,9 @@ class ClassInfo extends Component {
     }
 
     handle = () => {
-        let id = this.props.info.id
-        store.dispatch({ type: "selectCard",id : id})
-        store.dispatch({ type: "panelMode",panelMode : "Select"})
+        this.props.PanelSelect("Select")
+        this.props.selectCard(this.props.info.id)
+
     }
 
     date = (day,startTime,endTime) => {
@@ -37,12 +37,16 @@ class ClassInfo extends Component {
     render() {
         // prop의 정보를 상수로 만듭니다.
         const {
-        day, startTime, endTime, name, color// , professor, code, id // 사용하지 않는 상수
+        day, name, color// , professor, code, id // 사용하지 않는 상수
         } = this.props.info;
         // 카드의 칼라색
         let cardColor = this.props.cardColor["default"]
         let bgColor={backgroundColor:cardColor[0]}
         let titleColor ={backgroundColor:cardColor[1]}
+        let timeID = 0 
+        let classTimeText = this.props.info.classTime.map(
+            info => (<div className="classTimes" key={timeID++}> {this.date(info.day,info.startTime,info.endTime)}</div>)   
+        );
         try {
             cardColor = this.props.cardColor[color]
             bgColor={backgroundColor:cardColor[0]}
@@ -50,15 +54,18 @@ class ClassInfo extends Component {
           } catch (e) {
             console.log('에러 : 카드 컬러의 색상값을 받아오지 못했습니다.')
           }
+
+
+          
         return (
-        <div className = "classCard" onClick={this.handle}>   
+        <div className = "classCard" onClick={() => this.handle()}>   
             <div className = "classUpper" style={bgColor}>
                 <div className = "classCardBackground">
                     <div className = "classOne classDesign"/>
                     <div className = "classTwo classDesign"/>
                 </div>
                 <div className = "classInfo">
-                    <div className = "classDate classText">{this.date(day,startTime,endTime)}</div>
+                    <div className = "classDate classText">{classTimeText}</div>
                     {/* <div className = "classProfessor classText">{professor}</div> */}
                 </div>
             </div>
@@ -72,21 +79,11 @@ class ClassInfo extends Component {
 const mapStateToProps = (state) => ({
     cardColor : state.cardColor
   })
-//export default ClassInfo;
-/* 
-mapDispatchToProps는 첫번째 인자로
-redux의 dispatch를 인자로 사용한다.
-이를 통해 우리는 store의 상태를 변경할수있다.
-*/
-const mapDispatchToProps = dispatch => {
-    // 순수 객체를 반환해줘야한다.
+
+function mapDispatchToProps(dispatch){
     return {
-      // 순수 action객체를 dispatch 해준다.
-      increment: () => dispatch({ type: 'INCREMENT' }),
-      decrement: () => dispatch({ type: 'DECREMENT' }),
-      reset: () => dispatch({ type: 'RESET' })
+        selectCard : (id) => dispatch({ type: "selectCard",id :id}),
+        PanelSelect : (mode) => dispatch({ type: "panelMode",panelMode :mode}),
     }
   }
-
-
-export default connect(mapStateToProps)(ClassInfo);
+export default connect(mapStateToProps,mapDispatchToProps)(ClassInfo);

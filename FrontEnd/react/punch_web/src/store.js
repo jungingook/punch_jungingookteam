@@ -7,6 +7,12 @@ const classList = "classList";
 const defaultState = {
     panelMode : "Error",
     selectCard: null,
+    loginActivation: true,
+    addClass : false,
+    classListRefresh: false,
+    attendanceNo  : 1,
+    jwtToken : null,
+    thisweek : false,
     cardColor : {
         default : ["#00B0F0","#009FF0"], // 블루와 같음
         red : ["#E93A2E","#C92A1D"], // 확정
@@ -27,50 +33,6 @@ const defaultState = {
         startTime: 600,
         endTime: 180,
         color :'green',
-        design : "default"
-    },
-    {
-        id: 1,
-        name: '[테스트모드] 웹프로그래밍',
-        professor: '정인국',
-        code: '000001',
-        day: 0,
-        startTime: 600,
-        endTime: 180,
-        color :'pink',
-        design : "default"
-    },
-    {
-        id: 2,
-        name: '[테스트모드] C++',
-        professor: '담당 교수',
-        code: '000002',
-        day: 0,
-        startTime: 600,
-        endTime: 180,
-        color :'red',
-        design : "default"
-    },
-    {
-        id: 3,
-        name: '[테스트모드] 소프트웨어 캡스톤디자인',
-        professor: '담당 교수',
-        code: '000003',
-        day: 0,
-        startTime: 600,
-        endTime: 180,
-        color :'purple',
-        design : "default"
-    },
-    {
-        id: 4,
-        name: '[테스트모드] 파이썬',
-        professor: '담당 교수',
-        code: '000004',
-        day: 0,
-        startTime: 600,
-        endTime: 180,
-        color :'black',
         design : "default"
     },
     ],
@@ -95,6 +57,39 @@ const reducer = (state = defaultState, action) => {
                 ...state,
                 classList: action.classList
             } 
+        case "LOGINSUCCESS" :
+            return {
+                ...state,
+                loginActivation: false,
+                jwtToken : action.jwt,
+                classListRefresh: action.refresh,
+            }
+        case "LOGOUT" :
+            return {
+                ...state,
+                loginActivation: true,
+                jwtToken : null
+            }  
+        case "ADDCLASS" :
+            return {
+                ...state,
+                addClass: true,
+            }         
+        case "ADDCLASSBACK" :
+            return {
+                ...state,
+                addClass: false,
+            }         
+        case "classListRefresh" :
+            return {
+                ...state,
+                classListRefresh: action.refresh,
+            }     
+        case "selectAttendanceWeek" :
+            return {
+                ...state,
+                attendanceNo: action.attendanceNo,
+            }             
         default:
             //console.log("리듀스 성공");
             return state; 

@@ -37,9 +37,6 @@ class ViewControl extends Component {
   render() {
     return (
       <View style={layout.Main}>
-        <View>
-            
-        </View>
       </View>
     );
   }
@@ -53,7 +50,7 @@ function mapStateToProps (state){
 }
 function mapDispatchToProps(dispatch){
   return {
-
+    ScannerEnd : () => dispatch({type:'MAIN'}),
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(ViewControl);

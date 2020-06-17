@@ -10,15 +10,16 @@ from PyQt5.QtCore import Qt
 from PIL import ImageQt
 
 
-class MyApp(QWidget):
+class QR(QWidget):
 
     def __init__(self):
         super().__init__()
         self.initUI()
+
+    def initUI(self):
         # 파이썬 실행창을 항상 위로 유지해주는 코드
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
 
-    def initUI(self):
         #서버에서 json 값을 받아와 data 변수에 저장
         url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/qr"
         data = requests.get(url).json()
@@ -81,7 +82,7 @@ class MyApp(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MyApp()
+    ex = QR()
     sys.exit(app.exec_())
 
 

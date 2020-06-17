@@ -1,9 +1,57 @@
 /* 사이드바 */
-#sidebar{
+#SideBar{
     width: 10%;
     height: 100vh;
     background-color: #F2F2F2;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
   }
+.SideButton{
+    width: 80%;
+    margin: 10%;
+    background-color: #d9d9d9;
+    border-radius: 5px;
+    /* box-shadow: 2px 2px 5px #77777750; */
+}
+.SideButton:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+  }
+#SideBarLogoutBt{
+    background-image: url("../img/logout.png");
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    transition: all 0.3s;
+}
+#SideBarLogoutBt:hover{
+    background-size: 100% 100%;
+    background-color: #F2F2F2;
+}
+#SideBarSetting{
+    background-image: url("../img/setting.png");
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    transition: all 0.3s;
+}
+#SideBarSetting:hover{
+    background-size: 100% 100%;
+    background-color: #F2F2F2;
+}
+#SideBarAddClass{
+    background-image: url("../img/addclass.png");
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    transition: all 0.3s;
+}
+#SideBarAddClass:hover{
+    background-size: 100% 100%;
+    background-color: #F2F2F2;
+}
 /* 클래스룸 */
 #ClassInfoList{
     width: 90%;
@@ -16,22 +64,30 @@
     display: none; /* Chrome, Safari, Opera*/
   }
 #ClassInfoListTitle{
-    width: 80%;
-    height: 5vh;
-    margin: 0 auto;
-    line-height: 10vh;
+    width: 70%;
+    height: 8vh;
+    margin: 1vh auto;
+    padding: 0 2.5%;
+    box-sizing: border-box;
+    line-height: 8vh;
+    border-radius: 15px;
+    background-color: #d9d9d9;
     color: black;
     font-size: 5vh;  
     font-weight: bold;
 }
 .classCard{
     margin: 5vh auto;
-    width: 80%;
+    width: 70%;
     height: 30vh;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     box-shadow: 2px 2px 5px #77777760;
+    transition: all 0.5s;
+}
+.classCard:hover{
+    box-shadow: 2px 2px 10px #222222;
 }
 .errorCard{
     margin: 5vh auto;
@@ -49,6 +105,52 @@
 .errorCard > span{
     font-size: 2vh; 
 }
+.emptyCard{
+    margin: 5vh auto;
+    width: 80%;
+    height: 10vh;
+    border-radius: 5px;
+    display: flex;
+    text-align: center;
+    line-height: 5vh;
+    font-size: 3vh;
+    flex-direction: column;
+    background-color: #F2F2F2;
+    color: #bbb;
+    /* box-shadow: 2px 2px 5px #77777760; */
+}
+.guideNotice{
+    position: absolute;
+    top : 85vh;
+    left: 33.34%;
+    width: 500px;
+    height: 50px;
+    margin-left: -250px;
+    border-radius: 40px;
+    text-align: center;
+    color: #777;
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    background-color: #F2F2F290;
+    box-shadow: 2px 2px 5px #77777760;
+    line-height: 50px;
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
+}
+.emptyCardGuideButton{
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+}
+#SideBarAddClassGuide{
+    background-image: url("../img/addclass.png");
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    transition: all 0.3s;
+}
+
 .classUpper{
     width: 100%;
     height: 20vh;
@@ -108,6 +210,7 @@
     /* background-color: #00B0F0; */
     box-sizing: border-box;
     padding: 0 2.5%;
+    transition: all 0.5s;
 }
 .className{
     color: white;
@@ -117,4 +220,431 @@
     white-space:nowrap;
     word-wrap:normal;
     overflow:hidden;
+}
+/* 클래스 리스트 */
+#AddClassView{
+    position: absolute;
+    z-index: 10;
+    top : 0vh;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    transition: all 1s;
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    background-color: rgba(255,255,255,0.5);
+}
+#AddClassCard{
+    flex : 1;
+    /* background-color: rgba(255,0,0,0.3); */
+    padding: 10vh 0;
+    display: flex;
+
+}
+/* 뒤로가기 버튼  */
+#AddClassSidebar{
+    width: 10%;
+    height: 90vh;
+
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+#AddClassBackButton{
+    background-image: url("../img/backbt.png");
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    transition: all 0.3s;
+}
+#AddClassBackButton:hover{
+    background-size: 100% 100%;
+    background-color: #F2F2F200;
+}
+#CardMake{
+    width: 90%;
+}
+
+#AddClassSetting{
+    flex : 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: auto;
+    /* background-color: rgba(0,255,0,0.3); */
+}
+#AddClassDumi{
+    flex : 1;
+    /* background-color: rgba(0,0,255,0.3); */
+}
+
+#AddClassSubmit{
+    max-width: 600px;
+    width: 70%;
+    margin: 5vh auto;
+    padding: 20px 0;
+    background-color: rgba(99,99,99,0.5);
+    border-radius: 15px;
+    color: #fff;
+    box-shadow: 2px 2px 5px #77777760;
+    transition: all 1s;   
+}
+#AddClassSubmitReason{
+    width: 80%;
+    height: 3vh;
+    margin: 0px auto; 
+    padding: 1%;
+    box-sizing: border-box;
+    color: #FF7F00;
+    background-color: #F6F7F9;
+    border-radius: 5px;
+    font-size: 2vh;
+    text-align: center;
+}
+#AddClassSubmitButton{
+    width: 80%;
+    margin: 20px auto;
+    text-align: center;
+    line-height: 5vh;
+    font-size: 3vh;
+    border-radius: 5px;
+    color: #ccc;
+    border : 1px solid #fff;
+    background: #fff;  /* fallback for old browsers */
+ 
+}
+#AddClassSubmitButtonReady{
+    width: 80%;
+    margin: 20px auto;
+    text-align: center;
+    line-height: 5vh;
+    font-size: 3vh;
+    border-radius: 5px;
+    color: #ccc;
+    border : 1px solid #ccc ;
+    background-color: #00000000;
+}
+.AddClassSelector{
+    max-width: 600px;
+    width: 80%;
+    padding: 0 2%;
+    margin: 20px 10%;
+    background-color: rgba(99,99,99,0.5);
+    border-radius: 15px;
+    color: #fff;
+    box-shadow: 2px 2px 5px #77777760;
+    transition: all 1s;
+}
+.AddClassSelectorName{
+    font-size: 3vh;
+    
+}
+.AddClassSelectorInput{
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 30px;
+    color: #fff;
+    font-family: '나눔스퀘어';
+    font-weight: bold;
+}
+.AddClassSelectorInfo{
+    margin: 0 10px;
+    height: 30px;
+    padding: 5px;
+}
+#MakeClassName{
+    background-color: #ffffff00;
+    color: #fff;
+    border: 1px solid #fff;
+    height: 30px;
+    width: 300px;
+    padding: 5px;
+    font-size: 30px;
+    border-radius: 5px;
+    font-family: '나눔스퀘어';
+    font-weight: bold;
+}
+#MakeClassName::placeholder{
+    color: #ffffff70;
+}
+.timeError{
+    margin: 0px auto;
+    width: 400px;
+    color: red;
+}
+
+.AddClassTime{
+    margin: 10px auto;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #fff;
+    height: 30px;
+    width: 400px;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 20px;
+    line-height: 30px;
+    transition: all 0.35s;
+}
+@keyframes ErrorAni {
+    0% {
+        transform: rotate( 0deg );
+    }
+    25% {
+        transform: rotate( -2deg );
+    }
+    75% {
+        transform: rotate( 2deg );
+    }
+    100% {
+        transform: rotate( 0deg );
+    }
+  }
+
+.AddClassTimeError{
+    border: 1px solid red;
+    animation-name: ErrorAni;
+    animation-duration: 0.7s;
+    animation-iteration-count : 1;
+    animation-direction: normal;
+}
+.AddClassTimeReady{
+    border: 1px solid #ccc;
+    /* color: #cccccc; */
+}
+.AddClassTimeLeft{
+    display: flex;
+    width: 80%;
+    justify-content: space-around;
+}
+.AddClassTimeRight{
+    display: flex;
+    width: 20%;
+    justify-content: flex-end;
+}
+
+.AddClassTimeSelectorDay{
+    border: 0px solid #fff;
+    height: 30px;
+    padding: 5px; 
+    color :#fff;
+    background-color: #ffffff00;
+    font-size: 20px;
+    font-family: '나눔스퀘어';
+    font-weight: bold;
+}
+#AddClassSelectorTime{
+    background-color: rgba(230,230,230,0.9);
+    border-radius: 15px;
+}
+
+.MakeClassHour{
+    background-color: #ffffff00;
+    color: #fff;
+    border: 0;
+    height: 30px;
+    width: 30px;
+    font-size: 20px;
+    font-family: 'Do Hyeon', sans-serif;
+    text-align: right;
+}
+.MakeClassMin{
+    background-color: #ffffff00;
+    color: #fff;
+    border: 0;
+    height: 30px;
+    width: 30px;
+    font-size: 20px;
+    font-family: 'Do Hyeon', sans-serif; 
+    text-align: left;   
+}
+.MakeClassHour::placeholder{
+    color: #ffffff70;
+}
+.MakeClassMin::placeholder{
+    color: #ffffff70;
+}
+.AddClassTimeSetting{
+
+}
+.AddClassTimeDelete{
+    border: 1px solid #fff;
+    margin: 5px;
+    height: 18px;
+    width: 18px;
+    border-radius: 30px;
+    text-align: center;
+    line-height: 18px;
+    font-size: 15px;
+}
+#AddClassTimeApeend{
+    margin: 10px auto;
+    border: 1px solid #fff;
+    height: 30px;
+    width: 400px;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 30px;
+    font-weight: bold;
+    background-color: #ffffff;
+    color: #cccccc;
+}
+
+/* 수업시간 */
+.AddClassDate{
+    display: flex;
+    width: 400px;
+    flex-direction: column;
+    font-size: 20px;
+    line-height: 30px;
+    color: #fff;
+    font-family: '나눔스퀘어';
+    font-weight: bold;
+
+}
+.AddClassDateInput{
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    line-height: 30px;
+    color: #fff;
+    font-family: '나눔스퀘어';
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.AddClassDateInputTag{
+    background-color: #ffffff00;
+    color: #fff;
+    border: 1px solid #fff;
+    height: 20px;
+    padding: 5px;
+    width: 60%;
+    border-radius: 5px;
+    font-size: 20px;
+    line-height: 20px;
+    transition: all 0.35s;
+}
+
+#AddClassStartDate{
+
+}
+.AddClassSelectorInputDate{
+    background-color: #cccccc50;  
+    border: 0;
+    height: 30px;
+    border-radius: 15px;
+    color: #fff;
+    font-size: 15px;
+}
+
+#AddClassSelectorColorInput{
+    display: flex;
+
+}
+.AddClassSelectorColor{
+    margin: 7px;
+    height: 20px;
+    width: 20px;
+    border-radius: 20px;
+    /* border: 2px solid black; */
+    box-shadow: 2px 2px 5px #77777760;
+    transition: all 0.5s ;
+}
+.SelectThisColor{
+    margin: 2px;
+    height: 30px;
+    width: 30px;
+    border-radius: 30px;
+    box-shadow: 2px 2px 5px #77777760; 
+    transition: all 0.5s ;
+
+}
+.AddClassSelectorColor:hover{
+    margin: 2px;
+    height: 30px;
+    width: 30px;
+    border-radius: 30px;
+    /* border: 2px solid black; */
+    box-shadow: 2px 2px 5px #77777760;
+}
+
+.AddClassTardy{
+    max-width: 600px;
+    width: 80%;
+    padding: 0 2%;
+    margin: 20px 10%;
+    background-color: rgba(99,99,99,0.5);
+    border-radius: 15px;
+    color: #fff;
+    box-shadow: 2px 2px 5px #77777760;
+    transition: all 1s;
+}
+.AddClassTardyStart{
+    height: 0px;
+    transition: all 1s; 
+}
+#sscs
+{
+    max-width: 600px;
+    width: 80%;
+    padding: 0 2%;
+    margin: 20px 10%;
+    background-color: rgba(99,99,99,0.5);
+    border-radius: 15px;
+    color: #fff;
+    box-shadow: 2px 2px 5px #77777760;
+    transition: all 1s; 
+}
+#AddClassTardy{
+    width: 400px;
+    margin: 0 auto;
+}
+#tardyView{
+    display: flex;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+#tardyViewUpperText{
+    display: flex;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 10px;   
+}
+#AttendanceCell{
+    overflow: hidden;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: rgb(153, 197, 86);
+
+}
+#tardyCell{
+    overflow: hidden;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: orange;
+    
+}
+#absentCell{
+    overflow: hidden;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: red;
+}
+.tardyViewText{
+    white-space :nowrap;
+}
+#tardyView div {
+    transition: flex 0.5s ease-out;
 }

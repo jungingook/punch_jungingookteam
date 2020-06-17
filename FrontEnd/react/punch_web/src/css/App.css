@@ -30,9 +30,28 @@
   position: absolute;
   z-index: 5;
 }
-/* #L_Modal{
+#L_Login{
   position: absolute;
   z-index: 10;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  transition: all 1s;
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  background-color: rgba(255,255,255,0.72);
+}
+/* 로그인 창 활성화 애니메이션 */
+.LoginActivation{
+  top:0;
+}
+.LoginDisabled{
+  top:-100vh;
+}
+
+/* #L_Modal{
+  position: absolute;
+  z-index: 20;
   width: 100%;
   height: 100vh;
   overflow: hidden;
@@ -81,9 +100,19 @@
 @import url("background.css"); 
 /* 컨텐츠 레이어 */
 @import url("content.css");
-/* 컨트롤 */
-@import url("content/control.css");
 
+/* --------------------------- */
+/* 컨트롤*/
+@import url("content/control.css");
+/* 패널*/
+@import url("content/panel.css");
+/* 존*/
+@import url("content/zone.css");
+/* 존*/
+@import url("content/addon.css");
+/* --------------------------- */
+/* 로그인 */
+@import url("content/login.css");
 
 #qr{
   display: flex;
@@ -103,4 +132,11 @@
 #classProfessor{
   font-size: 20px;
   color: #555;
+}
+
+.transitionBackground{
+  transition: background-color 0.5s;
+}
+.transitionflex{
+  transition: flex 0.5s;
 }
