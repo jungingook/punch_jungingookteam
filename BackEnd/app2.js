@@ -4,8 +4,6 @@ const cors = require('cors');
 const app = express();
 const port  = 3000;
 const cookieParser = require('cookie-parser')
-const session = require('express-session');
-const MySQLStore = require('express-mysql-session')(session);
 const crypto = require('crypto');
 
 let jwt = require('jsonwebtoken');
@@ -28,25 +26,8 @@ const connection = mysql.createConnection({
 })
 connection.connect()
 
-
-
-
 app.use(cookieParser())
 
-// session
-app.use(session({
-    key: 'session_key',
-    secret: '1', // 세션을 암호화 해줌
-    resave: false, // 세션을 항상 저장할지 여부를 정하는 값. (false 권장)
-    saveUninitialized: true,// 초기화되지 않은채 스토어에 저장되는 세션
-    store: new MySQLStore({ // 데이터를 저장되는 형식
-        host: 'qr.c5wiyouiqpec.ap-northeast-2.rds.amazonaws.com',
-        user:'admin',
-        password: 'dlwhdgh009',
-        port: '3306',
-        database: 'qrqr'
-    })
-}));
 
 // Router 설정
 app.use('/desk', require('./routes/desk/jwt_index'));
@@ -283,95 +264,113 @@ app.get('/mobile/student/main', (req ,res) => {
             // 호출한 수업 각각의 모든 attendance를 호출하여 한 한생이 그 각각의 수업에 몇번 출석했는지, 몇 번 결석했는지 뽑아낸다.                        
             let classListArray = Object.values(classList);
 
-            for (let j = 0; j < classListArray.length; j++) {
-                let class_id2 = classListArray[j].id;
-                let student_id = classListArray[j].student_id;
+            if(classListArray.length == 0) { 
+                //jwt 생성 후 전송
+                let newToken = jwt.sign(
+                    { logId }, 
+                    secretObj.secret, 
+                    { expiresIn: '5h' }
+                )
 
-                let attend_count = 0;
-                let late_count = 0;
-                let absent_count = 0;
-
-                connection.query(`
-                    select att.*
-                    from attendance as att
-                    left join classList as cl on cl.id = att.class_id
-                    where cl.id = ? and att.student_id = ?
-                `, [class_id2, student_id], (err2, result2) => {
-                    if(err2) throw err2;
-                    
-                    attend_count = 0;
-                    late_count = 0;
-                    absent_count = 0;
-
-                    for (let i = 0; i < result2.length; i++) {
-                        if(result2[i].record == '출석') {
-                            attend_count++;
-                        } else if(result2[i].record == '지각') {
-                            late_count++;
-                        } else if(result2[i].record == '결석') {
-                            absent_count++
-                        }
-                    }
-
-                    classList[j].attend_count = attend_count;
-                    classList[j].late_count = late_count;
-                    classList[j].absent_count = absent_count;
-                })
-
-                connection.query(`
-                    select cd.startTime, cd.endTime, cd.day
-                    from class_date as cd
-                    left join classList as cl on cl.id = cd.class_id
-                    left join Student_has_class as sc on sc.class_id = cl.id
-                    left join student as s on s.id = sc.student_id
-                    where cl.id = ? and s.login_id = ?
-                `,[classListArray[j].id, logId],  (err3, classTime) => {
-                    if(err3){
-                        console.error(err3);
-                        throw err3;
-                    }
-                    // 한 수업에 대한 startTiem, endTime 가져 옴
-                    // 그러면 해당 수업의 id를 가진 classArraydml classTime 에다 각각을 집어 넣음
-                    
-
-                    for (let i = 0; i < classListArray.length; i++) {
-                        if(classListArray[i].id == classListArray[j].id){
-                            classList[i].classTime = [];
-
-                            for (let k = 0; k < classTime.length; k++) {
-                                
-                                let time = {
-                                    startTime: classTime[k].startTime,
-                                    endTime: classTime[k].endTime,
-                                    day: classTime[k].day
-                                }
+                let result = {
+                    classList: null,
+                    error : false,
+                    token: newToken
+                }
+                res.json(result);
+            }else {
+                for (let j = 0; j < classListArray.length; j++) {
+                    let class_id2 = classListArray[j].id;
+                    let student_id = classListArray[j].student_id;
     
-                                classList[i].classTime.push(time);
-                            
+                    let attend_count = 0;
+                    let late_count = 0;
+                    let absent_count = 0;
+    
+                    connection.query(`
+                        select att.*
+                        from attendance as att
+                        left join classList as cl on cl.id = att.class_id
+                        where cl.id = ? and att.student_id = ?
+                    `, [class_id2, student_id], (err2, result2) => {
+                        if(err2) throw err2;
+                        
+                        attend_count = 0;
+                        late_count = 0;
+                        absent_count = 0;
+    
+                        for (let i = 0; i < result2.length; i++) {
+                            if(result2[i].record == '출석') {
+                                attend_count++;
+                            } else if(result2[i].record == '지각') {
+                                late_count++;
+                            } else if(result2[i].record == '결석') {
+                                absent_count++
                             }
-                        }   
-                    }
-                    if(j == classListArray.length - 1){
-                        // 모든 classList의 classTime속성이 채워진 상태                
-                        
-                        
-    
-                        //jwt 생성 후 전송
-                        let newToken = jwt.sign(
-                            { logId }, 
-                            secretObj.secret, 
-                            { expiresIn: '5h' }
-                        )
-    
-                        let result = {
-                            classList,
-                            error : false,
-                            token: newToken
                         }
-                        res.json(result);
-                    }
-                })
+    
+                        classList[j].attend_count = attend_count;
+                        classList[j].late_count = late_count;
+                        classList[j].absent_count = absent_count;
+                    })
+    
+                    connection.query(`
+                        select cd.startTime, cd.endTime, cd.day
+                        from class_date as cd
+                        left join classList as cl on cl.id = cd.class_id
+                        left join Student_has_class as sc on sc.class_id = cl.id
+                        left join student as s on s.id = sc.student_id
+                        where cl.id = ? and s.login_id = ?
+                    `,[classListArray[j].id, logId],  (err3, classTime) => {
+                        if(err3){
+                            console.error(err3);
+                            throw err3;
+                        }
+                        // 한 수업에 대한 startTiem, endTime 가져 옴
+                        // 그러면 해당 수업의 id를 가진 classArraydml classTime 에다 각각을 집어 넣음
+                        
+    
+                        for (let i = 0; i < classListArray.length; i++) {
+                            if(classListArray[i].id == classListArray[j].id){
+                                classList[i].classTime = [];
+    
+                                for (let k = 0; k < classTime.length; k++) {
+                                    
+                                    let time = {
+                                        startTime: classTime[k].startTime,
+                                        endTime: classTime[k].endTime,
+                                        day: classTime[k].day
+                                    }
+        
+                                    classList[i].classTime.push(time);
+                                
+                                }
+                            }   
+                        }
+                        if(j == classListArray.length - 1){
+                            // 모든 classList의 classTime속성이 채워진 상태                
+                            
+                            
+        
+                            //jwt 생성 후 전송
+                            let newToken = jwt.sign(
+                                { logId }, 
+                                secretObj.secret, 
+                                { expiresIn: '5h' }
+                            )
+        
+                            let result = {
+                                classList,
+                                error : false,
+                                token: newToken
+                            }
+                            res.json(result);
+                        }
+                    })
+                }
             }
+
+            
         })
     }) 
 })// 성공
@@ -543,6 +542,11 @@ app.post('/mobile/student/class/delete', (req, res) => {
 // 4. 학생 qr코드 인증 req
 app.post('/mobile/qr/verify', (req, res) => {
     let token = req.headers['x-access-token'] || req.query.token;
+    let {
+        qrNum,
+        allowTime  // allowTime 은 밀리초 단위, 방금 학생이 찍었을 때 시간                
+    } = req.body;
+
     
     if(!token){
         res.json({
@@ -572,19 +576,15 @@ app.post('/mobile/qr/verify', (req, res) => {
             if(err) throw err;
 
             let studentID = student[0].id;
-            let {
-                qrNum,
-                allowTime  // allowTime 은 밀리초 단위, 방금 학생이 찍었을 때 시간                
-            } = req.body;
-
+            
             
 
-            console.log("프론트에서 보내줘야 하는 값: ")
-            console.log("qrNum: ", qrNum);
-            console.log("allowTime: ", allowTime);
-            // console.log("current_student_time: ", current_student_time);
+            // console.log("프론트에서 보내줘야 하는 값: ")
+            // console.log("qrNum: ", qrNum);
+            // console.log("allowTime: ", allowTime);
+            // // console.log("current_student_time: ", current_student_time);
      
-            console.log();
+            // console.log();
             
             let current_hour = new Date().getHours();
             let current_minute = new Date().getMinutes();
@@ -640,7 +640,6 @@ app.post('/mobile/qr/verify', (req, res) => {
                         console.log("student_id_1: ", student_id_1);
                         console.log("class_id_1: ", class_id_1);
 
-                        console.log("11111111111111111111111111111111111111111")
                         // 해당 학생의 attendance를 새로 추가해줘야함
                         connection.query(`
                             insert into attendance (record, reason, created_day, created_time, updated_day, updated_time, is_verified, week_id, student_id, class_id)
@@ -650,11 +649,10 @@ app.post('/mobile/qr/verify', (req, res) => {
                                 console.error(err7);
                                 throw err7;
                             }
-                            console.log("22222222222222222222222222222222222222222222222")
 
                             let classStartTimeHour = result4[0].when_is_opened; 
 
-                            console.log("global처리가 잘 되었는지? classStartTimeHour = "+ classStartTimeHour);
+                            console.log("classStartTimeHour = "+ classStartTimeHour);
                             console.log("qr인증 test");        
                     
                             // 현재 db의 classList의 상태 역시 확인한다.
@@ -667,7 +665,7 @@ app.post('/mobile/qr/verify', (req, res) => {
                     console.log("이미 등록된 학생입니다!!!")
                     let classStartTimeHour = result4[0].when_is_opened; 
 
-                    console.log("global처리가 잘 되었는지? classStartTimeHour = "+ classStartTimeHour);
+                    console.log("classStartTimeHour = "+ classStartTimeHour);
                     console.log("qr인증 test");        
             
                     // 현재 db의 classList의 상태 역시 확인한다.
@@ -678,10 +676,65 @@ app.post('/mobile/qr/verify', (req, res) => {
     })
 })  //실제로 테스트 해 봐야하는 ** 가장 중요
 
+// 4-1 2차 qr코드 검증
+app.post('/mobile/qr/second_verify', (req,res) => {
+    let token = req.headers['x-access-token'] || req.query.token;
+    let {
+        qrNum,
+        allowTime  // allowTime 은 밀리초 단위, 방금 학생이 찍었을 때 시간                
+    } = req.body;    
+    
+    if(!token){
+        res.json({
+            message: '토큰이 없습니다.',
+            error: 'true'
+        })
+        return;
+    }
+    jwt.verify(token, secretObj.secret, (err, decoded) => {
+        if(err){
+            res.json({
+                message: '잘못된 토큰이 왔습니다.',
+                error: true
+            })
+            return;
+        }
+        let login_id = decoded.logId; // student_login_id
+
+        connection.query(`
+            select s.id as id, class_id
+            from student as s
+            left join Student_has_class as sc on sc.student_id = s.id
+            where s.login_id = ?
+        `, [login_id], (err, student) => {
+            if(err) throw err;
+
+            let studentID = student[0].id;
+
+            qrNum = qrNum+"";
+            let onlyRandomNum = qrNum.substring(0, 10);
+            let classCode = Math.floor(qrNum.substring(10, qrNum.length));
+            console.log("classCode = " + classCode);
+
+            let current_hour = new Date().getHours();
+            let current_minute = new Date().getMinutes();
+            let current_student_time = ((current_hour * 60) + current_minute);
+
+
+            // 1. 출결의 2차 값을 채워야한다.? 일단 검사를 진행하고 맞으면 그때 날짜, 시간, 결과를 각각 채운다.
+            // 2. 그런 결과를 log에도 반영 근데 이건 나중에 할 일
+            // 3. 1차와 2차의 결과를 가져와서 비교한 뒤 높은 값을 다시 1차의 결과에 채운다. 그리고 해당 결과으이 날짜 시간 이유를 채운다.
+            // 이때 이유는 바뀌었을 때만 바뀜
+
+
+
+        })
+    })
+})
+
 // 현재 db의 classList의 상태 역시 확인한다.
 function checkClassStatus(classCode, classStartTimeHour, onlyRandomNum, allowTime, current_student_time, studentID, res) {
     // 현재 db의 classList의 상태 역시 확인한다.
-    console.log("333333333333333333333333333333333333333333333333333333")
     connection.query(`
         select isOpened, id, week, lateTime, absentTime
         from classList
@@ -690,7 +743,6 @@ function checkClassStatus(classCode, classStartTimeHour, onlyRandomNum, allowTim
         if(err) throw err;
 
         // 현재 학생이 qr검사를 재시도하는 것은 아닌지 확인한다.
-        console.log("44444444444444444444444444444444444444444444444444444444444")
         connection.query(`
             select is_verified
             from attendance as att
@@ -705,7 +757,6 @@ function checkClassStatus(classCode, classStartTimeHour, onlyRandomNum, allowTim
             console.log("재시도인지?")
             if(result0[0].is_verified == 1) {
                 console.log("현재 요청은 재시도 입니다. error를 내보냅니다.")
-                console.log("5555555555555555555555555555555555555555555555555555555555555555555")
 
                 res.json({
                     error: true,
@@ -715,7 +766,6 @@ function checkClassStatus(classCode, classStartTimeHour, onlyRandomNum, allowTim
             }
             else {
                 console.log("현재 요청은 재시도가 아닙니다. 정상적으로 요청을 진행합니다.");
-                console.log("666666666666666666666666666666666666666666666666666666666666666666666")
 
                 
 
@@ -744,8 +794,7 @@ function checkClassStatus(classCode, classStartTimeHour, onlyRandomNum, allowTim
 }
 
 // 실제 출결을 업데이트 하는 함수
-function updateAttendanceFunc(isAllow, classIsOpened, current_student_time, result, studentID, res) {
-    console.log("88888888888888888888888888888888888888888888888888888888888888888888888888888")  
+function updateAttendanceFunc(isAllow, classIsOpened, current_student_time, result, studentID, res) { 
     // class의 상태와 시간 값, 난수 값 모두 일치한다면 
     if(isAllow == 2 && classIsOpened){      // week속성 값을 update해주어야 한다.
         // db에 해당 요청의 학생의 attendance를 출석 update한다.
@@ -1037,7 +1086,6 @@ function initRandomArray(){
 // 그러면 출석 인정시간을 db에서 가져와야 한다.
 // 현재 배열에서 같은 값이 있는지 검증 한다.
 function  checkRandomArray( qrNum, allowTime, startTimeHour, startTimeMinute, lt, at){  
-    console.log("77777777777777777777777777777777777777777777777777777777777777777777777777")  
     console.log("check Random Array start, the parameters is...")
     console.log("qrNum: ", qrNum)
     console.log("allowTime: ", allowTime)
@@ -1197,3 +1245,22 @@ app.listen(port, function(){
 // });
 
 
+
+// const session = require('express-session');
+// const MySQLStore = require('express-mysql-session')(session);
+
+
+// session
+// app.use(session({
+//     key: 'session_key',
+//     secret: '1', // 세션을 암호화 해줌
+//     resave: false, // 세션을 항상 저장할지 여부를 정하는 값. (false 권장)
+//     saveUninitialized: true,// 초기화되지 않은채 스토어에 저장되는 세션
+//     store: new MySQLStore({ // 데이터를 저장되는 형식
+//         host: 'qr.c5wiyouiqpec.ap-northeast-2.rds.amazonaws.com',
+//         user:'admin',
+//         password: 'dlwhdgh009',
+//         port: '3306',
+//         database: 'qrqr'
+//     })
+// }));
