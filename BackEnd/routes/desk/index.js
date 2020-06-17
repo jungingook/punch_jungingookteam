@@ -17,9 +17,7 @@ const connection = mysql.createConnection({
 })
 connection.connect();
 
-// Router 설정
-app.use('/desk', require('./routes/desk/jwt_index'));
-app.use('/mobile', require('./routes/mobile'));
+
 
 
 // 1-1. sign_up 회원가입 페이지
