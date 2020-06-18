@@ -850,7 +850,7 @@ router.post('/professor/classList/attendance/modify', (req, res) => {
     })
 })
 
-// 4-1 preOpen
+// 5-1 preOpen
 router.post('/professor/classList/qr/preOpen', (req, res) => {
     let token = req.headers['x-access-token'] || req.query.token;
     
@@ -901,7 +901,7 @@ router.post('/professor/classList/qr/preOpen', (req, res) => {
     })
 })
 
-// 4-2. 교수 수업 개설. qr/open
+// 5-2. 교수 수업 개설. qr/open
 router.post('/professor/classList/qr/open', (req, res)=> {
     let token = req.headers['x-access-token'] || req.query.token;
     
