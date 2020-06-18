@@ -30,8 +30,19 @@ app.use(cookieParser())
 
 
 // Router 설정
-app.use('/desk', require('./routes/desk/jwt_index'));
-app.use('/mobile', require('./routes/mobile'));
+const deskRouter = require('./routes/desk');
+const mobileRouter = require('./routes/mobile');
+const accountRouter = require('./routes/account');
+const classListRouter = require('./routes/desk/professor/classList/class');
+const weekRouter = require('./routes/desk/professor/classList/week');
+const attendanceRouter = require('./routes/desk/professor/classList/attendance');
+
+app.use('/desk', deskRouter);
+app.use('/mobile', mobileRouter);
+app.use('/account', accountRouter);
+app.use('/classList', classListRouter);
+app.use('/week', weekRouter);
+app.use('/classList/attendance', attendanceRouter);
 
 
 // Part. python
