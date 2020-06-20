@@ -957,7 +957,7 @@ router.post('/professor/classList/qr/open', (req, res)=> {
             // 해당 교수의 모든 수업을 검사한다. 다른 수업이 열려있으면 닫기 위해서.
             for (let i = 0; i < classList.length; i++) {
                 if( classList[i].isOpened && classList[i].id != classListId ) {
-                    console.log("한 교수에서 열고 싶은 수업 이외에 다른 수업이 열려있는 경우 자동을 닫인다.");
+                    console.log("Warning: 한 교수에서 열고 싶은 수업 이외에 다른 수업이 열려있는 경우 자동을 닫인다.");
                     connection.query(`
                         update classList
                         set isOpened = ?
