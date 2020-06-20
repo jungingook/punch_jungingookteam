@@ -81,8 +81,12 @@ router.post('/professor/login', (req, res) => {
 
 
         if (!result || result === [] || result === null) {    // 잘못된 id로 접근할 경우 해야할 이벤트
-            res.redirect('/professor/main');
-            return false;
+            console.log("잘못됭 id로 접근")
+            res.json({
+                error: true,
+                message: "잘못된 id로 접근"
+            })
+            return;
         } else {
             let dbPassword = result[0].login_pw;
             let salt = result[0].salt;
@@ -125,5 +129,8 @@ router.post('/professor/login', (req, res) => {
     })
 })
 
+router.post('/python/login', (req, res) => {
+
+})
 
 module.exports = router;
