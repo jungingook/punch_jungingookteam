@@ -127,7 +127,6 @@ router.get('/', (req, res) => {
                 })
             })
         } else {     // 전 회차의 각각의 회차의 모든 출결 정보 return;
-            console.log("회차가 없다..")
             connection.query(`
                 select * 
                 from week as we
