@@ -998,11 +998,20 @@ app.post('/mobile/student/login', (req, res) => {
                 token
             });
         } else {
-            console.log("비밀번호 불일치");
+            console.log("비밀번호 불일치")
+            //jwt 생성 후 전송
+            let token = jwt.sign(
+                { logId },
+                secretObj.secret,
+                { expiresIn: '10h' }
+            )
+
+
             res.json({
+                error: true,
                 message: '비밀번호 불일치',
-                error: true
-            })
+                token
+            });
         }
     })
 })
