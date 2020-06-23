@@ -43,51 +43,59 @@ router.delete('/', (req, res) => {
         console.log("week: ", week);
 
         connection.query(`
-            DELETE FROM week 
-            WHERE class_id = ? and week = ?;
-        `, [class_id, week], (err, result) => {
-            if (err) {
-                console.error(err);
-                throw err;
-            }
+            select week from classList
+            where id = ?
+        `, [class_id], (err0, class_week) => {
+            isError(err0);
+
 
             connection.query(`
-                delete from attendance
-                where class_id = ? and week_id = ?
-            `, [class_id, week], (err2, result2) => {
-                if (err2) {
-                    console.error(err2);
-                    throw err2;
+                    DELETE FROM week 
+                    WHERE class_id = ? and week = ?;
+                `, [class_id, week], (err, result) => {
+                if (err) {
+                    console.error(err);
+                    throw err;
                 }
 
-                console.log("해당 회차의 모든 출결 역시 삭제");
-                let update_week = week - 1;
                 connection.query(`
-                    update classList
-                    set when_is_opened = 0, when_is_opened_getTime = 0, week = ?
-                    where id = ?
-                `, [update_week, class_id], (err3, result3) => {
-
-                    if (err3) {
-                        console.error(err3);
-                        throw err3;
+                        delete from attendance
+                        where class_id = ? and week_id = ?
+                    `, [class_id, week], (err2, result2) => {
+                    if (err2) {
+                        console.error(err2);
+                        throw err2;
                     }
 
-                    console.log("해당 수업의 시작시간을 0으로 초기화했습니다.")
-                    console.log("해당 수업의 회차를 1 감소시켰습니다.", week - 1)
-                    //jwt 생성 후 전송
-                    let token = jwt.sign(
-                        { logId },
-                        secretObj.secret,
-                        { expiresIn: '10h' }
-                    )
+                    console.log("해당 회차의 모든 출결 역시 삭제");
+                    let update_week = week - 1;
+                    connection.query(`
+                            update classList
+                            set when_is_opened = 0, when_is_opened_getTime = 0, week = ?
+                            where id = ?
+                        `, [update_week, class_id], (err3, result3) => {
 
-                    console.log("해당 회차가 삭제되었습니다.")
-                    res.json({
-                        error: false,
-                        token,
-                        message: "해당 회차가 삭제되었습니다."
-                    });
+                        if (err3) {
+                            console.error(err3);
+                            throw err3;
+                        }
+
+                        console.log("해당 수업의 시작시간을 0으로 초기화했습니다.")
+                        console.log("해당 수업의 회차를 1 감소시켰습니다.", week - 1)
+                        //jwt 생성 후 전송
+                        let token = jwt.sign(
+                            { logId },
+                            secretObj.secret,
+                            { expiresIn: '10h' }
+                        )
+
+                        console.log("해당 회차가 삭제되었습니다.")
+                        res.json({
+                            error: false,
+                            token,
+                            message: "해당 회차가 삭제되었습니다."
+                        });
+                    })
                 })
             })
         })
@@ -95,3 +103,10 @@ router.delete('/', (req, res) => {
 })
 
 module.exports = router;
+
+function isError(err) {
+    if (err) {
+        console.error(err);
+        throw err;
+    }
+}
