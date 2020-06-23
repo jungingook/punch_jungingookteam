@@ -80,7 +80,7 @@ router.post('/professor/login', (req, res) => {
         }
 
 
-        if (!result || result === [] || result === null) {    // 잘못된 id로 접근할 경우 해야할 이벤트
+        if (!result || result == [] || result == null) {    // 잘못된 id로 접근할 경우 해야할 이벤트
             console.log("잘못됭 id로 접근")
             res.json({
                 error: true,
@@ -245,40 +245,12 @@ router.post('/student/login', (req, res) => {
                 console.log("Warning: 현재 등록된 모바일 id와 다른 id가 들어왔습니다.")
                 // 갱신 mobile_id
                 connection.query(`
-                    update student set mobile_no = ?
+                    update student set mobile_no = ?, mobile_change_time = ?
                     where login_id = ?
-                `, [inputMobileId, inputId], (err2, result2) => {
+                `, [inputMobileId, new Date().getTime(), inputId], (err2, result2) => {
                     isError(err);
 
-                    console.log(`SUCCESS: 학생의 모바일 id를 ${inputMobileId}로 등록하였습니다.`);
-
-                    // 갱신 학생의 모든 수업 에 is_mobile_changed
-                    let student_id = student[0].id;
-                    console.log("student_id: ", student_id)
-                    connection.query(`
-                        select * from Student_has_class
-                        where student_id = ?
-                    `, [student_id], (err3, has_class) => {
-                        isError(err3);
-
-                        for (let i = 0; i < has_class.length; i++) {
-                            connection.query(`
-                                update Student_has_class set is_mobile_changed = true
-                                where class_id = ? and student_id = ?
-                            `, [has_class[i].class_id, student_id], (err4, result4) => {
-                                isError(err4);
-
-                                console.log(`${has_class[i].class_id}번 수업의 is_mobile_changed를 true로 변경하였습니다.`);
-                            })
-
-                            if (i == has_class.length - 1) {
-                                res.json({
-                                    error: false,
-                                    token: makeToken(inputId)
-                                });
-                            }
-                        }
-                    })
+                    console.log(`SUCCESS: 학생의 모바일 id를 ${inputMobileId}로 등록하였습니다.`);                    
                 })
             }
         } else {
