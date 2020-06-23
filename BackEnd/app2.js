@@ -14,22 +14,23 @@ app.use(cors());
 
 
 // Router 설정
-const deskRouter = require('./routes/desk');
 const mobileRouter = require('./routes/mobile');
 const accountRouter = require('./routes/account');
-const classListRouter = require('./routes/desk/professor/classList/class');
-const weekRouter = require('./routes/desk/professor/classList/week');
-const attendanceRouter = require('./routes/desk/professor/classList/attendance');
+const classListRouter = require('./routes/desk/class');
+const weekRouter = require('./routes/desk/week');
+const attendanceRouter = require('./routes/desk/attendance');
 const mobileAttendanceRouter = require('./routes/mobile/attendance');
 const qrRouter = require('./routes/qr');
 
-app.use('/desk', deskRouter);
-app.use('/mobile', mobileRouter);
 app.use('/account', accountRouter);
-app.use('/classList', classListRouter);
-app.use('/week', weekRouter);
-app.use('/classList/attendance', attendanceRouter);
+
+app.use('/desk/classList', classListRouter);
+app.use('/desk/week', weekRouter);
+app.use('/desk/classList/attendance', attendanceRouter);
+
+app.use('/mobile', mobileRouter);
 app.use('/mobile/attendance', mobileAttendanceRouter);
+
 app.use('/qr', qrRouter);
 
 //  listen

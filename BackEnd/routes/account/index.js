@@ -129,6 +129,57 @@ router.post('/professor/login', (req, res) => {
     })
 })
 
+router.post('/student/sign_up', (req, res) => {
+    let {
+        inputId,
+        inputPw,
+        inputName,
+        inputEmail,
+        inputNo     // 학번
+    } = req.body;
+
+    connection.query(`
+        select login_id, email
+        from student
+        where login_id = ?
+    `, [inputId], (err, student) => {
+        if (err) {
+            console.error(err);
+            throw err;
+        }
+        console.log("student = ");
+        console.log(student);
+
+        if (student[0]) {
+            console.log("동일한 아이디를 가진 유저가 존재합니다.");
+            res.json({
+                message: "동일한 아이디를 가진 유저가 존재합니다.",
+                error: true
+            })
+            return;
+        }
+
+        let salt = Math.round((new Date().valueOf() * Math.random())) + "";
+        let hashPassowrd = crypto.createHash("sha512").update(inputPw + salt).digest("hex");
+
+        connection.query(`
+            insert into student (name, email, login_id, login_pw, salt, created_at, no)
+            values (?, ?, ?, ?, ?, ?, ?);
+        `, [inputName, inputEmail, inputId, hashPassowrd, salt, new Date(), inputNo], (err1, insertStudent) => {
+            if (err1) {
+                console.error(err1);
+                throw err1;
+            }
+
+            console.log("학생 회원 가입 완료");
+            res.json({
+                message: 'student sign_up success',
+                error: false
+            })
+        })
+    })
+})
+
 router.post('/student/login', (req, res) => {
     let {
         inputId,
@@ -242,73 +293,6 @@ router.post('/student/login', (req, res) => {
     })
 })
 
-function makeToken(logId) {
-    let token = jwt.sign(
-        { logId },
-        secretObj.secret,
-        { expiresIn: '10h' }
-    )
-    return token;
-}
-
-function isError(err) {
-    if (err) {
-        console.error(err);
-        throw err;
-    }
-}
-
-router.post('/student/sign_up', (req, res) => {
-    let {
-        inputId,
-        inputPw,
-        inputName,
-        inputEmail,
-        inputNo     // 학번
-    } = req.body;
-
-    connection.query(`
-        select login_id, email
-        from student
-        where login_id = ?
-    `, [inputId], (err, student) => {
-        if (err) {
-            console.error(err);
-            throw err;
-        }
-        console.log("student = ");
-        console.log(student);
-
-        if (student[0]) {
-            console.log("동일한 아이디를 가진 유저가 존재합니다.");
-            res.json({
-                message: "동일한 아이디를 가진 유저가 존재합니다.",
-                error: true
-            })
-            return;
-        }
-
-        let salt = Math.round((new Date().valueOf() * Math.random())) + "";
-        let hashPassowrd = crypto.createHash("sha512").update(inputPw + salt).digest("hex");
-
-        connection.query(`
-            insert into student (name, email, login_id, login_pw, salt, created_at, no)
-            values (?, ?, ?, ?, ?, ?, ?);
-        `, [inputName, inputEmail, inputId, hashPassowrd, salt, new Date(), inputNo], (err1, insertStudent) => {
-            if (err1) {
-                console.error(err1);
-                throw err1;
-            }
-
-            console.log("학생 회원 가입 완료");
-            res.json({
-                message: 'student sign_up success',
-                error: false
-            })
-        })
-    })
-})
-
 router.post('/professor/password', (req, res) => {
     let token = req.headers['x-access-token'] || req.query.token;
     let input_password = req.body.inputPw;
@@ -366,6 +350,24 @@ router.post('/professor/password', (req, res) => {
         })
     })
 })
+
+function makeToken(logId) {
+    let token = jwt.sign(
+        { logId },
+        secretObj.secret,
+        { expiresIn: '10h' }
+    )
+    return token;
+}
+
+function isError(err) {
+    if (err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+
 
 function isEmpty(user) {
     if(!user || user.length == 0) {

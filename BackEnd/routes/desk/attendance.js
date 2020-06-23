@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const secretObj = require('../../../../config/jwt');
+const secretObj = require('../../config/jwt');
 
 // //mysql 
 const mysql = require('mysql')
