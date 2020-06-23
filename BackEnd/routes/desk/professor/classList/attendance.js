@@ -48,7 +48,7 @@ router.get('/', (req, res) => {
         if (week) {  // 특정 회차의 출결을 보고싶은 경우
             console.log("회차가 있다.")
             connection.query(`
-                select att.id as attendance_id, att.record as studentState, st.name, st.no as studentNo, att.created_day, att.created_time,att.updated_day, att.updated_time, is_fingerprint, is_gtx, is_qr, is_passive, is_verified, we.class_day, we.class_time
+                select att.id as attendance_id, att.record as studentState, att.reason, st.name, st.no as studentNo, att.created_day, att.created_time,att.updated_day, att.updated_time, is_fingerprint, is_gtx, is_qr, is_passive, is_verified, we.class_day, we.class_time
                 from attendance as att
                 left join student as st on st.id = att.student_id
                 left join week as we on we.week = att.week_id
