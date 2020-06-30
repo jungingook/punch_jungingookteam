@@ -77,3 +77,18 @@
 ## 출석체크   
 <img src="/FrontEnd/자료들/mQR.png" height="800px">
 카메라를 통해서 QR코드를 찍어서 출석체크를 할 수 있습니다.
+
+#윈도우 프로그램
+
+# 릴리즈 기록
+- 1차 릴리즈 영상 (5월3일 까지 작업된 내용 소개영상) 
+https://drive.google.com/file/d/1EfwazlGQ82h8E-GUOTU37ZSvTrUACng_/view?usp=sharing
+- 2차 릴리즈 영상 (6월7일 까지 작업된 내용 소개영상) 
+ - 본편 
+https://drive.google.com/file/d/1YV0fnOeQKhIRQgPGZnFiUK9DzPPdznK0/view?usp=sharing
+ - 윈도우 프로그램에 대한 부록
+https://drive.google.com/file/d/1-k5I40wytpCFFciBpxcXBsSlVm-mh7Qr/view?usp=sharing 
+- 3차 릴리즈 영상 (7월5일 까지 작업된 소개영상)
+준비중입니다.
+- 최종 릴리즈 영상 (경진대회 제출 전까지 작업된 소개영상)
+준비중입니다.
