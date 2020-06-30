@@ -63,17 +63,17 @@
 
 # 학생용 모바일앱   
 ## 로그인 화면   
-<img src="/FrontEnd/자료들/mlogin.png">   
+<img src="/FrontEnd/자료들/mlogin.png" height="800px">   
 학생 아이디를 사용해서 로그인 할 수 있습니다.
 
 ## 수업목록   
-<img src="/FrontEnd/자료들/mmain.png"> 
+<img src="/FrontEnd/자료들/mmain.png" height="800px"> 
 참여중인 수업 목록을 볼 수 있습니다. 수업을 누르면 해당 수업의 출결 현황으로 넘어갑니다.
 
 ## 출결현황   
-<img src="/FrontEnd/자료들/mlist.png">     
+<img src="/FrontEnd/자료들/mlist.png" height="800px">     
 내 출석 현황을 볼 수 있습니다.
 
 ## 출석체크   
-<img src="/FrontEnd/자료들/mQR.png">
+<img src="/FrontEnd/자료들/mQR.png" height="800px">
 카메라를 통해서 QR코드를 찍어서 출석체크를 할 수 있습니다.
