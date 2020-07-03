@@ -31,7 +31,7 @@ class Login extends Component {
         console.log('로그인')
         // console.log('수업이름 : ',this.state.className,'수업요일 : ',this.state.backClassTimeList[0].day,'수업시간 : ',this.state.backClassTimeList[0].startTime,'~',this.state.backClassTimeList[0].endTime,'수업 컬러  : ',this.state.classColor,'수업디자인 : ',this.state.classDesign,)
         // 임시로 다중 시간을 입력하지 않고 입력된 첫 시간만 보냄 
-        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/login', {
+        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/account/professor/login', {
             inputId: this.state.id,
             inputPw : this.state.password,
         }, { credentials: true })

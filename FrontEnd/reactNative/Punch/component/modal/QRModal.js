@@ -5,6 +5,7 @@ import { Text, View, StyleSheet, Button, Image, TouchableHighlight, TouchableOpa
 import {connect} from 'react-redux'
 // 컴포넌트 연결
 import QRSanner from '../../QRSanner';
+import QRstate from './QRstate';
 
 const layout = StyleSheet.create({
     attendanceButton: {
@@ -100,8 +101,8 @@ class QRModal extends Component {
     else if (mode == "QRSCAN") {
           output = <View style={layout.qrModal}><View style={layout.qrHeader}><Text style={layout.qrHeaderFont}>출석체크</Text></View><View style={layout.qrScanner}><QRSanner check={this.attendcheck}/></View><View style={layout.qrHeader}><TouchableOpacity onPress={()=> this.props.appMode('NORMAL')} ><Text>뒤로</Text></TouchableOpacity></View></View>
     }
-    else if (mode == "QRATTEND") {
-          output = <View style={layout.qrModal}><View style={layout.qrHeader}><Text style={layout.qrHeaderFont}>출석체크</Text></View><View style={layout.qrScanner}><QRSanner/></View><View style={layout.qrHeader}><TouchableOpacity onPress={()=> this.props.appMode('AppMode')} ><Text>뒤로</Text></TouchableOpacity></View></View>
+    else if (mode == "QRCOMPLETE") {
+          output = <View style={layout.qrModal}><View style={layout.qrHeader}><Text style={layout.qrHeaderFont}>출석체크</Text></View><View style={layout.qrScanner}><QRstate/></View><View style={layout.qrHeader}><TouchableOpacity onPress={()=> this.props.appMode('AppMode')} ><Text>뒤로</Text></TouchableOpacity></View></View>
     }
     else if (mode == "QRactive") { 
       
@@ -116,7 +117,7 @@ class QRModal extends Component {
     else if (mode == "QRSCAN") {
           output = layout.backdrop
     }
-    else if (mode == "QRATTEND") {
+    else if (mode == "QRCOMPLETE") {
           output = layout.backdrop
     }
     else if (mode == "QRactive") { 
@@ -138,7 +139,8 @@ class QRModal extends Component {
   
   function mapStateToProps (state){
     return {
-      AppMode: state.AppMode
+      AppMode: state.AppMode,
+      attendState : state.attendState,
     }
   }
 

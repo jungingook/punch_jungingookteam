@@ -13,7 +13,7 @@ class BackBnt extends Component {
         switch (this.props.panelMode){
 
             case 'QRactive' : 
-                this.props.PanelSelect( "QRreade")
+                this.props.PanelSelect( "Select")
                 break;
 
             case 'AttendanceWeek' : 
@@ -39,7 +39,7 @@ const mapStateToProps = (state) => ({
 
 function mapDispatchToProps(dispatch){
     return {
-        PanelSelect : (mode) => dispatch({ type: "panelMode",panelMode :mode}),
+        PanelSelect : (mode) => dispatch({ type: "panelMode",panelMode :mode,force:true}),
     }
 }
 

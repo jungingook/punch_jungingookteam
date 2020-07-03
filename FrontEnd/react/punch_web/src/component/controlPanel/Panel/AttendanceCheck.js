@@ -25,17 +25,17 @@ class AttendanceCheck extends Component {
         this.props.logout()
     }
 
-    componentDidMount() {
-        console.log("출석리스트 받아오기 : ",this.props.selectCard)
-
+    Refresh = () => {
         if(!this.props.token){
             this.logout()
             return
         }
-
-        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/attendance?token='+this.props.token, {
-            classListID : this.props.select.id
-        })
+        // 에러 
+        axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/classList/attendance?token='+this.props.token+'&classListID='+this.props.select.id, 
+        // {
+        //     // classListID : this.props.select.id
+        // }
+        )
         .then( response => {
             if (response.message == "잘못된 토큰이 왔습니다."){
                 this.logout('어텐던스 토큰 에러 : ',this.props.token,'로 인한')
@@ -48,11 +48,25 @@ class AttendanceCheck extends Component {
             })
         })
         .catch( error => {
-            console.log('에러',error)
+            console.log('새로운 요청 에러',error)
             this.setState({
                 week : false
             })
         })
+    }
+
+    
+    componentDidMount() {
+        console.log("출석리스트 받아오기 : ",this.props.selectCard)
+        this.Refresh()
+    }
+
+    componentDidUpdate(){
+        console.log('변화감지',this.props.refresh)
+        if(this.props.refresh){
+            this.Refresh()
+            this.props.RefreshFinish()
+        }
     }
 
 
@@ -96,12 +110,14 @@ const mapStateToProps = (state) => ({
     selectCard : state.selectCard,
     cardColor : state.cardColor,
     token :  state.jwtToken,
+    refresh :  state.attendanceRefresh,
   })
 
 
 function mapDispatchToProps(dispatch){
     return {
         logout : () => dispatch({type:'LOGOUT'}),
+        RefreshFinish : () => dispatch({type:'attendanceRefresh',refresh : false}),
     }
 }
 

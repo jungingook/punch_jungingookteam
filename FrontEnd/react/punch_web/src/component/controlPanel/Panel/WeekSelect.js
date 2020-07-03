@@ -35,9 +35,11 @@ class WeekSelect extends Component {
             return
         }
 
-        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/attendance?token='+this.props.token, {
-            classListID : this.props.select.id
-        })
+        axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000this.props.select.id?token='+this.props.token+'&classListID='+this.props.select.id, 
+        // {
+        //     // classListID : this.props.select.id
+        // }
+        )
         .then( response => {
             if (response.message == "잘못된 토큰이 왔습니다."){
                 this.logout()

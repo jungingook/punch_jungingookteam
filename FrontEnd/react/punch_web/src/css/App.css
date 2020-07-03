@@ -9,6 +9,14 @@
   width: 100%;
 }
 
+
+/* 특수옵션 */
+div {
+  /* 드레그방지 */
+  -ms-user-: none; -moz-user-select: -moz-none; -webkit-user-select: none; -khtml-user-select: none; user-select:none;
+  /* 폰트스무딩 */
+  -webkit-font-smoothing: antialiased;
+}
 /* Layer 연결 */
 
 #L_Background{

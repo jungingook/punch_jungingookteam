@@ -32,6 +32,7 @@ const appStore = {
     purple : ["#9949CE","#5C3088"], // 확정
     black : ["#595959","#474747"] // 확정
   },
+  attendState : null,
 }
 
 const reducer = (state = appStore,action) =>{
@@ -71,6 +72,12 @@ const reducer = (state = appStore,action) =>{
           selectCard : action.card,
           AppMode: 'CLASSVIEW'
       }
+      case "QRCOMPLETE" :
+        return {
+            ...state,
+            attendState : action.state,
+            AppMode: 'QRCOMPLETE'
+        }
     default:
         //console.log("리듀스 성공");
         return state; 

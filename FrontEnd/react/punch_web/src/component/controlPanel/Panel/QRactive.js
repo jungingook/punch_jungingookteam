@@ -57,7 +57,7 @@ class QRactive extends Component {
         );
         return (
             <div id = "QRActivePanel">
-                {this.props.week}주차 수업
+                {this.props.week}회차 수업
             </div>      
             );
         }

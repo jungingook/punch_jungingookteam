@@ -19,12 +19,17 @@ class Test extends Component {
                 {this.state.show?
             <div id = "Test">   
                 <div>
-                <button onClick = {()=> this.setState({show : false})}>테스트 패널 끄기</button>
+                <button id = "Testbt" onClick = {()=> this.setState({show : false})}>테스트 패널 끄기</button>
                 </div>
                 <div title={this.props.token}>토큰값 : {this.props.token?'존재':'미존재'} </div>
-                <div>선택된카드 : {this.props.selectCard}</div>
-                <div>선택된주차 : {this.props.qrCreactWeek}</div>
-                <div>화면의상황 : {this.props.panelMode}</div>
+                <div style={{display:'flex',justifyContent: 'space-between'}}>
+                    <div>선택된카드 : {this.props.selectCard}</div>
+                    <div>선택된주차 : {this.props.qrCreactWeek}</div>
+                    <div>화면의상황 : {this.props.panelMode}</div>
+                </div>
+                <div style={{display:'flex',justifyContent: 'space-between'}}>
+                    <button onClick = {()=> this.props.tokenKill()}>토큰값 제거</button>
+                </div>
             </div>
                 :<button id = "Testbt" onClick = {()=> this.setState({show : true})}>테스트 패널 켜기</button>}
             </Fragment>
@@ -42,4 +47,9 @@ const mapStateToProps = (state) => ({
     qrCreactWeek :  state.qrCreactWeek,
   })
 
-export default connect(mapStateToProps)(Test);
+function mapDispatchToProps(dispatch){
+return {
+    tokenKill : () => dispatch({type:'테스트토큰제거'}),
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Test);

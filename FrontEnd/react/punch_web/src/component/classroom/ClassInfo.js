@@ -22,9 +22,11 @@ class ClassInfo extends Component {
     }
 
     handle = () => {
-        this.props.PanelSelect("Select")
-        this.props.selectCard(this.props.info.id)
-        this.props.weekSelect(null)
+        if(this.props.token !=null){
+            this.props.PanelSelect("Select")
+            this.props.selectCard(this.props.info.id)
+            this.props.weekSelect(null)
+        }
     }
 
     date = (day,startTime,endTime) => {
@@ -77,7 +79,8 @@ class ClassInfo extends Component {
     }
 }
 const mapStateToProps = (state) => ({
-    cardColor : state.cardColor
+    cardColor : state.cardColor,
+    token :  state.jwtToken,
   })
 
 function mapDispatchToProps(dispatch){

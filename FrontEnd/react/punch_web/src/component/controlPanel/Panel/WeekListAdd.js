@@ -21,7 +21,6 @@ class WeekListAdd extends Component {
         const mon = date.getMonth()+1
         const day = date.getDate()
 
-        console.log(this.props.color)
         return (
             <Fragment>
                 { !this.state.add ? 
@@ -29,7 +28,7 @@ class WeekListAdd extends Component {
                 <div className = "weekAddInfo"> 새로운회차 <br/> 생성 </div>
             </div>
             :
-            <div className = "weekObj" onClick = {()=>this.weekCllck()} style={{backgroundColor:'#aaa'}}>
+            <div className ={ this.props.week ==1?"weekObj newWeekAniFast":"weekObj newWeekAni"} onClick = {()=>this.weekCllck()} style={{backgroundColor:'#aaa'}}>
                 <div className = "weekObjDate"> {mon}월{day}일</div>
                 <div className = "weekObjNo"> {this.props.week}<span> 회차</span></div>
                 <div className = "weekObjStateloding"> 출석체크를 하지 않았습니다</div>

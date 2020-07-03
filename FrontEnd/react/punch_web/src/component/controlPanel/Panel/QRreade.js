@@ -23,6 +23,7 @@ class QRreade extends Component {
     handle = () => {
         let uplodeTime
         console.log('주차:',this.props.week)
+        let endTime = this.nearClassTime(this.props.select.classTime).endTime
         if(this.state.cheakMode == 'ClassTime'){
             uplodeTime = this.nearClassTime(this.props.select.classTime).startTime
         }
@@ -33,6 +34,7 @@ class QRreade extends Component {
         if(this.state.cheakMode == 'SelectTime'){
             uplodeTime = this.state.selectTime
         }
+        console.log('업로드시간',uplodeTime)
         if(0 <= uplodeTime && uplodeTime <1440 && typeof(uplodeTime)==="number"){
             if(!this.props.token){
                 this.logout()
@@ -42,8 +44,8 @@ class QRreade extends Component {
                 this.logout()
                 return
             }
-            store.dispatch({ type: "panelMode",panelMode : "QRactive"})
-            axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/open?token='+this.props.token, {
+            console.log('회차 생성중',this.props.select.id,uplodeTime,this.props.week)
+            axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/qr/open?token='+this.props.token, {
                 classListId: this.props.select.id,
                 classStartTimeHour : uplodeTime,
                 week : this.props.week,
@@ -53,6 +55,8 @@ class QRreade extends Component {
                     this.logout()
                     return
                 }
+                this.props.PanelSelect("QRactive")
+                this.props.progressClassRecord({className: this.props.select.name,classTime: uplodeTime, endTime:endTime,classId:this.props.select.id, classWeek: this.props.week,color:this.props.cardColor[this.props.select.color]})
                 console.log("QR코드 생성")
                 this.props.loginSuccess(response.data.token)
             })
@@ -244,7 +248,6 @@ class QRreade extends Component {
         let fontColor={color: this.props.cardColor[this.props.select.color][1]}
         const timeText = <span>{this.timeCalculation(this.state.selectTime,"late")} 부터 지각 {this.timeCalculation(this.state.selectTime,"absent")} 부터는 결석이 됩니다.</span>
         const selectText = <span>수업을 시작할 시간을 설정해주세요</span>
-
         return (
             <div id = "QRreadePanel">
                 <div id ="cheakTime">
@@ -298,6 +301,8 @@ function mapDispatchToProps(dispatch){
     return {
         loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
         logout : () => dispatch({type:'LOGOUT'}),
+        progressClassRecord : (record) => dispatch({type:'progressClassRecord',record:record}),
+        PanelSelect : (mode) => dispatch({ type: "panelMode",panelMode :mode,force:true}),
     }
 }
 

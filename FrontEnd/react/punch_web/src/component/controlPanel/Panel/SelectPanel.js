@@ -9,7 +9,8 @@ import store from "../../../store";
 class SelectPanel extends Component {
 
     render() {
-        let bgColor={backgroundColor: this.props.cardColor[this.props.color][0]}
+        console.log('받는값',this.props.select)
+        let bgColor={backgroundColor: this.props.cardColor[this.props.select.color][0]}
         return (
             <div id = "SelectPanel">
                 <div id = "PanelCheckBnt" className ="SelectPanelBnt" onClick={() => this.props.PanelSelect("Week")} style ={bgColor} >

@@ -1,6 +1,6 @@
 // 리엑트 모듈
 import React, { Component } from 'react';
-import { TouchableOpacity, Text, View, StyleSheet, TextInput,Image, Alert, Button } from 'react-native';
+import { TouchableOpacity, AsyncStorage, Text, View, StyleSheet, TextInput,Image, Alert, Button } from 'react-native';
 // [redux]를 통한 데이터 통신
 import {connect} from 'react-redux'
 // [ajax] axios 연결
@@ -99,11 +99,19 @@ class Login extends Component {
             password : text,
         })
     }
+    _storeData = async () => {
+        try {
+        //   await AsyncStorage.setItem('userId',this.state.id);
+        //   await AsyncStorage.setItem('userPw',this.state.pw);
+        } catch (error) {
+          // Error saving data
+        }
+      };
     
     login = () => {
     // console.log('수업이름 : ',this.state.className,'수업요일 : ',this.state.backClassTimeList[0].day,'수업시간 : ',this.state.backClassTimeList[0].startTime,'~',this.state.backClassTimeList[0].endTime,'수업 컬러  : ',this.state.classColor,'수업디자인 : ',this.state.classDesign,)
     // 임시로 다중 시간을 입력하지 않고 입력된 첫 시간만 보냄 
-    axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/mobile/student/login?token='+this.props.token, {
+    axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/account/student/login?token='+this.props.token, {
         inputId: this.state.id,
         inputPw : this.state.password,
     }, { credentials: true })
@@ -112,6 +120,9 @@ class Login extends Component {
         this.props.loginSuccess(response.data.token)
         this.props.appMode('LOGININFO')
         console.log(this.props.AppMode)
+        // AsyncStorage.setItem('userId',this.state.id);
+        // AsyncStorage.setItem('userPw',this.state.pw);
+
     })
     .catch( error => {
         console.log('실패 : ',error)
@@ -129,6 +140,23 @@ class Login extends Component {
     })
         // 
     } 
+
+    // _retrieveData = async () => {
+    //     try {
+    //       const userId = AsyncStorage.getItem('userId');
+    //       const userPw = AsyncStorage.getItem('userPw');
+    //       if (userId !== null &&userPw !== null  ) {
+    //         // We have data!!
+    //         console.log('저장된 id : [',userId,'] 저장된 pw : [',userPw,']');
+    //       }
+    //     } catch (error) {
+    //         console.log('저장된 아이디를 불러오지 못함');
+    //     }
+    //   };
+      
+    // componentDidMount(){
+    //     _retrieveData()
+    // }
 
     render() {
       return (

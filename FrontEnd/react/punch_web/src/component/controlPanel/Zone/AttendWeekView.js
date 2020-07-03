@@ -17,31 +17,13 @@ class AttendWeekView extends Component {
         attendanceNo : null,
         search : '',
         student :[
-        {name :'정인국', studentNo:201334023, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334024, attendTime:'13시 23분 07초'},
-        {name :'여은성', studentNo:201334025, attendTime:'13시 23분 07초'},
-        {name :'김민혁', studentNo:201334026, attendTime:'13시 23분 07초'},
-        {name :'정인식', studentNo:201334027, attendTime:'13시 23분 07초'},
-        {name :'정인국', studentNo:201334028, attendTime:'13시 23분 07초'},
-        {name :'장성원', studentNo:201334029, attendTime:'13시 23분 07초'},
-        {name :'배민환', studentNo:201334030, attendTime:'13시 23분 07초'},
-        {name :'한용재', studentNo:201334031, attendTime:'13시 23분 07초'},
-        {name :'변민영', studentNo:201334032, attendTime:'13시 23분 07초'},
-        {name :'이상민', studentNo:201334033, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334034, attendTime:'13시 23분 07초'},
-        {name :'강민성', studentNo:201334035, attendTime:'13시 23분 07초'},
-        {name :'김민혁', studentNo:201334036, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334037, attendTime:'13시 23분 07초'},
-        {name :'정인국', studentNo:201334038, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334039, attendTime:'13시 23분 07초'},
-        {name :'여은성', studentNo:201334040, attendTime:'13시 23분 07초'},
-        {name :'김민혁', studentNo:201334041, attendTime:'13시 23분 07초'},
-        {name :'이종호', studentNo:201334042, attendTime:'13시 23분 07초'},
+
         ],
+        error : false,
         attend: 0,
         tardy : 0,
         absent: 0,
-
+        tokenCheck : this.props.token
     }
 
     studentSearch = (e) => {
@@ -49,14 +31,20 @@ class AttendWeekView extends Component {
             search : e.target.value,
         })
     }
-
+    logout = (error) =>{
+        if(error){
+            this.props.logout()
+        }
+    }   
     listUpdata = () => {
-        console.log('토큰값 : ','http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/attendance?token='+this.props.token)
         let classList
-        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/attendance?token='+this.props.token,{
-            classListID : this.props.select.id,
-            att_week : this.props.attendanceNo
-        }, { credentials: true })
+        console.log(this.props.attendanceNo)
+        axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/classList/attendance?token='+this.props.token+'&classListID='+this.props.select.id+'&att_week='+this.props.attendanceNo
+        // ,{
+        //     classListID : this.props.select.id,
+        //     att_week : this.props.attendanceNo
+        // }, { credentials: true }
+        )
         .then( response => {
             console.log('출석 리스트 222: ',this.props.attendanceNo,'주차',response.data)
             this.props.loginSuccess(response.data.token)
@@ -65,16 +53,17 @@ class AttendWeekView extends Component {
                 attend: response.data.attend_count,
                 tardy : response.data.late_count,
                 absent : response.data.absent_count,
-                
-            })
+                error : response.data.error,
+            },this.logout(this.state.error))
         })
         .catch( error => {
             console.log('출석 리스트 에러 ',error)          
             })      
     }
-    componentWillMount() {
+    componentDidMount() {
         this.listUpdata()
         }
+    
     render() {
         let result  
         if (this.state.attendanceNo!=this.props.attendanceNo){
@@ -83,24 +72,26 @@ class AttendWeekView extends Component {
                 attendanceNo : this.props.attendanceNo,
             })
         }
-
-        if (Number(this.state.search)|| this.state.search =='0'){
-            // console.log('학번으로 검색')
-            result = this.state.student.filter(s =>((s.studentNo+'').search(this.state.search) != -1))
-        }else {
-            // console.log('이름으로 검색')
-            result = this.state.student.filter(s =>(s.name.search(this.state.search) != -1));
+        let list = <div>로그인 정보가 만료되었습니다 <br/> 다시 주차를 선택해주세요</div>
+        console.log(this.state.error==true) 
+        if(this.state.error!=true){
+            if (Number(this.state.search)|| this.state.search =='0'){
+                // console.log('학번으로 검색')
+                result = this.state.student.filter(s =>((s.studentNo+'').search(this.state.search) != -1))
+            }else {
+                // console.log('이름으로 검색')
+                result = this.state.student.filter(s =>(s.name.search(this.state.search) != -1));
+            }
+            // console.log('렌더',result)
+            let show = result.map(
+                info => (info.studentNo)   
+            );     
+            // console.log('쇼',show)
+            console.log('리 렌더링')
+            list = this.state.student.map(
+                info => (<AttendWeekStudent key={info.attendance_id} update={this.listUpdata} order={info.name.search(this.state.search)} show={(show.indexOf(info.studentNo) == -1 ? false : true )} student={info} />)   
+            );          
         }
-        // console.log('렌더',result)
-        let show = result.map(
-            info => (info.studentNo)   
-        );     
-        // console.log('쇼',show)
-        console.log('리 렌더링')
-        let list = this.state.student.map(
-            info => (<AttendWeekStudent key={info.attendance_id} order={info.name.search(this.state.search)} show={(show.indexOf(info.studentNo) == -1 ? false : true )} student={info} />)   
-        );          
-
         return (
       
             <div id = "AttendWeekZone">
@@ -112,6 +103,7 @@ class AttendWeekView extends Component {
                         <span className="AttendStateTrady">지각 :  {this.state.tardy}</span> 
                         <span className="AttendStateAbsent">결석 :  {this.state.absent}</span>
                     </div>
+                    <div id="AttendWeekdelete"></div>
                 </div>
                 <div id = "AttendWeekInfoButton">
                     <div className= "AttendInfoinput" > <span>학생 검색 : </span><input placeholder="학번 또는 이름" onChange={this.studentSearch}/> </div>
@@ -134,6 +126,7 @@ const mapStateToProps = (state) => ({
 function mapDispatchToProps(dispatch){
     return {
         loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
+        logout : () => dispatch({type:'LOGOUT'}),
         }
     }
 export default connect(mapStateToProps,mapDispatchToProps)(AttendWeekView);
