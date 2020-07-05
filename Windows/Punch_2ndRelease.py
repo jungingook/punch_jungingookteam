@@ -76,7 +76,7 @@ class LoginForm(QWidget):
             msg.setText('아이디 혹은 비밀번호를 입력하세요.')
             msg.exec_()
         else:
-            url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/python/login"
+            url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/account/professor/login"
             login_json = {'inputId': self.lineEdit_username.text(), 'inputPw': self.lineEdit_password.text()}
             response = requests.post(url_post, json=login_json)
             if response.status_code == 200:
@@ -149,7 +149,7 @@ class QR(QWidget):
         # 스레드 구현부
 
     def refreshImg(self):
-        url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/python/qr?token=" + qr_token
+        url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/qr/python?token=" + qr_token
 
         # 스레드를 멈추기 위한 bool 타입 변수
         global thread_code
