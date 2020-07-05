@@ -14,16 +14,19 @@ import QRactive from './QRactive'; // QR코드 체크
 
 import ClassDelete from './ClassDelete'; // QR코드 체크
 import AttendanceCheck from './AttendanceCheck'; // QR코드 체크
+import WeekSelect from './WeekSelect'; // 주차 선택
 
 class ActivePanel extends Component {
     
     state = {
         titlePanelSetting : false, // 수업의 숫자
         cardNo : null,
-        week : null,
         intervalTime : null,
         lastTime : null,
-        panelSize : {height:'70vh'},
+        panelMode : this.props.panelMode,
+        panelpointer : this.props.select.id,
+        panelComponent : <div></div>,
+        panelSize: {height:'70vh'}
     }
 
     titlePanelSettingClick = () =>{
@@ -105,18 +108,23 @@ class ActivePanel extends Component {
         if (mode == "Error") {
             output = <div>오류 : 패널의 mode가 없음</div>
         }
+        else if (mode == "Refresh") {
+            output = <div>Refresh...</div>
+        }
         else if (mode == "Select") {
-            output = <SelectPanel color={this.props.select.color} intervalTime={this.state.intervalTime} />
+            // output = <WeekSelect select={this.props.select} intervalTime={this.state.intervalTime} />
+            output = <SelectPanel color={this.props.select.color} select={this.props.select} />
         }
         else if (mode == "Week" ) {
-            output = <WeekPanel select={this.props.select} weekSelect={this.setWeek} week={this.state.week} lastTime ={this.state.lastTime}/>
+            console.log('lastTime:',this.state.lastTime,'intervalTime',this.state.intervalTime)
+            output = <WeekPanel select={this.props.select} lastTime ={this.state.lastTime}  intervalTime={this.state.intervalTime}/>
         }
         else if (mode == "QRreade") {
-            output = <QRreade select={this.props.select} week={this.state.week}/>
+            output = <QRreade select={this.props.select} week={this.props.week}/>
         }
         else if (mode == "QRactive") {
             panelsize = '20vh'
-            output = <QRactive select={this.props.select} week={this.state.week}/> 
+            output = <QRactive select={this.props.select} week={this.props.week}/> 
             // this.props.addOn('QRactiveList') 
         }
         else if (mode == "ClassDelete") {
@@ -128,34 +136,25 @@ class ActivePanel extends Component {
         else if (mode == "AttendanceWeek") {
             output = <AttendanceCheck select={this.props.select}/>
         }
-
-        return {component : output, size : {height:panelsize} }
-    }
-    getWeek = () =>{
-        return(this.state.week)
-    }
-    setWeek = (value) =>{
         this.setState({
-            week : value
+            panelMode : this.props.panelMode,
+            panelComponent : output,
+            panelSize: {height:panelsize}
         })
     }
 
     weekfind = () => {
-        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/qr/preOpen?token='+this.props.token, {
+        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/qr/preOpen?token='+this.props.token, {
             class_id: this.props.select.id,
         })
         .then( response => {
             if (response.message == "잘못된 토큰이 왔습니다."){
-                this.setState({
-                    week : false
-                })
                 return
             }
-            console.log(response.data)
+            console.log('받아온 데이터 ::',response.data)
             let now = new Date();
             console.log('마지막 수업으로 부터 지난 시간1 :',this.nearClassTime(this.props.select.classTime).endTime-Math.floor((now.getTime() - response.data.getTime)/60000))
             this.setState({
-                week : response.data.week+1,
                 intervalTime : this.nearClassTime(this.props.select.classTime).endTime-Math.floor((now.getTime() - response.data.getTime)/60000),
                 lastTime : Math.floor((now.getTime() - response.data.getTime)/60000)
             })
@@ -165,18 +164,38 @@ class ActivePanel extends Component {
         .catch( error => {
             console.log(error)
             this.setState({
-                week : false,
                 intervalTime : null,
                 lastTime : null,
             })
         })
     }
 
+    componentDidMount() {
+        this.panel(this.props.panelMode)
+    }
+    componentDidUpdate(){
+        if(this.state.panelpointer != this.props.select.id){
+            this.setState({
+                panelpointer : this.props.select.id,
+            },this.panel(this.state.panelMode))
+ 
+        }
+        if(this.props.token ==null&&this.state.panelMode!='Refresh')(
+            this.setState({
+                panelMode : 'Refresh',
+            },this.panel(this.state.panelMode))
+
+        )
+        else if(this.state.panelMode != this.props.panelMode&&this.props.token!=null){
+            
+            this.panel(this.props.panelMode)
+        }
+
+    }
+
     render() { 
         
-        let panel = this.panel(this.props.panelMode)
-
-
+        // let panel = this.panel(this.props.panelMode)
         if(this.props.select.id != this.state.cardNo){
             this.setState({
                 cardNo : this.props.select.id,
@@ -185,7 +204,7 @@ class ActivePanel extends Component {
             this.weekfind()
         }
         return (
-            <div id = "PanelBox" style={panel.size}>
+            <div id = "PanelBox" style={this.state.panelSize}>
                 <div id = "TitlePanel">
                     <div id="TitlePanelUpper" >
                         <div id="TitlePanelTime">
@@ -205,7 +224,7 @@ class ActivePanel extends Component {
                     </div>
                 </div>
                 <div id = "PanelField">
-                    {panel.component}
+                    {this.state.panelComponent}
                 </div>
             </div>
         );
@@ -217,6 +236,7 @@ function mapDispatchToProps(dispatch){
     return {
       classDelete : () => dispatch({ type: "panelMode",panelMode : "ClassDelete"}),
       loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwt : token}),
+      classListRefresh : (value) => dispatch({ type: "classListRefresh",refresh : value}),
     }
   }
 const mapStateToProps = (state) => ({
@@ -224,6 +244,7 @@ const mapStateToProps = (state) => ({
     selectCard : state.selectCard,
     panelMode : state.panelMode,
     token :  state.jwtToken,
+    week :  state.qrCreactWeek,
   })
 
 export default connect(mapStateToProps,mapDispatchToProps)(ActivePanel);

@@ -4,9 +4,7 @@ class Standby extends Component {
     state = {
 
     }
-    componentWillMount() {
 
-      }
     render() {
         return (
             <div id="StandbyReversal">

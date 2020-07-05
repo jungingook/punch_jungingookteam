@@ -187,9 +187,10 @@ class ClassInfo extends Component {
 
   attendList = () => {
     console.log('토큰 :',this.props.token)
-    axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/mobile/student/class/attendance?token='+this.props.token, {
-      classListID : this.props.selectCard.id
-    }, { credentials: true })
+    axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/mobile/attendance?token='+this.props.token+'&classListID='+this.props.selectCard.id
+    // , {classListID : this.props.selectCard.id
+    // }, { credentials: true }
+    )
     .then( response => {
         console.log('성공 : ',response.data)
         console.log('데이터리스트 : ',response.data)

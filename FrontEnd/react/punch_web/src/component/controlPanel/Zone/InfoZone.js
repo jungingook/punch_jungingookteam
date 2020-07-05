@@ -11,7 +11,6 @@ import AttendWeekView  from './AttendWeekView'; // 큐알코드 생성
 
 class InfoZone extends Component {
     zone = (mode) => {
-        console.log(mode)
         let output = <div>오류 : 패널의 mode가 없음</div>
         if (mode == "Error") {
             output = <div>오류 : 패널의 mode가 없음</div>

@@ -35,10 +35,11 @@ class ClassDelete extends Component {
     classDelete = () =>{
         console.log( '준비중 : ', this.props.select.name,  'id : ', this.props.select.id) 
             if (this.state.cssClass=='classDeleteButtonOn'){
-                axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/delete?token='+this.props.token, {
-                    classListID: this.props.select.id,
+                axios.delete('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/classList?token='+this.props.token, {
+                 data : {  classListID: this.props.select.id, }     
                 })
                 .then( response => {
+                    console.log(response.data)
                     this.props.loginSuccess(response.data.token)
                     this.props.classListRefresh(true)
                 })

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet, Button,ActivityIndicator } from 'react-native';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 
@@ -32,7 +32,7 @@ class BarcodeScannerExample extends React.Component {
     const { hasCameraPermission, scanned } = this.state;
 
     if (hasCameraPermission === null) {
-      return <Text>카메라 로딩중</Text>;
+      return <ActivityIndicator size="large"/>
     }
     if (hasCameraPermission === false) {
       return <Text>카메라에 연결할수 없습니다.</Text>;
@@ -71,21 +71,19 @@ class BarcodeScannerExample extends React.Component {
     this.setState({ control : "MAIN"});
     // alert(`??? :  ${this.state.control} `);
     let d = new Date();
+    console.log('받은데이터 : ',data);
     console.log('출석 시작 토큰 : ',this.props.token);
-    axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/mobile/qr/verify?token='+this.props.token,{
+    axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/qr/verify?token='+this.props.token,{
             qrNum: data, // QR코드 읽은값
             allowTime: d.getTime(), //  1970년 이후 밀리초 값
             classStartTimeHour : 950,
           })
         .then( response => {
             console.log('성공',response.data);
-            alert(`출석체크 :  ${response.data} `);
-            this.props.check(response.data)
-            this.props.appMode('NORMAL')
+            this.props.qrComplete(response.data)
         })
         .catch( error => {
             console.log('에러',error);
-            alert(`인증실패 :  ${error.message} `);
         });
   };
   
@@ -101,6 +99,7 @@ function mapDispatchToProps(dispatch){
     return {
       loginSuccess : (token) => dispatch({type:'LOGINSUCCESS',jwtToken:token}),
       appMode : (mode) => dispatch({type:'AppMode',mode:mode}),
+      qrComplete : (state) => dispatch({type:'QRCOMPLETE',state}),
     }
 }
   

@@ -22,9 +22,11 @@ class ClassInfo extends Component {
     }
 
     handle = () => {
-        this.props.PanelSelect("Select")
-        this.props.selectCard(this.props.info.id)
-
+        if(this.props.token !=null){
+            this.props.PanelSelect("Select")
+            this.props.selectCard(this.props.info.id)
+            this.props.weekSelect(null)
+        }
     }
 
     date = (day,startTime,endTime) => {
@@ -77,13 +79,16 @@ class ClassInfo extends Component {
     }
 }
 const mapStateToProps = (state) => ({
-    cardColor : state.cardColor
+    cardColor : state.cardColor,
+    token :  state.jwtToken,
   })
 
 function mapDispatchToProps(dispatch){
     return {
         selectCard : (id) => dispatch({ type: "selectCard",id :id}),
         PanelSelect : (mode) => dispatch({ type: "panelMode",panelMode :mode}),
+        weekSelect : (week) => dispatch({ type: "WEEKSLECET",week}),
+
     }
   }
 export default connect(mapStateToProps,mapDispatchToProps)(ClassInfo);

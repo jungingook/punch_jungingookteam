@@ -22,30 +22,54 @@ class QRactiveList extends Component {
             search : e.target.value,
         })
     }
-    componentWillMount() {
-        console.log("출석리스트 받아오기 : ",this.props.selectCard)
+    componentDidMount() {
+        this.userChange()
+        let UserInterval = setInterval(this.userChange, 3000, "1초 간격")
+        this.setState({
+           Interval : UserInterval
+        },)
 
-        axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/professor/classList/attendance?token='+this.props.token,{
-            classListID : this.props.selectCard,
-            att_week : 1
-        }, { credentials: true })
+     }
+     componentWillUnmount(){
+       clearInterval(this.state.Interval)
+       console.log('인터벌 헤제')
+     }
+
+     userChange = () => {
+        console.log('보내는값 : ',this.props.selectCard,this.props.week)
+        // 에러@@@@@@@@@@@@@@@@@@@@@@ 쿼리값 정해야함
+        axios.get('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/desk/classList/attendance?token='+this.props.token+'&classListID='+this.props.selectCard+"&att_week="+this.props.week
+        // ,{
+        //     classListID : this.props.selectCard,
+        //     att_week : this.props.week,
+        // }, { credentials: true }
+        )
         .then( response => {
-            console.log('출석 리스트 222: ','주차',response.data)
+            console.log('출석 리스트 받아오기: ','주차',response.data)
             // this.props.loginSuccess(response.data.token)
-            this.setState({
-                student : response.data.att_arr,
-                attend: response.data.attend_count,
-                tardy : response.data.late_count,
-                absent : response.data.absent_count,
-            })
+            if (response.data.att_arr){
+                this.setState({
+                    student : response.data.att_arr,
+                    attend: response.data.attend_count,
+                    tardy : response.data.late_count,
+                    absent : response.data.absent_count,
+                })
+            } else {
+                this.setState({
+                    student : [],
+                })   
+            }
         })
         .catch( error => {
-            console.log('출석 리스트 에러 ',error)          
+            console.log('출석 리스트 에러 ',error)   
             })    
     }
+
+    
     
     render() { 
         let result  
+
         if (Number(this.state.search)|| this.state.search =='0'){
             // console.log('학번으로 검색')
             result = this.state.student.filter(s =>((s.studentNo+'').search(this.state.search) != -1))
@@ -53,13 +77,16 @@ class QRactiveList extends Component {
             // console.log('이름으로 검색')
             result = this.state.student.filter(s =>(s.name.search(this.state.search) != -1));
         }
+        
         // console.log('렌더',result)
         let show = result.map(
             info => (info.studentNo)   
-        );     
+        );    
+        let appear = 1
         let list = this.state.student.map(
-            info => (<AttendanceUser key={info.studentNo} name={info.name} order={info.name.search(this.state.search)} show={(show.indexOf(info.studentNo) == -1 ? false : true )}  studentNo={info.studentNo}  attendTime={info.attendTime} />)   
-        );        
+            info => (<AttendanceUser key={info.studentNo} appear={appear++} student={info} order={info.name.search(this.state.search)} show={(show.indexOf(info.studentNo) == -1 ? false : true )}  studentNo={info.studentNo}  attendTime={info.attendTime} />)   
+        );      
+
         return (
             <div id ="QRactivePanelList">
                 <div id = "QRactiveSearch">
@@ -70,7 +97,7 @@ class QRactiveList extends Component {
                     </div>
                 </div>
                 <div id ="attendancelist"> 
-                {/* {list} */}
+                {list}
                 </div>
             </div>      
             );
@@ -80,7 +107,8 @@ class QRactiveList extends Component {
 const mapStateToProps = (state) => ({
     classList : state.classList,
     selectCard : state.selectCard,
-    token :  state.jwtToken
+    token :  state.jwtToken,
+    week :  state.qrCreactWeek,
   })
 
 function mapDispatchToProps(dispatch){

@@ -9,10 +9,13 @@ const defaultState = {
     selectCard: null,
     loginActivation: true,
     addClass : false,
-    classListRefresh: false,
+    classListRefresh: false, // 수업목록 새로고침
+    attendanceRefresh: false, // 출결목록 새로고침
     attendanceNo  : 1,
+    qrCreactWeek : null,
     jwtToken : null,
     thisweek : false,
+    classRecord : null,
     cardColor : {
         default : ["#00B0F0","#009FF0"], // 블루와 같음
         red : ["#E93A2E","#C92A1D"], // 확정
@@ -48,10 +51,17 @@ const reducer = (state = defaultState, action) => {
                 selectCard: action.id
             } 
         case panelMode :
-            return {
-                ...state,
-                panelMode: action.panelMode
-            } 
+            if  (state.jwtToken!=null||action.force==true ){
+                console.log(action.panelMode)
+                return {
+                    ...state,
+                    panelMode: action.panelMode
+                } 
+            } else{
+                return {
+                    ...state
+                }              
+            }
         case classList :
             return {
                 ...state,
@@ -85,11 +95,33 @@ const reducer = (state = defaultState, action) => {
                 ...state,
                 classListRefresh: action.refresh,
             }     
+        case "attendanceRefresh" :
+            return {
+                ...state,
+                attendanceRefresh: action.refresh,
+            }     
         case "selectAttendanceWeek" :
             return {
                 ...state,
                 attendanceNo: action.attendanceNo,
-            }             
+            }     
+        case "WEEKSLECET" :
+            return {
+                ...state,
+                qrCreactWeek: action.week,
+            }   
+        case "progressClassRecord" :
+            return {
+                ...state,
+                classRecord: action.record,
+            }   
+            
+        // 테스트용 
+        case "테스트토큰제거" :
+            return {
+                ...state,
+                jwtToken : null,
+            }    
         default:
             //console.log("리듀스 성공");
             return state; 
