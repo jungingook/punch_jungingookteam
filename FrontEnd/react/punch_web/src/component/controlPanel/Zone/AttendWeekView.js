@@ -23,6 +23,7 @@ class AttendWeekView extends Component {
         attend: 0,
         tardy : 0,
         absent: 0,
+        classTime : '수업시간을 불러오는중 입니다.',
         tokenCheck : this.props.token
     }
 
@@ -54,12 +55,31 @@ class AttendWeekView extends Component {
                 tardy : response.data.late_count,
                 absent : response.data.absent_count,
                 error : response.data.error,
+                classTime : response.data.class_day,
             },this.logout(this.state.error))
         })
         .catch( error => {
             console.log('출석 리스트 에러 ',error)          
             })      
     }
+
+    date = (day) => {
+        let weekday = new Array();
+        weekday[0]="일요일"; weekday[1]="월요일"; weekday[2]="화요일"; weekday[3]="수요일"; weekday[4]="목요일"; weekday[5]="금요일"; weekday[6]="토요일";
+        return weekday[day]
+    }
+    sortTime = (mode,Hours,Minutes) =>{
+        let Min  = Minutes<10?"0"+Minutes : Minutes
+        let Hour = Number(Hours)
+        if (mode==12){
+            Hours>12? Hour = Hours-12 : Hour = Hours-0
+            return (Hours>12?"오후" : "오전") +" "+(Hour<10? "0"+Hour : Hour) + ":" + Min
+        }
+        if (mode==24){
+            return (Hour<10? "0"+Hour : Hour) + ":" + Min
+        }
+    }
+
     componentDidMount() {
         this.listUpdata()
         }
@@ -92,12 +112,14 @@ class AttendWeekView extends Component {
                 info => (<AttendWeekStudent key={info.attendance_id} update={this.listUpdata} order={info.name.search(this.state.search)} show={(show.indexOf(info.studentNo) == -1 ? false : true )} student={info} />)   
             );          
         }
+
+        const date = new Date(this.state.classTime)
         return (
       
             <div id = "AttendWeekZone">
                 <div id = "AttendWeekInfo">
                     <div id = "AttendWeekInfoTitle"> {this.props.attendanceNo}회차 수업 </div>
-                    <div id = "AttendWeekInfoDate"> 2020년 11월 10일 월요일 13:23 </div>
+                    <div id = "AttendWeekInfoDate"> {date.getFullYear()}년 {date.getMonth()}월 {date.getDate()}일 {this.date(date.getDay())} {this.sortTime(24,date.getHours(),date.getMinutes())} </div>
                     <div id = "AttendWeekInfoState"> 
                         <span className="AttendStateAttendance">출석 : {this.state.attend}</span> 
                         <span className="AttendStateTrady">지각 :  {this.state.tardy}</span> 

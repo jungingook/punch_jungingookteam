@@ -71,6 +71,7 @@ class BarcodeScannerExample extends React.Component {
     this.setState({ control : "MAIN"});
     // alert(`??? :  ${this.state.control} `);
     let d = new Date();
+    console.log('받은데이터 : ',data);
     console.log('출석 시작 토큰 : ',this.props.token);
     axios.post('http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/qr/verify?token='+this.props.token,{
             qrNum: data, // QR코드 읽은값

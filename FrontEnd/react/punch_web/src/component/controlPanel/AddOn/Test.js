@@ -21,7 +21,8 @@ class Test extends Component {
                 <div>
                 <button id = "Testbt" onClick = {()=> this.setState({show : false})}>테스트 패널 끄기</button>
                 </div>
-                <div title={this.props.token}>토큰값 : {this.props.token?'존재':'미존재'} </div>
+                값
+                <div title={this.props.token}>토큰값 : {this.props.token?'존재':'미존재'}</div>
                 <div style={{display:'flex',justifyContent: 'space-between'}}>
                     <div>선택된카드 : {this.props.selectCard}</div>
                     <div>선택된주차 : {this.props.qrCreactWeek}</div>
@@ -31,7 +32,10 @@ class Test extends Component {
                     <button onClick = {()=> this.props.tokenKill()}>토큰값 제거</button>
                 </div>
             </div>
-                :<button id = "Testbt" onClick = {()=> this.setState({show : true})}>테스트 패널 켜기</button>}
+                :
+                // <button id = "Testbt" onClick = {()=> this.setState({show : true})}>테스트 패널 켜기</button>
+                ''
+                }
             </Fragment>
             
         );
