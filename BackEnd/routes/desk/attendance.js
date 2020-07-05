@@ -245,12 +245,12 @@ router.put('/', (req, res) => {
             })
             return;
         }
-
+        let update_date = makeUpdateTime();
         connection.query(`
             update attendance
-            set record = ?, reason = ?, is_verified = 1
+            set record = ?, reason = ?, is_verified = 1, updated_day = ?, updated_time = ?
             where id = ?
-        `, [record, reason, att_id], (err1, result1) => {
+        `, [record, reason, new Date(), update_date, att_id], (err1, result1) => {
             if (err1) throw err1;
 
             //jwt 생성 후 전송
@@ -271,3 +271,21 @@ router.put('/', (req, res) => {
 })
 
 module.exports = router;
+
+
+function getDate(date) {
+    let year = date.getUTCFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+
+    let result = (year + "-" + month + "-" + day)
+
+    return result;
+}
+
+function makeUpdateTime() {
+    let hour = new Date().getHours();
+    let minute = new Date().getMinutes();
+
+    return (hour * 60)+minute;
+}
