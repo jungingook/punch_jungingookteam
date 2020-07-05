@@ -436,6 +436,7 @@ router.post('/verify', (req, res) => {
             qrNum = qrNum + "";
             let onlyRandomNum = qrNum.substring(0, 10);
             let classCode = Math.floor(qrNum.substring(10, qrNum.length));
+            console.log("qrNum = " ,  qrNum);
             console.log("classCode = " + classCode);
 
             connection.query(`
@@ -635,7 +636,7 @@ function checkClassStatus(classCode, classStartTimeHour, onlyRandomNum, allowTim
                 // 학생의 시간 + 분
                 
                 // 실제 출결을 업데이트 하는 함수
-                updateAttendanceFunc(isAllow, classIsOpened, current_student_time, result, studentID, allowDateTime, lateTime, res)
+                updateAttendanceFunc(isAllow, classIsOpened, current_student_time, result, studentID, lateTime, res)
             }
         })
     })
@@ -743,13 +744,6 @@ function initRandomArray() {
 // 현재 배열에서 같은 값이 있는지 검증 한다.
 function checkRandomArray(qrNum, allowTime, startTimeHour, startTimeMinute, lt, at) {
     console.log("check Random Array start, the parameters is...")
-    console.log("qrNum: ", qrNum)
-    console.log("allowTime: ", allowTime)
-    console.log("startTimeHour: ", startTimeHour)
-    console.log("startTimeMinute: ", startTimeMinute)
-    console.log("lt: ", lt)
-    console.log("at: ", at)
-    console.log("  ")
 
     // 검증1 배열 앞부분의 5개의 RandomObject를 꺼낸다.
     firstRandomObject = randomArray[0];
@@ -759,19 +753,8 @@ function checkRandomArray(qrNum, allowTime, startTimeHour, startTimeMinute, lt, 
     fifthRandomObject = randomArray[4];
 
     // 5번째 값의 ct + 5초의 값이 allowTime보다 큰지 먼저 검사
-    console.log("5번째 값의 ct + 5초의 값이 allowTime보다 큰지 먼저 검사")
-    console.log("fifthRandomObject.ct + 5000 > allowTime: ", (fifthRandomObject.ct + 5000 > allowTime))
-    console.log("fifthRandomObject.ct + 5000: ", (fifthRandomObject.ct + 5000))
-    console.log("allowTime: ", allowTime)
     if (fifthRandomObject.ct + 5000 > allowTime) {
         // 통과하면 5개의 넘 값중에 같은 난수값이 있는지 확인
-        console.log("통과하면 5개의 넘 값중에 같은 난수값이 있는지 확인")
-        console.log("firstRandomObject.rn == qrNum || secondRandomObject.rn == qrNum || thirdRandomObject.rn == qrNum || fourthRandomObject.rn == qrNum || fifthRandomObject.rn == qrNum: ", (firstRandomObject.rn == qrNum || secondRandomObject.rn == qrNum || thirdRandomObject.rn == qrNum || fourthRandomObject.rn == qrNum || fifthRandomObject.rn == qrNum))
-        console.log("firstRandomObject.rn: ", firstRandomObject.rn)
-        console.log("secondRandomObject.rn: ", secondRandomObject.rn)
-        console.log("thirdRandomObject.rn: ", thirdRandomObject.rn)
-        console.log("fourthRandomObject.rn: ", fourthRandomObject.rn)
-        console.log("fifthRandomObject.rn: ", fifthRandomObject.rn)
 
         if (firstRandomObject.rn == qrNum || secondRandomObject.rn == qrNum || thirdRandomObject.rn == qrNum || fourthRandomObject.rn == qrNum || fifthRandomObject.rn == qrNum) {
             // 출석인지 지각인지 결석인지 결정
@@ -783,30 +766,22 @@ function checkRandomArray(qrNum, allowTime, startTimeHour, startTimeMinute, lt, 
 
             // 먼저 비교 가능하게 1970년 이후의 밀로초 값으로 만들자
             let testCurrentTime = new Date(currentYear, currentMonth, currentDate, startTimeHour, startTimeMinute, 0);
-            console.log("testCurrentTime : ");
-            console.log(testCurrentTime)
 
             let millie1970StartTime = testCurrentTime.getTime();//수업시간
             millie1970StartTime = millie1970StartTime;
 
-            // 출석이라면 수업시간 <=  현재 시간 
-            // 수업시간 
-            // 출석이라면 startTime + 5분 보다 5번째 랜덤 객체의 createTime이 작아야 한다.
-
-
             let mTime = minusTime(fifthRandomObject.ct, millie1970StartTime);
-            console.log("mtime = ", mTime)
             // console.log(" mTime < lateTime = ",  mTime < lateTime, typeof(mTime) )
             if (mTime < lt) {
-                // 2 == 출석
+                // 출석
                 console.log('출석')
                 return 2;
             } else if (mTime < at) {
-                // 1 == 지각
+                // 지각
                 console.log('지각')
                 return 1;
             } else {
-                // 0 == 결석
+                // 결석
                 console.log('결석')
                 return 0;
             }
@@ -826,13 +801,10 @@ function doingChange() {
     let min = Math.ceil(1000000000);  //10억 10자리
     let max = Math.floor(10000000000);    //100억 11자리
     let randomNum = Math.floor(Math.random() * (max - min)) + min;   //10자리의 랜덤 값
-    // randomNum = 1000000000;
 
 
     let time = new Date();
     let currentTime = time.getTime(); //밀리초 단위로 환산
-    // console.log("randomNum : " +randomNum + ",  currentTIme : " + currentTime + "\n")
-    // console.log("randomNum, currentTime : " + randomNum + ", " + currentTime);
 
     // 새로운 값을 추가하고
     randomArray.unshift(new RandomObject(randomNum, currentTime));

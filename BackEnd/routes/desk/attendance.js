@@ -90,6 +90,7 @@ router.get('/', (req, res) => {
 
                 let att_arr = Object.values(attendanceArr);
                 let class_day = attendanceArr[0].class_day;
+                console.log("week_day = ", class_day );
                 let class_time = attendanceArr[0].class_time;
 
                 for (let i = 0; i < att_arr.length; i++) {

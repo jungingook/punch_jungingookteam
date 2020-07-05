@@ -79,8 +79,8 @@ router.post('/professor/login', (req, res) => {
             throw err;
         }
 
-
-        if (!result || result == [] || result == null) {    // 잘못된 id로 접근할 경우 해야할 이벤트
+        console.log("result = ", result);
+        if (!result || result == [] || result.length == 0) {    // 잘못된 id로 접근할 경우 해야할 이벤트
             console.log("잘못됭 id로 접근")
             res.json({
                 error: true,
