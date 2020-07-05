@@ -11,6 +11,7 @@ from PyQt5.QtCore import Qt
 from PIL import ImageQt
 
 thread_code = False
+qr_token = ""
 
 
 class LoginForm(QWidget):
@@ -30,7 +31,7 @@ class LoginForm(QWidget):
         # Punch 로고
         self.lbl = QLabel()
         self.lbl.setMinimumSize(300, 400)
-        self.img = QPixmap("logoW.png")
+        self.img = QPixmap("C:\\Program Files\\Punch\\logoW.png")
         self.lbl.setPixmap(self.img.scaledToWidth(170))
         self.lbl.setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, "
                                "stop: 0.4 #FF4B2B,"
@@ -76,7 +77,7 @@ class LoginForm(QWidget):
             msg.setText('아이디 혹은 비밀번호를 입력하세요.')
             msg.exec_()
         else:
-            url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/python/login"
+            url_post = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/account/professor/login"
             login_json = {'inputId': self.lineEdit_username.text(), 'inputPw': self.lineEdit_password.text()}
             response = requests.post(url_post, json=login_json)
             if response.status_code == 200:
@@ -116,9 +117,8 @@ class QR(QWidget):
         self.vbox = QVBoxLayout()
 
         # 로그아웃 버튼
-        button_logout = QPushButton()
-        button_logout.setStyleSheet(
-            "image: url(logout.png); font-family: NanumSquare; font-size: 20px; font-weight:bold;")
+        button_logout = QPushButton('로그아웃')
+        button_logout.setStyleSheet("font-family: NanumSquare; font-size: 20px; font-weight:bold;")
         button_logout.clicked.connect(self.logout)
         self.vbox.addWidget(button_logout)
 
@@ -126,7 +126,7 @@ class QR(QWidget):
         self.lbl_img = QLabel()
 
         # Label에 첫 이미지 "수업을 개설해주세요."
-        self.pixmap = QPixmap('error.png')
+        self.pixmap = QPixmap('C:\\Program Files\\Punch\\error.png')
         self.lbl_img.setPixmap(self.pixmap)
         self.lbl_img.setScaledContents(True)
         self.vbox.addWidget(self.lbl_img)
@@ -149,7 +149,7 @@ class QR(QWidget):
         # 스레드 구현부
 
     def refreshImg(self):
-        url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/python/qr?token=" + qr_token
+        url = "http://ec2-54-180-94-182.ap-northeast-2.compute.amazonaws.com:3000/qr/python?token=" + qr_token
 
         # 스레드를 멈추기 위한 bool 타입 변수
         global thread_code
@@ -159,7 +159,7 @@ class QR(QWidget):
             data = requests.post(url).json()
             # 서버에서 받아온 값의 error 값이 True면 QR이 아닌 error.png를 띄움
             if data['error']:
-                self.pixmap = QPixmap('error.png')
+                self.pixmap = QPixmap('C:\\Program Files\\Punch\\error.png')
             else:
                 qr = qrcode.QRCode(
                     version=1,
@@ -206,7 +206,10 @@ class QR(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
-    form = LoginForm()
-    form.show()
-
+    if qr_token == "":
+        form = LoginForm()
+        form.show()
+    else:
+        qr = QR()
+        qr.show()
     sys.exit(app.exec_())
