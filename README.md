@@ -2,6 +2,8 @@
 * punch 소개   
 * 기술소개   
    
+*최신릴리즈 영상 보러가기 https://youtu.be/EC03WZoowlo
+
 # Punch 소개   
 펀치는 기존의 출석체크 프로그램의 단점을 보완한 출석체크 플렛폼입니다.    
 기존의 출석체크 비밀번호나 QR코드를 이용해 출석체크를 하는 방식은 비밀번호나 QR코드가 유출되서 부정출석이 될 여지가 있었습니다.    
@@ -85,13 +87,14 @@
 
 # 릴리즈 기록
 - 1차 릴리즈 영상 (5월3일 까지 작업된 내용 소개영상)   
-https://drive.google.com/file/d/1EfwazlGQ82h8E-GUOTU37ZSvTrUACng_/view?usp=sharing
+https://youtu.be/KqxKXtL7FK4
 - 2차 릴리즈 영상 (6월7일 까지 작업된 내용 소개영상) 
  - 본편   
- https://drive.google.com/file/d/1YV0fnOeQKhIRQgPGZnFiUK9DzPPdznK0/view?usp=sharing
+https://youtu.be/a_BcAVznKUQ
  - 윈도우 프로그램에 대한 부록   
- https://drive.google.com/file/d/1-k5I40wytpCFFciBpxcXBsSlVm-mh7Qr/view?usp=sharing 
+https://youtu.be/ojKkSizC9OA
 - 3차 릴리즈 영상 (7월5일 까지 작업된 소개영상)   
-준비중입니다.
+https://youtu.be/EC03WZoowlo
+
 - 최종 릴리즈 영상 (경진대회 제출 전까지 작업된 소개영상)   
 준비중입니다.
