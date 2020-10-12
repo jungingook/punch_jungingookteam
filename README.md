@@ -2,7 +2,8 @@
 * punch 소개   
 * 기술소개   
    
-*최신릴리즈 영상 보러가기 https://youtu.be/EC03WZoowlo
+*최신릴리즈 영상 보러가기 https://youtu.be/kM4P36WwId4
+*보고서 보러가기 
 
 # Punch 소개   
 펀치는 기존의 출석체크 프로그램의 단점을 보완한 출석체크 플렛폼입니다.    
@@ -97,4 +98,4 @@ https://youtu.be/ojKkSizC9OA
 https://youtu.be/EC03WZoowlo
 
 - 최종 릴리즈 영상 (경진대회 제출 전까지 작업된 소개영상)   
-준비중입니다.
+https://youtu.be/kM4P36WwId4
