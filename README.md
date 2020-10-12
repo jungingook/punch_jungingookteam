@@ -1,13 +1,61 @@
 # 프로젝트 소개   
 * punch 소개   
 * 기술소개   
-   
-*최신릴리즈 영상 <a href="https://youtu.be/kM4P36WwId4">보러가기</a>
-*보고서 <a href="https://github.com/jungingook/punch_jungingookteam/raw/master/%ED%8E%80%EC%B9%98%20%EB%B3%B4%EA%B3%A0%EC%84%9C(%EC%A0%95%EC%9D%B8%EA%B5%AD%ED%8C%80).pdf
-">보러가기</a> 
+
+# Punch 소개 영상과 문서
+
+<table>
+   <tr>
+      <th>
+         펀치 소개 동영상
+      </th>
+      <td>
+         <a href="https://youtu.be/kM4P36WwId4">보러가기</a>
+      </td>
+   </tr>
+   <tr>
+      <th>
+         펀치 소개 보고서
+      </th>
+      <td>
+ <a href="https://github.com/jungingook/punch_jungingookteam/raw/master/%ED%8E%80%EC%B9%98%20%EB%B3%B4%EA%B3%A0%EC%84%9C(%EC%A0%95%EC%9D%B8%EA%B5%AD%ED%8C%80).pdf
+">다운로드</a> 
+      </td>
+   </tr>
+</table>
+
 
 # Punch 펀치 사이트 이동
-출석체크 사이트 펀치 https://vo.la/JtfpQ
+
+<table>
+   <tr>
+      <th>
+         펀치 웹사이트
+      </th>
+      <td>
+         <a href="https://vo.la/JtfpQ">이동</a>
+      </td>
+   </tr>
+   <tr>
+      <th>
+         펀치 회원가입
+      </th>
+      <td>
+          <a href="">이동</a>
+      </td>
+   </tr>
+   <tr>
+      <th>
+         펀치 APK 다운로드
+      </th>
+      <td>
+          <a href="">다운받기</a>
+      </td>
+   </tr>
+</table>
+
+
+출석체크 사이트 펀치 
 교수&학생 회원가입
 
 
