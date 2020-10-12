@@ -3,7 +3,12 @@
 * 기술소개   
    
 *최신릴리즈 영상 보러가기 https://youtu.be/kM4P36WwId4
-*보고서 보러가기 
+*보고서 보러가기 /jungingook/punch_jungingookteam/raw/master/%ED%8E%80%EC%B9%98%20%EB%B3%B4%EA%B3%A0%EC%84%9C(%EC%A0%95%EC%9D%B8%EA%B5%AD%ED%8C%80).pdf
+
+# Punch 펀치 사이트 이동
+출석체크 사이트 펀치 https://vo.la/JtfpQ
+교수&학생 회원가입
+
 
 # Punch 소개   
 펀치는 기존의 출석체크 프로그램의 단점을 보완한 출석체크 플렛폼입니다.    
