@@ -41,7 +41,8 @@
          펀치 회원가입
       </th>
       <td>
-          <a href="">이동</a>
+          <a href="http://54.180.145.28/punch/sign_up_professor.html">교수 회원가입</a>
+          <a href="http://54.180.145.28/punch/sign_up_student.html">학생 회원가입</a>
       </td>
    </tr>
    <tr>
