@@ -50,7 +50,7 @@
          펀치 APK 다운로드
       </th>
       <td>
-          <a href="">다운받기</a>
+          <a href="https://drive.google.com/file/d/1btv8bVssiybXgClIQiYWMHafbdST4U86/view?usp=sharing">다운받기</a>
       </td>
    </tr>
 </table>
